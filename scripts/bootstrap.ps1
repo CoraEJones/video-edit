@@ -9,6 +9,21 @@
     }
     return $config
 }
+function Save-VESelection([string]$Root,[string]$HostName,[string]$DeliveryMode,[string]$EntryMode,
+    [Nullable[bool]]$TranscriptionRequired=$null,[Nullable[bool]]$VoiceoverRequired=$null) {
+    $config=Read-VEConfig $Root
+    if ($HostName) {$config.host=$HostName}
+    if ($DeliveryMode) {$config.delivery_mode=$DeliveryMode}
+    if ($EntryMode) {$config.entry_mode=$EntryMode}
+    if ($null -ne $TranscriptionRequired) {$config.transcription_required=[bool]$TranscriptionRequired}
+    if ($null -ne $VoiceoverRequired) {$config.voiceover_required=[bool]$VoiceoverRequired}
+    $local=Join-Path $Root 'config.local.json'
+    if (Test-Path -LiteralPath $local) {Copy-Item -LiteralPath $local -Destination ($local+'.backup') -Force}
+    $temp=Join-Path $Root ('.config-'+[guid]::NewGuid().ToString()+'.json')
+    $config | ConvertTo-Json -Depth 12 | Set-Content -LiteralPath $temp -Encoding UTF8
+    Move-Item -LiteralPath $temp -Destination $local -Force
+    return $config
+}
 . (Join-Path $PSScriptRoot 'bootstrap-support.ps1')
 function Read-VEProbe([string]$Python,[string]$Root,[switch]$PythonOnly,[string]$ConfigPath) {
     $arguments=@('-B','-X','utf8',(Join-Path $Root 'scripts\bootstrap_probe.py'))
@@ -134,10 +149,14 @@ function Initialize-VideoEdit([string]$Root) {
     Write-Host '[1/4] 已找到可用的 Python。'
     $probe=Read-VEProbe $python $Root
     if (-not $probe) { throw '环境探测未完成，请检查配置文件。' }
+    if (@($probe.missing_dependencies) -contains 'tkinter') {
+        $python=Install-VEPython $Root;$probe=Read-VEProbe $python $Root
+        if (-not $probe) {throw '图形 Python 安装后探测失败。'}
+    }
     if (@($probe.missing_dependencies).Count -gt 0) {
         if ($offline -and $probe.version -notlike '3.13.*') {$python=Install-VEPython $Root;$probe=Read-VEProbe $python $Root}
         Set-VEStage $Root 'dependencies' '[2/4] 正在安装剪辑运行组件…'
-        Test-VEVendor $Root
+        if ($config.delivery_mode -ne 'mp4') {Test-VEVendor $Root}
         $venv=Join-Path $Root '.runtime\venv';$privatePython=Join-Path $venv 'Scripts\python.exe'
         $venvProbe=Read-VEProbe $privatePython $Root -PythonOnly
         if (-not $venvProbe -or -not $venvProbe.usable -or ($offline -and $venvProbe.version -notlike '3.13.*')) {
@@ -151,11 +170,13 @@ function Initialize-VideoEdit([string]$Root) {
         }
         @{python=$privatePython} | ConvertTo-Json | Set-Content -LiteralPath (Join-Path $Root '.runtime\setup-python.json') -Encoding UTF8
         $pipArgs=@('-m','pip','install','--disable-pip-version-check','--only-binary=:all:','--retries','2','--timeout','30')
+        $requirement=if ($config.delivery_mode -eq 'mp4') {'requirements-base.txt'} else {'requirements-editable.txt'}
+        $pipArgs+=@('-r',(Join-Path $Root $requirement))
+        if ($config.transcription_required) {$pipArgs+=@('-r',(Join-Path $Root 'requirements-transcription.txt'))}
         if ($offline) {
             foreach ($file in $offline.manifest.files.PSObject.Properties.Name | Where-Object {$_ -like 'wheels/*'}) {$null=Get-VEOfflineFile $offline $file}
-            $requirements=Get-VEOfflineFile $offline 'requirements-lock.txt'
-            $pipArgs+=@('--no-index','--find-links',(Join-Path $offline.root 'wheels'),'--require-hashes','-r',$requirements)
-        } else {$pipArgs+=@('-r',(Join-Path $Root 'requirements.txt'))}
+            $pipArgs+=@('--no-index','--find-links',(Join-Path $offline.root 'wheels'))
+        }
         $null=Invoke-VENative $privatePython $pipArgs $Root 'install-components' 1800
         $python=$privatePython;$probe=Read-VEProbe $python $Root
         if (-not $probe -or @($probe.missing_dependencies).Count -gt 0) { throw ('组件安装后仍无法加载：'+($probe.dependency_errors | ConvertTo-Json -Compress)+'。请复制诊断信息。') }
@@ -170,7 +191,7 @@ function Initialize-VideoEdit([string]$Root) {
         $f=Install-VEFFmpeg $Root;$config.ffmpeg=$f.ffmpeg;$config.ffprobe=$f.ffprobe
     }
     $model=$probe.model
-    if (-not $model) {
+    if ($config.transcription_required -and -not $model) {
         Set-VEStage $Root 'model' '[4/4] 正在准备本地语音模型…'
         $cache=Join-Path $Root '.runtime\models';$result=Join-Path $Root '.runtime\model-download.json'
         $null=New-Item -ItemType Directory -Path $cache -Force
@@ -185,7 +206,8 @@ function Initialize-VideoEdit([string]$Root) {
             $model=(Get-Content -Raw -LiteralPath $result -Encoding UTF8 | ConvertFrom-Json).model
         }
         $config.model_cache=$cache
-    } else { Write-Host '[4/4] 本地语音模型已存在，直接复用。' }
+    } elseif ($model) { Write-Host '[4/4] 本地语音模型已存在，直接复用。' }
+    else {Write-Host '[4/4] 本次尚不需要转录，稍后按实际需求配置。'}
     $config.whisper_model_dir=$model
     Set-VEStage $Root 'verify' '正在复核安装结果…'
     if ($config.font_path -and -not (Test-Path -LiteralPath $config.font_path -PathType Leaf)) {
@@ -195,7 +217,7 @@ function Initialize-VideoEdit([string]$Root) {
     $temporary=Join-Path $Root ('.config-'+[guid]::NewGuid().ToString()+'.json')
     $config | ConvertTo-Json -Depth 12 | Set-Content -LiteralPath $temporary -Encoding UTF8
     $final=Read-VEProbe $python $Root -ConfigPath $temporary
-    if (-not $final -or -not $final.model -or -not $final.font_ready -or @($final.missing_dependencies).Count -gt 0) { throw ('配置复核失败，原配置未覆盖。检查文件：'+$temporary) }
+    if (-not $final -or ($config.transcription_required -and -not $final.model) -or -not $final.font_ready -or @($final.missing_dependencies).Count -gt 0) { throw ('配置复核失败，原配置未覆盖。检查文件：'+$temporary) }
     $local=Join-Path $Root 'config.local.json'
     if (Test-Path -LiteralPath $local) { Copy-Item -LiteralPath $local -Destination ($local+'.backup') -Force }
     Move-Item -LiteralPath $temporary -Destination $local -Force

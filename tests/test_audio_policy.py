@@ -76,6 +76,18 @@ class OriginalAudioPolicyTests(unittest.TestCase):
                 p['shots'][0]['audio_review'][field] = value
                 self.assertIn(code, self.codes(p))
 
+    def test_user_mute_all_overrides_approved_review(self):
+        self.plan['request'] = {'audio_policy': 'mute_all'}
+        self.assertIn('ORIGINAL_AUDIO_DISABLED', self.codes())
+        self.plan['shots'][0]['audio_gain'] = 0
+        self.assertEqual(self.codes(), [])
+
+    def test_user_speech_only_rejects_ambient_original_sound(self):
+        self.plan['request'] = {'audio_policy': 'key_speech_only'}
+        self.assertEqual(self.codes(), [])
+        self.plan['shots'][0]['audio_review']['purpose'] = 'story_sound'
+        self.assertIn('ORIGINAL_AUDIO_SPEECH_ONLY', self.codes())
+
     def test_listening_evidence_and_story_reason_are_required(self):
         for field in ('evidence', 'reason'):
             with self.subTest(field=field):

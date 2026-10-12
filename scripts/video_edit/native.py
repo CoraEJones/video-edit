@@ -7,6 +7,8 @@ from .common import *
 from . import __version__
 from .plan import validate, inventory_for
 from .sound import prepare_audio
+from .assets import prepare_assets
+from .text import text_items
 
 def us(t):return round(t*1_000_000)
 
@@ -39,42 +41,6 @@ def running():
     if p.returncode:raise EditError('PROCESS_STATE_UNAVAILABLE','无法检查剪映是否运行，请在本机桌面环境重试。')
     return b'jianyingpro.exe' in p.stdout.lower()
 
-def prepare_assets(plan,rows,folder,cfg):
-    from PIL import Image, ImageOps
-    w,h=plan['width'],plan['height'];lookup={r['id']:r for r in rows}
-    selected={s['id'] for s in plan['shots'] if not str(s.get('purpose','')).startswith('panels_')}
-    selected.update(s['id'] for s in plan.get('panels',[]))
-    selected.update(s['id'] for s in plan.get('visual_layers',[]))
-    for d in ('originals','video','audio','graphics'):(folder/'assets'/d).mkdir(parents=True,exist_ok=True)
-    assets={};hashes=[]
-    for ident in sorted(selected):
-        r=lookup[ident];source=Path(r['absolute_path']);progress('打包完整原片：'+source.name)
-        dest=folder/'assets/originals'/f'{ident}_{source.name}'
-        before=source.stat();shutil.copy2(source,dest)
-        digest=sha256(dest)
-        if source.stat().st_size!=before.st_size or source.stat().st_mtime_ns!=before.st_mtime_ns or sha256(source)!=digest:
-            raise EditError('SOURCE_CHANGED','复制期间原素材发生变化，已停止生成。',{'path':str(source)})
-        hashes.append({'source':str(source),'relative':str(dest.relative_to(folder)).replace('\\','/'),'sha256':digest,'size':before.st_size})
-        # The editable timeline references the byte-for-byte copy, never an
-        # encoded or resized proxy. Layout is expressed by native transforms.
-        video=dest;audio=None
-        if r.get('kind')=='image':
-            with Image.open(dest) as original:
-                img=ImageOps.exif_transpose(original)
-                metadata={'width':img.width,'height':img.height,'rotation':0}
-        else:
-            metadata=probe(dest,cfg)
-            if r.get('has_audio'):
-                audio=folder/'assets/audio'/f'{ident}_完整原声.wav'
-                run([cfg['ffmpeg'],'-v','error','-i',dest,'-vn','-ac','2','-ar','48000','-c:a','pcm_s16le','-y',audio],timeout=1800)
-        assets[ident]={'video':str(video),'audio':str(audio) if audio else None,'original':str(dest),
-                       'duration':r['duration'],'kind':r.get('kind','video'),'source_metadata':metadata,
-                       'original_sha256':digest,'video_reencoded':False,
-                       'normalization':'原片逐字节复制并直接用于剪映；分辨率、编码、帧率与 HDR 数据保留'}
-    Image.new('RGB',(w,h),'black').save(folder/'assets/graphics/black.png')
-    write(folder/'source-manifest.json',hashes)
-    return assets
-
 def auxiliary(folder,ident):
     from PIL import Image
     data=(folder/'draft_content.json').read_bytes()
@@ -95,10 +61,6 @@ def encode(folder,content,meta,cfg):
         reread,encrypted=load_json_object_with_codec(folder/name,content_codec=cc)
         if not encrypted or reread!=obj:raise EditError('CODEC_VERIFY_FAILED','剪映工程加密回读不一致。')
     auxiliary(folder,content['id'])
-
-def text_items(item):
-    if item.get('text'):return [(item.get('language','zh'),item['text'])]
-    return [(lang,item[lang]) for lang in ('zh','en','es') if item.get(lang)]
 
 def build_native(plan,assets,sound,folder,cfg):
     import pyJianYingDraft as draft
@@ -298,12 +260,16 @@ def package_editorial(plan,rows,assets,folder,plan_path):
     if story.is_file():shutil.copy2(story,folder/'story.txt')
 
 def export(plan_path,out,cfg,name=None,do_register=False,preview=True):
-    plan=read(plan_path);plan['name']=safe_name(name or plan.get('name','我的回忆'))
+    plan_path=resolve_path(plan_path)
+    plan=read(plan_path)
+    from .intake import require_delivery_request
+    require_delivery_request(plan.get('request',{}),out,'editable',cfg)
+    plan['name']=safe_name(name or plan.get('name','我的回忆'))
     report=validate(plan,plan_path,cfg)
     if not report['valid']:raise EditError('INVALID_PLAN','剪辑计划检查未通过。',report)
     codec(cfg) # fail before copying large original media
     if plan.get('panels') or plan.get('mask_reveal'):rectangle_mask(cfg)
-    folder=Path(out).resolve()/plan['name']
+    folder=resolve_path(out)/plan['name']
     if folder.exists():raise EditError('OUTPUT_EXISTS','输出工程已经存在，请使用新的作品名称或输出位置。',{'path':str(folder)})
     folder.mkdir(parents=True)
     rows=inventory_for(plan,plan_path)

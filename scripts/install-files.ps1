@@ -1,4 +1,5 @@
-﻿function Install-VESkill([string]$Source,[string]$Target) {
+﻿function Install-VESkill([string]$Source,[string]$Target,[string]$DeliveryMode,[string]$EntryMode) {
+    if (($DeliveryMode -and $DeliveryMode -notin @('mp4','editable')) -or ($EntryMode -and $EntryMode -notin @('chat','wizard'))) {throw '安装模式无效。'}
     $roots=@()
     if ($Target -in @('DeepSeek','Both')) { $roots+=Join-Path $env:USERPROFILE '.dsh\skills\video-edit' }
     if ($Target -in @('Codex','Both')) { $roots+=Join-Path $env:USERPROFILE '.codex\skills\video-edit' }
@@ -8,7 +9,11 @@
         $_.Name -notlike 'config.local.json*' -and $_.Name -notlike '.config-*.json'
     })
     foreach ($dest in $roots) {
-        if ([IO.Path]::GetFullPath($dest).TrimEnd('\') -eq [IO.Path]::GetFullPath($Source).TrimEnd('\')) { continue }
+        if ([IO.Path]::GetFullPath($dest).TrimEnd('\') -eq [IO.Path]::GetFullPath($Source).TrimEnd('\')) {
+            $selectedHost=if ($Target -eq 'DeepSeek') {'deepseek'} else {'codex'}
+            $null=Save-VESelection $dest $selectedHost $DeliveryMode $EntryMode
+            continue
+        }
         $null=New-Item -ItemType Directory -Path $dest -Force
         $backup=Join-Path $dest ('.runtime\installer-backups\'+[guid]::NewGuid().ToString())
         foreach ($file in $files) {
@@ -30,6 +35,8 @@
             if (Test-Path -LiteralPath $local) {Copy-Item -LiteralPath $local -Destination ($local+'.backup') -Force}
             $config | ConvertTo-Json -Depth 12 | Set-Content -LiteralPath $local -Encoding UTF8
         }
+        $hostName=if ($dest -like '*\.dsh\*') {'deepseek'} else {'codex'}
+        $null=Save-VESelection $dest $hostName $DeliveryMode $EntryMode
     }
     return $roots
 }

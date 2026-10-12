@@ -1,4 +1,9 @@
 {
+  "host": "auto",
+  "entry_mode": "chat",
+  "delivery_mode": "mp4",
+  "transcription_required": false,
+  "voiceover_required": false,
   "python": null,
   "offline_bundle_path": null,
   "harness_exe": null,

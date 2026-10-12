@@ -19,6 +19,10 @@ class EditError(Exception):
         super().__init__(message)
         self.code, self.details = code, details or {}
 
+def resolve_path(value):
+    """Resolve the same expanded path in request guards and actual file I/O."""
+    return Path(os.path.expandvars(str(value))).expanduser().resolve()
+
 def read(path):
     try:return json.loads(Path(path).read_text(encoding='utf-8-sig'))
     except json.JSONDecodeError as exc:raise EditError('INVALID_JSON','文件不是有效的 JSON。',{'path':str(path),'line':exc.lineno})

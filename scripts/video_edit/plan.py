@@ -128,6 +128,8 @@ def validate(plan, plan_path, cfg, inspect_files=True):
             if not any(isinstance(t.get(k),str) and t[k].strip() for k in ('text','zh','en','es')):issue('EMPTY_TEXT',f'{group}[{i}]','文字不能为空')
     request=plan.get('request',{})
     if request.get('voiceover') and not plan.get('narration'):issue('NARRATION_REQUIRED','narration','用户选择了配音，须提供故事文案及时间安排')
+    if request.get('voiceover') is False and plan.get('narration'):issue('NARRATION_DISABLED','narration','用户关闭了配音，请移除 narration；故事文案可另存。')
+    if request.get('title_mode') == 'fonts_only' and 'art_title_overlay' in plan.get('techniques',[]):issue('ART_TITLE_DISABLED','techniques','用户选择可编辑字体文字，请移除艺术字图片并用 titles 排版。')
     if request.get('subtitles') is False and plan.get('captions'):issue('SUBTITLES_DISABLED','captions','用户关闭了字幕，请移除 captions；片名仍可独立保留')
     wanted={str(Path(p).resolve()).casefold() for p in request.get('must_keep_files',[])}
     actual={str(Path(lookup[i]['absolute_path']).resolve()).casefold() for i in selected if i in lookup}

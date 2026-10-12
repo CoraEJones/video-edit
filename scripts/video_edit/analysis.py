@@ -5,9 +5,13 @@ from pathlib import Path
 from .common import *
 
 def analyze(media, out, request, cfg, transcribe=True, reuse=True):
+    from .intake import require_confirmed_request
+    require_confirmed_request(request,cfg)
+    if resolve_path(media)!=resolve_path(request['media_dir']):
+        raise EditError('REQUEST_MEDIA_MISMATCH','分析目录与用户确认的素材目录不同，请重新确认。')
     from PIL import Image, ImageDraw, ImageFont
     import numpy as np
-    media,out = Path(media).resolve(),Path(out).resolve()
+    media,out = resolve_path(media),resolve_path(out)
     if not media.is_dir():
         raise EditError('MEDIA_NOT_FOUND','所选素材文件夹不存在。')
     if out == media:
@@ -21,8 +25,13 @@ def analyze(media, out, request, cfg, transcribe=True, reuse=True):
     rows, warnings = [], []
     font = ImageFont.truetype(cfg['font_path'],17) if Path(cfg['font_path']).is_file() else ImageFont.load_default()
     whisper = None
+    required_transcription = bool(cfg.get('transcription_required', False))
+    if required_transcription and not transcribe:
+        raise EditError('TRANSCRIPTION_REQUIRED','此次需求要求识别讲话，不能同时使用 --no-transcribe；请调整需求或配置后再继续。')
     model = model_path(cfg)
     if transcribe and not model:
+        if required_transcription:
+            raise EditError('TRANSCRIPTION_UNAVAILABLE','此次需要语音识别，但本地模型未配置；请先按需配置识别组件和模型。')
         warnings.append('本地语音模型未配置：讲话尚未识别，不能声称已保留所有重要讲话。')
     for number,p in enumerate(files,1):
         progress(f'分析素材 {number}/{len(files)}：{p.name}')
@@ -70,24 +79,34 @@ def analyze(media, out, request, cfg, transcribe=True, reuse=True):
                 dest=frames_dir/f'contact_{page//12+1}.jpg';sheet.save(dest,quality=86)
                 r.setdefault('contact_sheets',[]).append(str(dest))
             if r['has_audio'] and transcribe and model:
-                if whisper is None:
-                    from faster_whisper import WhisperModel
-                    whisper=WhisperModel(model,device='cpu',compute_type='int8',cpu_threads=4,local_files_only=True)
-                wav=out/'audio'/f'{ident}.wav';wav.parent.mkdir(exist_ok=True)
-                run([cfg['ffmpeg'],'-v','error','-i',p,'-vn','-ac','1','-ar','16000','-y',wav])
-                segments,info=whisper.transcribe(str(wav),language=cfg.get('input_language'),word_timestamps=True,vad_filter=True)
-                r['transcript']=[{'start':s.start,'end':s.end,'text':s.text.strip(),
-                    'avg_logprob':s.avg_logprob,'no_speech_prob':s.no_speech_prob,'compression_ratio':s.compression_ratio,
-                    'confidence_warning':s.avg_logprob < -1 or s.no_speech_prob > .6 or s.compression_ratio > 2.4,
-                    'words':[{'start':w.start,'end':w.end,'word':w.word} for w in s.words or []]} for s in segments]
-                r['speech_language']=info.language;r['language_probability']=info.language_probability
-                r['transcription_status']='done';r['transcript_review']='需要试听核实；done 仅表示识别程序完成，不表示讲话内容正确'
+                # Optional ASR is independent of visual analysis. A missing or
+                # broken speech component must not discard valid sampled frames.
+                try:
+                    if whisper is None:
+                        from faster_whisper import WhisperModel
+                        whisper=WhisperModel(model,device='cpu',compute_type='int8',cpu_threads=4,local_files_only=True)
+                    wav=out/'audio'/f'{ident}.wav';wav.parent.mkdir(exist_ok=True)
+                    run([cfg['ffmpeg'],'-v','error','-i',p,'-vn','-ac','1','-ar','16000','-y',wav])
+                    segments,info=whisper.transcribe(str(wav),language=cfg.get('input_language'),word_timestamps=True,vad_filter=True)
+                    r['transcript']=[{'start':s.start,'end':s.end,'text':s.text.strip(),
+                        'avg_logprob':s.avg_logprob,'no_speech_prob':s.no_speech_prob,'compression_ratio':s.compression_ratio,
+                        'confidence_warning':s.avg_logprob < -1 or s.no_speech_prob > .6 or s.compression_ratio > 2.4,
+                        'words':[{'start':w.start,'end':w.end,'word':w.word} for w in s.words or []]} for s in segments]
+                    r['speech_language']=info.language;r['language_probability']=info.language_probability
+                    r['transcription_status']='done';r['transcript_review']='需要试听核实；done 仅表示识别程序完成，不表示讲话内容正确'
+                except Exception as exc:
+                    if required_transcription:
+                        raise EditError('TRANSCRIPTION_FAILED','此次要求的讲话识别未完成，不能继续声称转录成功；请修复组件或明确调整需求。',
+                                        {'path':str(p),'reason':f'{type(exc).__name__}: {exc}'}) from exc
+                    r['transcript']=[];r['transcription_status']='failed';r['transcription_error']=f'{type(exc).__name__}: {exc}'
+                    warnings.append(f'{p.name}：可选语音识别未完成，画面分析保留；{exc}')
             elif not r['has_audio']:
                 r['transcription_status']='no_audio'
             else:
                 r['transcription_status']='unavailable' if transcribe else 'not_requested'
             r['status']='analyzed'
         except Exception as exc:
+            if isinstance(exc,EditError) and exc.code=='TRANSCRIPTION_FAILED':raise
             r['status']='analysis_failed';r['error']=str(exc)
             warnings.append(f'{p.name}：{exc}')
         rows.append(r)

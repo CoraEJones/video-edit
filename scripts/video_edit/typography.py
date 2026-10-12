@@ -109,7 +109,7 @@ def prepare(plan,assets,folder,cfg):
                     bright=stats['brightness']>180 and stats['texture_std']<48
             color=[.10,.13,.15] if bright else ([.98,.95,.88] if preset in ('warm','cinema') else [.98,.98,.97])
             outline=[.98,.97,.93] if bright else [.04,.055,.07]
-            from .native import text_items
+            from .text import text_items
             language_fonts={};fallbacks=[]
             for lang,text in text_items(item):
                 latin=lang.startswith(('en','es'))

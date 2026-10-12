@@ -1,7 +1,7 @@
 from __future__ import annotations
 from pathlib import Path
 from .common import *
-from .native import text_items
+from .text import text_items
 
 def timecode(t,ass=False):
     if ass:

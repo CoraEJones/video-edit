@@ -40,6 +40,7 @@ def validate_original_audio(plan, rows, issue):
     require fresh review instead of an invented approval.
     """
     lookup = {r['id']: r for r in rows if isinstance(r, dict) and isinstance(r.get('id'), str)}
+    policy = plan.get('request', {}).get('audio_policy', 'strict')
     for group in ('shots', 'panels'):
         for i, shot in enumerate(plan.get(group, [])):
             where = f'{group}[{i}]'
@@ -50,6 +51,9 @@ def validate_original_audio(plan, rows, issue):
             if 'important_speech' in shot and not isinstance(shot['important_speech'], bool):
                 issue('ORIGINAL_AUDIO_REVIEW', where + '.important_speech', 'important_speech 需要布尔值。')
             if gain == 0:
+                continue
+            if policy == 'mute_all':
+                issue('ORIGINAL_AUDIO_DISABLED', where, '用户选择全部原声静音，请将 audio_gain 设为 0。')
                 continue
             if group == 'panels' or str(shot.get('purpose', '')).startswith('panels_'):
                 issue('ORIGINAL_AUDIO_PANEL', where, '分屏不输出原声；需要关键讲话时安排正常速度主轨镜头。')
@@ -73,6 +77,8 @@ def validate_original_audio(plan, rows, issue):
                 issue('ORIGINAL_AUDIO_QUALITY', where + '.audio_review', '原声必须已听审为清晰可用；噪声、爆音、含混或未确定时静音。')
             if review.get('purpose') not in ('key_speech', 'story_sound'):
                 issue('ORIGINAL_AUDIO_PURPOSE', where + '.audio_review', '仅保留清晰关键讲话 key_speech 或明确选中的优质叙事同期声 story_sound。')
+            if policy == 'key_speech_only' and review.get('purpose') != 'key_speech':
+                issue('ORIGINAL_AUDIO_SPEECH_ONLY', where + '.audio_review', '用户选择仅保留关键讲话，不能额外保留叙事环境原声。')
             for field in ('evidence', 'reason'):
                 if not isinstance(review.get(field), str) or not review[field].strip():
                     issue('ORIGINAL_AUDIO_REVIEW', where + '.audio_review.' + field, '填写实际试听文件/时码与结论，以及该声音的故事价值，不能自动伪造审核。')

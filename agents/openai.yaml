@@ -1,4 +1,4 @@
 interface:
   display_name: "回忆剪辑"
-  short_description: "通过大字图形向导，把旅行、家庭和活动素材整理成剪映可编辑的故事初稿。"
-  default_prompt: "使用 $video-edit 帮我挑选素材，制作一部有故事的纪念短片。"
+  short_description: "对话或向导确认需求，把旅行、家庭素材剪成故事短片；可只要 MP4 或同时保留剪映工程。"
+  default_prompt: "使用 $video-edit 剪辑我的素材，先检查环境、补问路径和需求，汇总给我确认后再开始。"

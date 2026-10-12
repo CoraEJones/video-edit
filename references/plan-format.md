@@ -2,6 +2,8 @@
 
 顶层：schema_version、name、width、height、fps、duration、inventory_path、request、shots、panels、titles、captions、chapters、narration、audio_layers、visual_layers、techniques、review。1.5 保持计划版本 1.0，增加可选 visual_layers 和 mask_reveal.hold；正增益原声需新增实际听审记录，旧计划不能绕过此要求。
 
+1.6 仍使用计划版本 1.0。实际执行时，`request` 必须完整复制 [需求接入](intake.md) 中已由用户确认的对象，包括 `media_dir`、`output_dir`、`delivery_mode` 与 `confirmation`。以下精简 request 仅展示字段关系，不能直接用于导出。`validate` 可以检查历史计划；分析/导出另外强制检查完整需求及确认，不自动升级或伪造确认。
+
 所有时间为秒。duration 是时间线时长；素材出点 = source_in + duration × speed。帧对齐用 round(seconds * fps) / fps；相邻镜头 start 使用前一镜头的终点，避免累计空隙。脚本内部转换为整数微秒。
 
 ```json

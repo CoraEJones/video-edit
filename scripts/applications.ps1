@@ -1,13 +1,22 @@
 ﻿# Desktop prerequisites, independent of Python and video-processing packages.
 function Find-VEApplication([string]$Id,$Config) {
     $roots=New-Object System.Collections.Generic.List[string]
-    $exe=if ($Id -eq 'jianying') {'JianyingPro.exe'} else {'DeepSeek Harness.exe'}
-    $display=if ($Id -eq 'jianying') {'Jianying|剪映'} else {'DeepSeek Harness'}
-    $configured=if ($Id -eq 'jianying') {$Config.jianying_install_dir} else {$Config.harness_exe}
+    $exe=if ($Id -eq 'jianying') {'JianyingPro.exe'} elseif ($Id -eq 'codex') {'Codex.exe'} else {'DeepSeek Harness.exe'}
+    $display=if ($Id -eq 'jianying') {'Jianying|剪映'} elseif ($Id -eq 'codex') {'OpenAI.*Codex|Codex'} else {'DeepSeek Harness'}
+    $configured=if ($Id -eq 'jianying') {$Config.jianying_install_dir} elseif ($Id -eq 'codex') {$Config.codex_exe} else {$Config.harness_exe}
+    if ($Id -ne 'jianying') {
+        $command=Get-Command $(if ($Id -eq 'codex') {'codex'} else {'dsh'}) -ErrorAction SilentlyContinue
+        if ($command -and $command.Source) {return $command.Source}
+    }
+    if ($Id -eq 'codex' -and (Get-Command Get-AppxPackage -ErrorAction SilentlyContinue)) {
+        foreach ($package in Get-AppxPackage -Name '*Codex*' -ErrorAction SilentlyContinue) {
+            if ($package.InstallLocation -and (Test-Path -LiteralPath $package.InstallLocation)) {return $package.InstallLocation}
+        }
+    }
     if ($configured) { $roots.Add([Environment]::ExpandEnvironmentVariables($configured)) }
     foreach ($base in @($env:LOCALAPPDATA,$env:ProgramFiles,${env:ProgramFiles(x86)})) {
         if (-not $base) { continue }
-        $name=if ($Id -eq 'jianying') {'JianyingPro'} else {'DeepSeek Harness'}
+        $name=if ($Id -eq 'jianying') {'JianyingPro'} elseif ($Id -eq 'codex') {'Codex'} else {'DeepSeek Harness'}
         $roots.Add((Join-Path $base $name));$roots.Add((Join-Path $base ('Programs\'+$name)))
     }
     foreach ($reg in @('HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*','HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*','HKLM:\Software\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*')) {
@@ -37,6 +46,9 @@ function Get-VEAppSpec([string]$Id) {
     if ($Id -eq 'jianying') {
         return @{id=$Id;name='剪映专业版';homepage='https://www.capcut.cn/';publisher='Shenzhen Lianmeng|深圳市脸萌';host_pattern='^lf\d+-package\.vlabstatic\.com$'}
     }
+    if ($Id -eq 'codex') {
+        return @{id=$Id;name='Codex';homepage='https://chatgpt.com/codex';publisher='OpenAI';host_pattern='^$';manual=$true}
+    }
     if ($Id -eq 'harness') {
         return @{id=$Id;name='DeepSeek Harness';homepage='https://www.deepseek.com/zh/download/';publisher='Hangzhou DeepSeek Artificial Intelligence';host_pattern='^download\.deepseek\.com$'}
     }
@@ -65,7 +77,9 @@ function Test-VEAppInstaller([string]$Id,[string]$Path) {
     return ($sig.Status -eq 'Valid' -and $sig.SignerCertificate.Subject -match $spec.publisher)
 }
 function Save-VEAppInstaller([string]$Id,[string]$Root) {
-    $spec=Get-VEAppSpec $Id;$path=Join-Path $Root ('.runtime\downloads\'+$Id+'-setup.exe')
+    $spec=Get-VEAppSpec $Id
+    if ($spec.manual) {return $null}
+    $path=Join-Path $Root ('.runtime\downloads\'+$Id+'-setup.exe')
     if (Test-VEAppInstaller $Id $path) { return $path }
     Write-Host ('正在从官网下载 '+$spec.name+' 安装包…')
     $url=Resolve-VEAppInstaller $Id
@@ -75,21 +89,42 @@ function Save-VEAppInstaller([string]$Id,[string]$Root) {
         ConvertTo-Json | Set-Content -LiteralPath ($path+'.json') -Encoding UTF8
     return $path
 }
-function Get-VEApplications([string]$Root,[switch]$DownloadMissing,[string]$ConfigPath) {
+function Get-VEApplications([string]$Root,[switch]$DownloadMissing,[string]$ConfigPath,
+    [string]$DeliveryMode,[string]$HostName,[switch]$ActiveHost) {
     $config=Read-VEConfig $Root;$apps=@();$problems=@()
     if ($ConfigPath) {
         $custom=Get-Content -Raw -LiteralPath $ConfigPath -Encoding UTF8 | ConvertFrom-Json
         foreach ($property in $custom.PSObject.Properties) {$config[$property.Name]=$property.Value}
     }
-    foreach ($id in @('jianying','harness')) {
-        $spec=Get-VEAppSpec $id;$path=Find-VEApplication $id $config;$installer=$null;$errorText=$null
-        if (-not $path) {
+    if (-not $DeliveryMode) {$DeliveryMode=if ($config.delivery_mode) {$config.delivery_mode} else {'editable'}}
+    if (-not $HostName) {$HostName=if ($config.host) {$config.host} else {'auto'}}
+    if ($DeliveryMode -notin @('mp4','editable') -or $HostName -notin @('auto','codex','deepseek')) {throw '交付方式或助手配置无效，请重新选择。'}
+    if ($HostName -eq 'auto') {
+        if (Find-VEApplication 'codex' $config) {$HostName='codex'}
+        elseif (Find-VEApplication 'harness' $config) {$HostName='deepseek'}
+        else {$problems+='请先选择并安装一个助手：Codex 或 DeepSeek Harness。'}
+    }
+    $ids=@()
+    if ($HostName -ne 'auto') {$ids+=if ($HostName -eq 'deepseek') {'harness'} else {'codex'}}
+    if ($DeliveryMode -eq 'editable') {$ids+='jianying'}
+    foreach ($id in $ids) {
+        $spec=Get-VEAppSpec $id;$installer=$null;$errorText=$null
+        $current=($ActiveHost -and $id -ne 'jianying' -and $HostName -ne 'auto')
+        $path=if ($current) {$null} else {Find-VEApplication $id $config}
+        $installed=($current -or [bool]$path)
+        if (-not $installed) {
             try {
                 if ($DownloadMissing) { $installer=Save-VEAppInstaller $id $Root }
-                else { $candidate=Join-Path $Root ('.runtime\downloads\'+$id+'-setup.exe');if (Test-VEAppInstaller $id $candidate) {$installer=$candidate} }
+                elseif (-not $spec.manual) {
+                    $candidate=Join-Path $Root ('.runtime\downloads\'+$id+'-setup.exe')
+                    if (Test-VEAppInstaller $id $candidate) {$installer=$candidate}
+                }
             } catch {$errorText=$_.Exception.Message;$problems+=$errorText}
+            $problems+=($spec.name+'尚未安装；已安装时请指定程序位置或重新扫描。')
         }
-        $apps+=@{id=$id;name=$spec.name;installed=[bool]$path;path=$path;installer=$installer;homepage=$spec.homepage;error=$errorText}
+        $apps+=@{id=$id;name=$spec.name;installed=$installed;path=$path;installer=$installer;homepage=$spec.homepage;error=$errorText;
+            detection=if ($current) {'active_host'} else {'local_scan'}}
     }
-    return @{ready=(@($apps | Where-Object {-not $_.installed}).Count -eq 0);apps=$apps;problems=$problems;phase='applications'}
+    return @{ready=($HostName -ne 'auto' -and @($apps | Where-Object {-not $_.installed}).Count -eq 0);
+        apps=$apps;problems=$problems;phase='applications';delivery_mode=$DeliveryMode;selected_host=$HostName}
 }
