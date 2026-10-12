@@ -1,0 +1,5 @@
+numpy>=1.26,<3
+Pillow>=10,<13
+fonttools>=4.61,<5
+faster-whisper>=1.1,<2
+./assets/vendor/pyjianyingdraft-0.3.0-py3-none-any.whl

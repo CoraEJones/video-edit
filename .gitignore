@@ -1,0 +1,16 @@
+.runtime/
+offline-runtime/
+config.local.json*
+.config-*.json
+__pycache__/
+*.pyc
+.venv/
+venv/
+jobs/
+output/
+dist/
+*.log
+*.part
+.env
+.env.*
+!.env.example

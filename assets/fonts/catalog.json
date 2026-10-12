@@ -1,0 +1,42 @@
+{
+  "source": "Public release: two fonts with complete accompanying SIL OFL 1.1 notices",
+  "fonts": [
+    {
+      "id": "ChenYuluoyan-Thin/ChenYuluoyan-Thin.ttf",
+      "file": "ChenYuluoyan-Thin/ChenYuluoyan-Thin.ttf",
+      "label": "辰宇落雁",
+      "family": "Chenyuluoyan",
+      "preview_family": "辰宇落雁體 Thin",
+      "postscript_name": "ChenYuluoyan-Thin",
+      "style": "Thin",
+      "glyph_count": 5163,
+      "cjk": true,
+      "role": "title",
+      "latin_sample_supported": true,
+      "simplified_sample_missing": "忆们过动",
+      "license_text": "The Chenyuluoyan-Thin font is written by Liu, Wei-Chen, created by Wang, Li-Yu, with Reserved Font Names '辰宇落雁' and 'Chenyuluoyan'. under SIL Open Font License, Version 1.1.\n\nThis license is copied below, and is also available with a FAQ at:\nhttp://scripts.sil.org/OFL",
+      "license_url": "http://scripts.sil.org/OFL",
+      "license_status": "font_metadata_or_included_notice; not independently verified",
+      "sha256": "1f04002cc0906d2bda376fb133d4a8160805db0113e92baf6da54aeafde88bd7"
+    },
+    {
+      "id": "ZhiMangXing-Regular/ZhiMangXing-Regular.ttf",
+      "file": "ZhiMangXing-Regular/ZhiMangXing-Regular.ttf",
+      "label": "志莽行",
+      "family": "Zhi Mang Xing",
+      "preview_family": "Zhi Mang Xing",
+      "postscript_name": "ZhiMangXing-Regular",
+      "style": "Regular",
+      "glyph_count": 7015,
+      "cjk": true,
+      "role": "title",
+      "latin_sample_supported": true,
+      "simplified_sample_missing": "",
+      "license_text": "This Font Software is licensed under the SIL Open Font License, Version 1.1. This license is available with a FAQ at: http://scripts.sil.org/OFL",
+      "license_url": "http://scripts.sil.org/OFL",
+      "license_status": "font_metadata_or_included_notice; not independently verified",
+      "sha256": "625f79bf364e20a6c1939e4bd20d477bd1ea67a26af884d1e319720083090c3c"
+    }
+  ],
+  "distribution_note": "Other locally supplied fonts are not part of this public distribution."
+}
