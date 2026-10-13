@@ -119,7 +119,8 @@ def doctor(cfg, delivery_mode=None, host=None, entry_mode=None):
             'quality': {'native_media': 'byte_identical_originals', 'default_policy': 'preserve_source',
                 'preview_mode': cfg.get('preview_mode', 'full_quality'), 'preview_lossless': False,
                 'preview_color_output': 'SDR', 'source_hdr_preserved': True, 'lossy_encoding': 'final_mp4_only'},
-            'capabilities': {'mp4_without_jianying': True, 'native_editable_draft': native,
+            'capabilities': {'scope': 'main edit-plan schema1.0; derived technique assets have a separate interface',
+                'mp4_without_jianying': True, 'native_editable_draft': native,
                 'graphical_wizard': graphical, 'graphical_wizard_checked': selected['entry_mode'] == 'wizard',
                 'local_transcription': transcription, 'offline_voiceover': bool(voices),
                 'voiceover_checked': bool(cfg.get('voiceover_required', False)),
@@ -129,4 +130,8 @@ def doctor(cfg, delivery_mode=None, host=None, entry_mode=None):
                 'host_delegation': 'unknown; 由宿主实际开放的子智能体工具确认',
                 'semantic_selection': '必须由实际查看帧和可用转录的助手完成',
                 'optical_flow': False, 'motion_tracking': False, 'complex_matting': False, 'continuous_speed_curve': False},
+            'technique_assets': {'schema_version': 'technique.2.0', 'interface': 'scripts/technique_tool.py',
+                'continuous_speed_curve': True, 'animated_transforms': True, 'alpha_masks': True,
+                'output': 'silent QTRLE ARGB MOV plus parameter sidecars', 'native_effect_parameter_roundtrip': False,
+                'render_verified_by_doctor': False, 'note': '实现能力；先校验与渲染，再审看并登记派生素材，继续主流程。'},
             'problems': problems, 'note': 'ready 仅表示所选模式运行依赖就绪；不证明模型视觉权限、Skill 已加载或剪映界面验收。'}

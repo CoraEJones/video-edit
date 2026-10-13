@@ -127,7 +127,7 @@ review.status=reviewed；evidence 为实际审看时间点/转录引用。select
 
 techniques 支持 montage、action_opening、slow_fast_slow、shot_size_sequence、split_screen、mask_reveal、j_cut、l_cut、beat_cut、staggered_titles、segmented_speed、zoom、fade。这些名字标记实际使用的设计，不会仅因填写就自动生成对应效果。对应轨道/参数必须由计划落实。
 
-不支持 optical_flow、motion_tracking、complex_matting、continuous_speed_curve。validate 对这些声明直接报错。语义选片和文案由已具备视觉/语言能力的 Harness 模型完成，本地脚本不内置另一个云端模型。
+主计划1.0不支持 optical_flow、motion_tracking、complex_matting、continuous_speed_curve 声明，validate直接报错。2.0的连续曲线通过独立 [技巧资产接口](technique-language.md) 实现，先渲染、审看、登记MOV后作为普通片段进入主计划，不把speed_curve字段塞进主计划；doctor分别报告capabilities（主计划）和technique_assets（技巧接口）。光流、跟踪、人物分割仍未实现。语义选片和文案由已具备视觉/语言能力的 Harness 模型完成，本地脚本不内置另一个云端模型。
 
 ## 返回约定
 
