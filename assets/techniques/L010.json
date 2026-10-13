@@ -1,0 +1,249 @@
+{
+  "id": "L010",
+  "title": "08  转场调色预览效果制作.mp4",
+  "origin": "User-provided local Jianying tutorial; abstracted principles, not a bundled preset.",
+  "source_sha256": "c262a56d2e7ba004bb49e752f24fc4ecbca933678c0092973e38f789becab76b",
+  "source_duration_seconds": 706.52,
+  "review_scope": {
+    "overview_viewed": true,
+    "detailed_frame_seconds": [
+      164.0,
+      355.0,
+      424.0,
+      470.0,
+      613.0
+    ],
+    "timestamped_asr_reviewed": true,
+    "asr_verified_by_listening": false,
+    "continuous_playback": false
+  },
+  "execution_routes": [
+    "recipe:compare-wipe"
+  ],
+  "route_semantics": {
+    "typed": "Supported technique.2.0 fields; build and validate an explicit graph.",
+    "recipe": "Executable builder producing a typed graph.",
+    "workflow": "Existing main workflow; separate confirmation and evidence remain required.",
+    "external": "Not bundled; exact resource/voice/preset needs explicit licensed input.",
+    "knowledge": "Planning abstraction only; no new automatic detector or segmentation implementation."
+  },
+  "techniques": [
+    {
+      "id": "color-before-after-wipe",
+      "name": "横向或纵向调色前后擦除对比",
+      "intent": "通过移动分界线直观显示原始与调色画面的区别。",
+      "code_expression": {
+        "inputs": [
+          {
+            "name": "before",
+            "type": "VideoFrames"
+          },
+          {
+            "name": "after",
+            "type": "VideoFrames",
+            "requirement": "same source geometry and explicit source-time mapping"
+          }
+        ],
+        "operations": [
+          {
+            "op": "normalize_geometry",
+            "sar": "preserve displayed aspect"
+          },
+          {
+            "op": "wipe_composite",
+            "mask": "directional threshold",
+            "before": "before(t)",
+            "after": "after(t)",
+            "output": "comparison(t)"
+          }
+        ],
+        "parameters": {
+          "direction": {
+            "type": "enum",
+            "values": [
+              "left",
+              "right",
+              "up",
+              "down"
+            ]
+          },
+          "duration_s": {
+            "type": "float",
+            "unit": "seconds",
+            "narrated_example": 5
+          },
+          "edge_softness_px": {
+            "type": "float",
+            "unit": "pixels",
+            "exact_tutorial_value": "unknown"
+          },
+          "look": {
+            "type": "LookAssetRef",
+            "required_for_exact_grade": true
+          }
+        },
+        "timing": {
+          "type": "TimeMap",
+          "progress": "p=clamp((t-start)/duration,0,1)",
+          "mask": "right-moving reveal example m(x,t)=step(x/W,p)",
+          "rule": "Both compared frames must refer to the declared same source moment for a true before/after comparison."
+        },
+        "outputs": [
+          {
+            "name": "comparison_video",
+            "type": "VideoFrames"
+          }
+        ]
+      },
+      "execution_equivalence": "direct_math",
+      "pitfalls": [
+        "The wipe is mathematical; the proprietary grade is an independent asset_required dependency.",
+        "A normal transition between sequential clips can compare different source moments, causing object motion at the boundary; code should synchronize both streams when claiming before/after.",
+        "Source sample aspect15:16 differs from square pixels; normalize displayed aspect intentionally."
+      ],
+      "validation": [
+        "At p=0/p=1 the intended full original/graded versions appear.",
+        "At p=0.5 both sides align in geometry and source moment.",
+        "Check boundary motion at several frames and verify horizontal/vertical direction."
+      ]
+    },
+    {
+      "id": "trim-composed-effect",
+      "name": "保留转场内部时序后再裁剪",
+      "intent": "缩短对比效果前后静止部分时保持擦除持续时间。",
+      "code_expression": {
+        "inputs": [
+          {
+            "name": "comparison_graph",
+            "type": "EffectGraph"
+          }
+        ],
+        "operations": [
+          {
+            "op": "freeze_effect_time_map",
+            "domain": "effect_local_time"
+          },
+          {
+            "op": "trim_graph_output",
+            "interval": [
+              "keep_in",
+              "keep_out"
+            ]
+          },
+          {
+            "op": "rebase_pts",
+            "output_start": 0
+          }
+        ],
+        "parameters": {
+          "keep_in": {
+            "type": "float",
+            "unit": "effect-output seconds"
+          },
+          "keep_out": {
+            "type": "float",
+            "unit": "effect-output seconds"
+          },
+          "intermediate_codec": {
+            "type": "enum",
+            "policy": "lossless if graph nesting cannot be rendered directly"
+          }
+        },
+        "timing": {
+          "type": "TimeMap",
+          "rule": "rendered t samples original effect at t+keep_in; effect progress must not be recomputed from the shortened clip duration"
+        },
+        "outputs": [
+          {
+            "name": "short_comparison",
+            "type": "VideoFrames"
+          }
+        ]
+      },
+      "execution_equivalence": "direct_math",
+      "pitfalls": [
+        "Repeated tutorial MP4 exports accumulate compression; retain a single graph or lossless intermediate.",
+        "Trimming source clips and trimming the composed output are different operations."
+      ],
+      "validation": [
+        "The wipe completion minus wipe start remains unchanged after removing preroll.",
+        "Compare retained frames with corresponding frames of the untrimmed effect."
+      ]
+    },
+    {
+      "id": "align-audio-marker-to-reveal",
+      "name": "音乐入点标记对齐变色完成",
+      "intent": "让听觉提示与明确的视觉事件同步。",
+      "code_expression": {
+        "inputs": [
+          {
+            "name": "music",
+            "type": "AudioAssetRef"
+          },
+          {
+            "name": "cue",
+            "type": "SourceTimeSeconds"
+          },
+          {
+            "name": "reveal_complete",
+            "type": "TimelineTimeSeconds"
+          }
+        ],
+        "operations": [
+          {
+            "op": "trim_audio_head",
+            "source_in": "s_in"
+          },
+          {
+            "op": "place_audio",
+            "timeline_start": "event-(cue-s_in)/speed"
+          },
+          {
+            "op": "trim_audio_tail",
+            "timeline_end": "video_end"
+          }
+        ],
+        "parameters": {
+          "cue": {
+            "type": "float",
+            "unit": "source seconds",
+            "selection": "requires actual audition"
+          },
+          "event": {
+            "type": "float",
+            "unit": "timeline seconds"
+          },
+          "s_in": {
+            "type": "float",
+            "unit": "source seconds"
+          }
+        },
+        "timing": {
+          "type": "Constraint",
+          "equation": "timeline_start+(cue-source_in)/speed=reveal_complete"
+        },
+        "outputs": [
+          {
+            "name": "aligned_music_clip",
+            "type": "AudioTimelineClip"
+          }
+        ]
+      },
+      "execution_equivalence": "direct_math",
+      "pitfalls": [
+        "Waveform or ASR does not prove the audible onset; this reviewer did not audition.",
+        "Trimming the head must preserve the marker's source-time identity.",
+        "Music library availability and permission are separate from the operation."
+      ],
+      "validation": [
+        "Mapped marker equals the chosen visual event within one output frame.",
+        "Audition the rendered cue and check no abrupt cut or unintended silence."
+      ]
+    }
+  ],
+  "unknowns": [
+    "No audio audition or continuous playback performed.",
+    "ASR is unverified; exact filter name and final horizontal wipe duration beyond narrated example are not independently calibrated.",
+    "Exact original/graded stream alignment in the tutorial export cannot be proven from sparse UI frames."
+  ]
+}

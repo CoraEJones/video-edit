@@ -1,0 +1,203 @@
+{
+  "id": "L001",
+  "title": "01  认识电脑版剪映界面.mp4",
+  "origin": "User-provided local Jianying tutorial; abstracted principles, not a bundled preset.",
+  "source_sha256": "c9c7b89ab7bccea6ad52874a9af1c81a3430b8e939f21284f0f9bbc581a4f43f",
+  "source_duration_seconds": 1042.249542,
+  "review_scope": {
+    "overview_viewed": true,
+    "detailed_frame_seconds": [
+      628.0,
+      742.0,
+      953.0,
+      978.0
+    ],
+    "timestamped_asr_reviewed": true,
+    "asr_verified_by_listening": false,
+    "continuous_playback": false
+  },
+  "execution_routes": [
+    "workflow:inventory",
+    "typed:layers"
+  ],
+  "route_semantics": {
+    "typed": "Supported technique.2.0 fields; build and validate an explicit graph.",
+    "recipe": "Executable builder producing a typed graph.",
+    "workflow": "Existing main workflow; separate confirmation and evidence remain required.",
+    "external": "Not bundled; exact resource/voice/preset needs explicit licensed input.",
+    "knowledge": "Planning abstraction only; no new automatic detector or segmentation implementation."
+  },
+  "techniques": [
+    {
+      "id": "project-assets",
+      "name": "Separate editable project references from rendered output",
+      "intent": "Prevent missing assets when reopening an editable timeline.",
+      "code_expression": {
+        "inputs": [
+          "asset path",
+          "asset sha256",
+          "editable timeline"
+        ],
+        "operations": [
+          "register each original asset with a stable identifier",
+          "resolve paths before rendering",
+          "relink missing asset by explicit mapping and matching hash",
+          "render a separate self-contained video when requested"
+        ],
+        "parameters": {
+          "asset_path": {
+            "units": "filesystem path",
+            "adjustable": true
+          },
+          "sha256": {
+            "units": "hex digest",
+            "adjustable": false
+          }
+        },
+        "timing": "Validate every referenced asset before any timeline render.",
+        "outputs": [
+          "editable project with resolved references",
+          "rendered movie"
+        ]
+      },
+      "execution_equivalence": "direct_math",
+      "pitfalls": [
+        "A project file is not a rendered movie.",
+        "Renaming or moving original files can break references; exporting does not repair the editable project.",
+        "The tutorial UI is from older footage and does not establish current menu names."
+      ],
+      "validation": [
+        "Missing-reference validation names the affected asset.",
+        "Relink only after matching identity, then reopen or decode expected source."
+      ]
+    },
+    {
+      "id": "layered-timeline",
+      "name": "Represent timeline placement, overlap, canvas and audio as separate state",
+      "intent": "Translate drag-and-drop editing into explicit, reproducible temporal and spatial composition.",
+      "code_expression": {
+        "inputs": [
+          "video clips",
+          "solid-color layer",
+          "audio clip",
+          "canvas dimensions"
+        ],
+        "operations": [
+          "place clips with source_in/source_out and timeline_start",
+          "composite active visual layers in ascending z order",
+          "apply scale, position and rotation before compositing",
+          "place and mix audio independently of visual z order",
+          "preserve aspect by fit or deliberately choose crop"
+        ],
+        "parameters": {
+          "canvas_ratio": {
+            "demonstrated": "9:16",
+            "units": "width:height",
+            "adjustable": true
+          },
+          "solid_duration": {
+            "demonstrated": 3.0,
+            "units": "seconds",
+            "adjustable": true
+          },
+          "opacity": {
+            "visible": 1.0,
+            "ui_units": "percent 100",
+            "code_units": "0..1",
+            "adjustable": true
+          },
+          "audio_gain": {
+            "visible": 1.0,
+            "ui_units": "percent 100",
+            "adjustable": true
+          },
+          "audio_fades": {
+            "visible": [
+              0.0,
+              0.0
+            ],
+            "units": "seconds",
+            "adjustable": true
+          }
+        },
+        "timing": "Layer interval [timeline_start,timeline_start+(source_out-source_in)/speed). Snap target is an existing clip boundary or marker.",
+        "outputs": [
+          "composed frames",
+          "mixed audio"
+        ]
+      },
+      "execution_equivalence": "direct_math",
+      "pitfalls": [
+        "Switching ratio alone can expose black margins.",
+        "Upper opaque solids can cover video.",
+        "Track order and timeline start are separate variables.",
+        "Visible values are the demonstrated current state, not required defaults."
+      ],
+      "validation": [
+        "Sample each overlap and boundary.",
+        "Check canvas ratio and fit/crop choice.",
+        "Inspect visual and audio layers separately."
+      ]
+    },
+    {
+      "id": "time-markers-export",
+      "name": "Frame-aware splitting and beat markers with explicit export settings",
+      "intent": "Make timing edits precise while choosing export settings from source properties.",
+      "code_expression": {
+        "inputs": [
+          "clip interval",
+          "playhead time",
+          "audio marker times",
+          "source metadata"
+        ],
+        "operations": [
+          "quantize split location to output frame grid",
+          "split one clip preserving source continuity",
+          "store markers as audio-relative seconds",
+          "select export dimensions/fps/codec explicitly"
+        ],
+        "parameters": {
+          "marker_time": {
+            "units": "seconds relative to audio clip",
+            "adjustable": true
+          },
+          "split_time": {
+            "units": "seconds then frame index",
+            "adjustable": true
+          },
+          "export_fps": {
+            "tutorial_examples": [
+              25,
+              30
+            ],
+            "units": "frames/second",
+            "adjustable": true,
+            "rule": "Derive from desired delivery and actual footage; examples are not universal requirements."
+          }
+        },
+        "timing": "source_split=source_in+(playhead-timeline_start)*speed; adjacent pieces share this source boundary.",
+        "outputs": [
+          "split clip intervals",
+          "marker table",
+          "explicit output profile"
+        ]
+      },
+      "execution_equivalence": "direct_math",
+      "pitfalls": [
+        "Upscaling cannot restore missing detail.",
+        "Manual markers do not guarantee every cut should follow a beat.",
+        "Old shortcuts/menu behavior may have changed."
+      ],
+      "validation": [
+        "No gap or duplicate frame at split.",
+        "Markers stay aligned after trimming/moving audio.",
+        "Decode output and verify its actual dimensions/fps."
+      ]
+    }
+  ],
+  "unknowns": [
+    "No audio was auditioned; ASR is unverified and contains spelling errors.",
+    "Full-resolution frames are discrete evidence, not continuous playback.",
+    "Current Jianying UI and original asset licensing are not established by this lesson."
+  ]
+}

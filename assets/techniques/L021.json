@@ -1,0 +1,154 @@
+{
+  "id": "L021",
+  "title": "19  剪映抖动卡点如何制作.mp4",
+  "origin": "User-provided local Jianying tutorial; abstracted principles, not a bundled preset.",
+  "source_sha256": "d3a9e75388f715ea7b0ac5ec92cc3f8d031f3d07571e69cc1fde34d1c337e2f8",
+  "source_duration_seconds": 979.353375,
+  "review_scope": {
+    "overview_viewed": true,
+    "detailed_frame_seconds": [
+      457.032,
+      652.902,
+      914.063
+    ],
+    "timestamped_asr_reviewed": true,
+    "asr_verified_by_listening": false,
+    "continuous_playback": false
+  },
+  "execution_routes": [
+    "recipe:beat-shake",
+    "workflow:reviewed_audio_cues"
+  ],
+  "route_semantics": {
+    "typed": "Supported technique.2.0 fields; build and validate an explicit graph.",
+    "recipe": "Executable builder producing a typed graph.",
+    "workflow": "Existing main workflow; separate confirmation and evidence remain required.",
+    "external": "Not bundled; exact resource/voice/preset needs explicit licensed input.",
+    "knowledge": "Planning abstraction only; no new automatic detector or segmentation implementation."
+  },
+  "techniques": [
+    {
+      "id": "beat_aligned_still_sequence",
+      "name": "强拍驱动的图片切换",
+      "intent": "按选中的音乐重音决定每张照片的时间范围。",
+      "code_expression": {
+        "inputs": [
+          "ordered still images",
+          "audition-verified strong beat source times",
+          "output fps",
+          "audio duration"
+        ],
+        "operations": [
+          "convert slow-play marking time to audio source time: beat_src=mark_t*0.5",
+          "restore playback rate1 without retaining doubled marker times",
+          "q(t)=round(t*fps)/fps",
+          "clip_i=[q(beat_i),q(beat_i+1))",
+          "crop image to1:1; contain foreground on9:16 canvas over blurred cover background",
+          "append final held image through chosen ending"
+        ],
+        "parameters": {
+          "marking_speed": 0.5,
+          "delivery_audio_speed": 1,
+          "foreground_aspect": "1:1",
+          "canvas_aspect": "9:16",
+          "blur": "UIsecond choice; sigma not specified",
+          "beat_count": "30+ described; actual cues must come from audio verification"
+        },
+        "timing": "seconds with explicit frame quantization; unequal intervals follow chosen accents",
+        "outputs": [
+          "timed still montage",
+          "source-relative beat markers"
+        ]
+      },
+      "execution_equivalence": "direct_math",
+      "pitfalls": [
+        "慢放标记必须保存为源音频坐标；否则恢复速度会错拍。",
+        "波形/自动检测只是候选，不能替代试听强弱节奏。",
+        "多个拍点量化到同帧应合并/调整，不生成零长片段。"
+      ],
+      "validation": [
+        "试听每次切图与重音；核对音频保持1X；所有图像有正时长，最终停留提供结束感。"
+      ]
+    },
+    {
+      "id": "alternating_beat_motion",
+      "name": "相邻变化的入场抖动",
+      "intent": "用变化的运动方向强化节拍。",
+      "code_expression": {
+        "inputs": [
+          "per-image interval",
+          "declared transform motion family",
+          "amplitude/frequency/damping"
+        ],
+        "operations": [
+          "choose next motion family different from previous",
+          "local_u=clamp((t-clip_start)/motion_duration,0,1)",
+          "example approximation dx=A*exp(-decay*u)*sin(2*pi*cycles*u), dy/angle/scale optional",
+          "compose only on foreground unless background motion intentionally specified"
+        ],
+        "parameters": {
+          "motion_duration": "must fit each image; preset numeric defaults unverified",
+          "units": "translation pixels or normalized canvas fraction; rotation degrees; scale factor",
+          "seed": "store explicit deterministic choices"
+        },
+        "timing": "entry motion starts at each beat-aligned clip onset",
+        "outputs": [
+          "varied beat-triggered movement"
+        ]
+      },
+      "execution_equivalence": "approximation",
+      "pitfalls": [
+        "内建抖动/甩入曲线及模糊核未取得；公式是可控近似。",
+        "持续运动不能超过短片段；大位移会露出边缘，需足够背景。"
+      ],
+      "validation": [
+        "逐张检查运动方向、边缘、停稳结果和漏加；变化要服务节奏而非机械随机。"
+      ]
+    },
+    {
+      "id": "montage_look_and_tail_partition",
+      "name": "整体外观与结尾特效分区",
+      "intent": "用全段色调贯穿，最后长停留改变节奏与视觉。",
+      "code_expression": {
+        "inputs": [
+          "montage",
+          "global look/light resources",
+          "last_image_start",
+          "tail layout definition"
+        ],
+        "operations": [
+          "global effects span full duration",
+          "accent effect interval=[0,last_image_start)",
+          "tail effect interval=[last_image_start,duration)",
+          "owned triple-panel approximation: duplicate image into three regions; grayscale selected regions"
+        ],
+        "parameters": {
+          "assets": [
+            "江浙沪",
+            "彩虹光II",
+            "文字闪动",
+            "黑白三格"
+          ],
+          "resource_policy": "exact proprietary appearance requires actual assets; panel geometry not confirmed"
+        },
+        "timing": "global, main accent, and ending intervals are separate",
+        "outputs": [
+          "unified montage with distinct held ending"
+        ]
+      },
+      "execution_equivalence": "asset_required",
+      "pitfalls": [
+        "统一滤镜不能自动校正每图曝光/白平衡；仍需逐张匹配。",
+        "不要把特效名称当作已执行操作。"
+      ],
+      "validation": [
+        "检查分区交界和最后停留；确认所有预期资源已入轨。"
+      ]
+    }
+  ],
+  "unknowns": [
+    "未试听音乐，也未连续播放；强拍时码、原音乐授权未独立核实。",
+    "专有抖动、文字闪动与三格特效的精确算法/参数、当前资源ID未收集。",
+    "源录屏25fps不等于剪辑工程fps；执行时必须声明输出时间基准。"
+  ]
+}

@@ -1,0 +1,148 @@
+{
+  "id": "L020",
+  "title": "18  多个画面定格播放解析.mp4",
+  "origin": "User-provided local Jianying tutorial; abstracted principles, not a bundled preset.",
+  "source_sha256": "c4feb1b26f3d9a4ae63053f8992d025261fbb476673b41dce33d24e1e82a33d4",
+  "source_duration_seconds": 1068.76,
+  "review_scope": {
+    "overview_viewed": true,
+    "detailed_frame_seconds": [
+      356.253,
+      570.005
+    ],
+    "timestamped_asr_reviewed": true,
+    "asr_verified_by_listening": false,
+    "continuous_playback": false
+  },
+  "execution_routes": [
+    "recipe:grid"
+  ],
+  "route_semantics": {
+    "typed": "Supported technique.2.0 fields; build and validate an explicit graph.",
+    "recipe": "Executable builder producing a typed graph.",
+    "workflow": "Existing main workflow; separate confirmation and evidence remain required.",
+    "external": "Not bundled; exact resource/voice/preset needs explicit licensed input.",
+    "knowledge": "Planning abstraction only; no new automatic detector or segmentation implementation."
+  },
+  "techniques": [
+    {
+      "id": "staggered_motion_grid",
+      "name": "四宫格轮流运动，其余冻结",
+      "intent": "用一个运动窗口引导视线，其他画面保留静止上下文。",
+      "code_expression": {
+        "inputs": [
+          "four source clips",
+          "source entry anchor per clip",
+          "output canvas",
+          "active windows"
+        ],
+        "operations": [
+          "scale/crop each clip to its tile; preserve aspect",
+          "for tile i freeze entry frame before active window",
+          "play selected source range during active window",
+          "freeze exit frame after active window",
+          "composite four persistent tiles"
+        ],
+        "parameters": {
+          "grid": "2x2 equal tiles; layout boundary/crop explicit",
+          "active_windows_s": [
+            [
+              0,
+              3
+            ],
+            [
+              3,
+              6
+            ],
+            [
+              6,
+              9
+            ],
+            [
+              9,
+              12
+            ]
+          ],
+          "total_duration_s": 18,
+          "values": "all timings are tutorial examples, adjustable",
+          "source_anchors": "not recoverable numerically from tutorial; select verified source seconds"
+        },
+        "timing": {
+          "unit": "seconds",
+          "source_mapping": "s_i(t)=s_in_i+clamp(t-active_start_i,0,active_duration_i)*speed_i",
+          "frame_boundary": "end hold uses last included source frame, not source_out exclusive boundary"
+        },
+        "outputs": [
+          "four-tile composite with exactly one moving tile at a time then common hold"
+        ]
+      },
+      "execution_equivalence": "direct_math",
+      "pitfalls": [
+        "仅叠四段视频并不产生轮流冻结，必须有每层的静态/动态/静态时间映射。",
+        "多轨首尾必须统一到18秒；源秒与教程源秒不同。",
+        "边界帧要按源帧时间锁定，避免多停一帧或从错误源位置启动。"
+      ],
+      "validation": [
+        "检查每个窗口之前/开始/结束/之后的连续帧，确认仅当前格运动且冻结帧一致。",
+        "检查四格接缝、比例、无遮挡、整体尾段全部静止。"
+      ]
+    },
+    {
+      "id": "group_look_change",
+      "name": "统一多画面色调与尾段风格变化",
+      "intent": "减轻四段不同色彩的杂乱感，并区分共同定格尾段。",
+      "code_expression": {
+        "inputs": [
+          "composited grid group",
+          "two look/effect resources",
+          "music"
+        ],
+        "operations": [
+          "apply shared grade to composite group",
+          "transition between pre/post look via explicit envelope or lossless group cache",
+          "align texture interval with frozen tail",
+          "trim music on verified phrase and fade"
+        ],
+        "parameters": {
+          "look": "exact named filter/effect assets required; generic grayscale/sepia is approximation",
+          "transition_s": {
+            "example_range": [
+              2,
+              3
+            ],
+            "adjustable": true
+          },
+          "audio_fades_s": {
+            "example_range": [
+              1,
+              2
+            ],
+            "adjustable": true
+          }
+        },
+        "timing": {
+          "unit": "seconds",
+          "look_change": "example around12s; any overlap must account for group/audio duration"
+        },
+        "outputs": [
+          "group-consistent look change and aligned music"
+        ]
+      },
+      "execution_equivalence": "asset_required",
+      "pitfalls": [
+        "原生特效资源未提供，不能用泛化滤镜冒称同款。",
+        "教程二次有损导出不应变成代码默认；保留可编辑组或无损缓存。",
+        "对组做转场可能改变时长，要重新验节奏和音乐尾部。"
+      ],
+      "validation": [
+        "检查色调过渡及特效作用范围，确保四格同受处理。",
+        "实际听审音乐后才确认曲风/音质；此处未试听。"
+      ]
+    }
+  ],
+  "unknowns": [
+    "未试听、无连续播放。",
+    "四段源入点、比例缩放准确数字、预设资源ID未知。",
+    "ASR在第三格拉长处出现8/18秒歧义；连续结构与多轨详图支持共同18秒结尾，卡中标记为示例目标而非逐帧实测。"
+  ]
+}

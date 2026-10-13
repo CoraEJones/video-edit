@@ -1,0 +1,103 @@
+{
+  "id": "L015",
+  "title": "13  镂空文字开场转场效果.mp4",
+  "origin": "User-provided local Jianying tutorial; abstracted principles, not a bundled preset.",
+  "source_sha256": "0765f345da83e9bacaeb36deaa517ed5b48a9e11a6f87d04c25107a965bdb249",
+  "source_duration_seconds": 324.12,
+  "review_scope": {
+    "overview_viewed": true,
+    "detailed_frame_seconds": [
+      172.864,
+      194.472,
+      237.688
+    ],
+    "timestamped_asr_reviewed": true,
+    "asr_verified_by_listening": false,
+    "continuous_playback": false
+  },
+  "execution_routes": [
+    "recipe:hollow-title"
+  ],
+  "route_semantics": {
+    "typed": "Supported technique.2.0 fields; build and validate an explicit graph.",
+    "recipe": "Executable builder producing a typed graph.",
+    "workflow": "Existing main workflow; separate confirmation and evidence remain required.",
+    "external": "Not bundled; exact resource/voice/preset needs explicit licensed input.",
+    "knowledge": "Planning abstraction only; no new automatic detector or segmentation implementation."
+  },
+  "techniques": [
+    {
+      "id": "animated_text_luma_aperture",
+      "name": "文字亮度镂空开场",
+      "intent": "以白色动态文字作为孔洞，让下层视频在黑底字形中出现，随后打开全画面。",
+      "code_expression": {
+        "inputs": [
+          "base video B",
+          "animated white-on-black glyph matte M or owned sticker asset"
+        ],
+        "operations": [
+          "M=render_glyph_RGBA(text,font,transform_keyframes) converted to luma",
+          "multiply=B*M",
+          "during final fade: result=(1-a)*B+a*(B*M) where a fades1->0",
+          "use cover(base,canvas) so aperture never exposes unintended letterbox"
+        ],
+        "parameters": {
+          "matte_interval_seconds": 3,
+          "exit_fade_seconds": 1,
+          "blend": "multiply / 正片叠底",
+          "text": "example lost.; custom text needs font and owned animation definition",
+          "motion": "inner sticker movement/blur is asset-dependent; not inferred from name"
+        },
+        "timing": "matte starts at timeline0; full opacity until2 seconds, fade through2..3 seconds; base continues underneath",
+        "outputs": [
+          "video seen inside glyphs then full-frame reveal"
+        ]
+      },
+      "execution_equivalence": "direct_math",
+      "pitfalls": [
+        "黑底白字乘法可镂空；黑白倒置会得到相反可见区。",
+        "原贴纸动画需要资源；直接绘字只是可声明的替代。",
+        "可在代码内直接生成并合成matte，避免教程为取得蒙版而二次有损导出。"
+      ],
+      "validation": [
+        "抽看0秒、中间与2/3秒边界；孔洞跟随文字，最后一帧全画面无黑边残留。"
+      ]
+    },
+    {
+      "id": "trim_music_and_fade",
+      "name": "按尾部声音边界截配乐",
+      "intent": "让配乐结束与画面时长和有效声音一致。",
+      "code_expression": {
+        "inputs": [
+          "licensed music",
+          "video duration",
+          "audition-confirmed end boundary"
+        ],
+        "operations": [
+          "trim audio to chosen end",
+          "apply gain envelope fade-in/out"
+        ],
+        "parameters": {
+          "fade_seconds": "1..3 as starting range; adjustable"
+        },
+        "timing": "use output timeline seconds and avoid clipping fade tail",
+        "outputs": [
+          "separate music track with clean endpoints"
+        ]
+      },
+      "execution_equivalence": "direct_math",
+      "pitfalls": [
+        "波形静默不证明语义结尾；实际音乐衔接必须试听。",
+        "示范库音乐不是自由再用授权。"
+      ],
+      "validation": [
+        "实际试听开头结尾和剪断点；检查输出音频长度及峰值。"
+      ]
+    }
+  ],
+  "unknowns": [
+    "未试听、未连续播放；全文ASR已读。",
+    "贴纸精确缩放/模糊关键帧与资源ID未取得。",
+    "1秒渐隐来自ASR，细节帧未显示数字；已按描述记录，需在实现预览核验。"
+  ]
+}

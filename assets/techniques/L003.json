@@ -1,0 +1,185 @@
+{
+  "id": "L003",
+  "title": "02  电脑版剪映视频剪辑.mp4",
+  "origin": "User-provided local Jianying tutorial; abstracted principles, not a bundled preset.",
+  "source_sha256": "cf214f2073ad82e2d2d768e1196a67f7369364d220035ddc48ec0cc80f1b75c9",
+  "source_duration_seconds": 1204.28,
+  "review_scope": {
+    "overview_viewed": true,
+    "detailed_frame_seconds": [
+      240.856,
+      722.568,
+      1043.709
+    ],
+    "timestamped_asr_reviewed": true,
+    "asr_verified_by_listening": false,
+    "continuous_playback": false
+  },
+  "execution_routes": [
+    "typed:source_in/speed/reverse/speed_curve"
+  ],
+  "route_semantics": {
+    "typed": "Supported technique.2.0 fields; build and validate an explicit graph.",
+    "recipe": "Executable builder producing a typed graph.",
+    "workflow": "Existing main workflow; separate confirmation and evidence remain required.",
+    "external": "Not bundled; exact resource/voice/preset needs explicit licensed input.",
+    "knowledge": "Planning abstraction only; no new automatic detector or segmentation implementation."
+  },
+  "techniques": [
+    {
+      "id": "non_destructive_clip_timeline",
+      "name": "非破坏剪裁与轨道合成",
+      "intent": "把素材变成可重排的片段；分开源区间、时间线位置和层级。",
+      "code_expression": {
+        "inputs": [
+          "source media",
+          "source in/out seconds",
+          "timeline_start_seconds",
+          "track_z"
+        ],
+        "operations": [
+          "Clip(source,in,out,start,z)",
+          "split(clip,t) creates adjacent source ranges",
+          "trim adjusts source range without deleting source",
+          "paste copy at playhead on adjacent z track",
+          "compose transformed layers in z order"
+        ],
+        "parameters": {
+          "transform": "scale uniform, translation px or normalized, rotation degrees",
+          "opacity": "0..1 maps UI0..100%"
+        },
+        "timing": "duration=(out-in)/speed; still image duration is independent of source length",
+        "outputs": [
+          "editable clip list",
+          "composited frames"
+        ]
+      },
+      "execution_equivalence": "direct_math",
+      "pitfalls": [
+        "教程为旧版剪映，插入与自动吸附语义应由当前工具显式决定。",
+        "不要以删除源文件来实现时间线删片。"
+      ],
+      "validation": [
+        "源区间在素材时长内；预览首尾能恢复修剪；高轨图像实际覆盖低轨。"
+      ]
+    },
+    {
+      "id": "canvas_background_and_blend",
+      "name": "统一画布、模糊背景与叠层",
+      "intent": "处理不同画幅素材并允许上下轨混合。",
+      "code_expression": {
+        "inputs": [
+          "canvas width/height",
+          "foreground clip",
+          "optional background image/style asset"
+        ],
+        "operations": [
+          "background=cover(foreground,canvas) then gaussian_blur",
+          "foreground=contain(foreground,canvas)",
+          "out=alpha_blend(background,foreground)",
+          "blend_mode applies per-pixel combine before opacity"
+        ],
+        "parameters": {
+          "background_mode": [
+            "none",
+            "blur",
+            "solid",
+            "asset"
+          ],
+          "blur_strength": "four UI choices; sigma mapping unknown",
+          "canvas": "explicit aspect ratio recommended"
+        },
+        "timing": "background and foreground share clip interval",
+        "outputs": [
+          "canvas-sized composite"
+        ]
+      },
+      "execution_equivalence": "direct_math",
+      "pitfalls": [
+        "必须显式指定画布，不能让首素材无意决定整个成片画幅。",
+        "样式背景依赖实际图像资源；四档模糊与Gaussian sigma不等价。"
+      ],
+      "validation": [
+        "看画面边缘、模糊背景接缝和叠层透明度；核对输出宽高。"
+      ]
+    },
+    {
+      "id": "speed_freeze_reverse",
+      "name": "变速、定格与反放",
+      "intent": "把时间变换表达成可执行采样函数。",
+      "code_expression": {
+        "inputs": [
+          "video source",
+          "selected source range",
+          "freeze source time"
+        ],
+        "operations": [
+          "retime: source_time=in+(timeline_time-start)*speed",
+          "target_duration: speed=(out-in)/target_seconds",
+          "freeze: split at source t and insert repeated decoded frame",
+          "reverse: source_time=out-(timeline_time-start)*speed"
+        ],
+        "parameters": {
+          "visible_example_speed": "3.5X at 722.568 seconds",
+          "default_freeze_seconds": 3,
+          "preserve_audio_pitch": "separate boolean; audio quality requires listening"
+        },
+        "timing": "seconds; freeze shifts subsequent timeline clips by freeze duration",
+        "outputs": [
+          "retimed timeline",
+          "freeze image segment"
+        ]
+      },
+      "execution_equivalence": "direct_math",
+      "pitfalls": [
+        "定格会增加时间线总长。",
+        "示例里的变调开关不证明处理后音质；未试听不能标记合格。"
+      ],
+      "validation": [
+        "冻结前后运动连续；静帧恰为指定长度；变速源出点不越界。"
+      ]
+    },
+    {
+      "id": "correction_and_proprietary_portrait",
+      "name": "调节与人物效果边界",
+      "intent": "把常规颜色参数与专有美颜/动画资源区分。",
+      "code_expression": {
+        "inputs": [
+          "RGB frame",
+          "optional animation/portrait model asset"
+        ],
+        "operations": [
+          "color correction operator chain",
+          "transform/opacity keyframes for reconstructible animation",
+          "portrait beautification requires identified algorithm/model"
+        ],
+        "parameters": {
+          "visible_at_722_568": {
+            "brightness": 15,
+            "contrast": 16,
+            "saturation": 20,
+            "sharpen": 13
+          },
+          "units": "these are Jianying UI sliders, not exposure stops or physical Kelvin"
+        },
+        "timing": "color per clip; entry/exit animation within clip boundaries",
+        "outputs": [
+          "corrected frame",
+          "optional animated or portrait-processed frame"
+        ]
+      },
+      "execution_equivalence": "approximation",
+      "pitfalls": [
+        "不能把同名滑块的数值直接当成FFmpeg滤镜物理参数。",
+        "专有瘦脸/磨皮/组合动画需要原资源或声明近似；本课未提取算法。"
+      ],
+      "validation": [
+        "比较肤色与边缘光晕；锐化不能补回失焦细节；检查动画首尾。"
+      ]
+    }
+  ],
+  "unknowns": [
+    "本地ASR全文读完但未听审，个别词如播放/静止/剪映识别错误；视觉支撑主要位于证据帧。",
+    "旧版应用的精确颜色曲线、四档模糊sigma、变声与人物算法、动画内建曲线未确认。"
+  ]
+}

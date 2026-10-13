@@ -1,0 +1,307 @@
+{
+  "schema_version": "technique-learning.2.0",
+  "lessons": [
+    {
+      "lesson": "L001",
+      "title": "01  认识电脑版剪映界面.mp4",
+      "source_sha256": "c9c7b89ab7bccea6ad52874a9af1c81a3430b8e939f21284f0f9bbc581a4f43f",
+      "principles": 3,
+      "execution_routes": [
+        "workflow:inventory",
+        "typed:layers"
+      ]
+    },
+    {
+      "lesson": "L002",
+      "title": "01更新   剪映界面更新.mp4",
+      "source_sha256": "150cade0eb30aa035f9a1335610a74491dd6f40cace2746dca1c26e6d103d39c",
+      "principles": 3,
+      "execution_routes": [
+        "workflow:inventory",
+        "typed:canvas"
+      ]
+    },
+    {
+      "lesson": "L003",
+      "title": "02  电脑版剪映视频剪辑.mp4",
+      "source_sha256": "cf214f2073ad82e2d2d768e1196a67f7369364d220035ddc48ec0cc80f1b75c9",
+      "principles": 4,
+      "execution_routes": [
+        "typed:source_in/speed/reverse/speed_curve"
+      ]
+    },
+    {
+      "lesson": "L004",
+      "title": "03  电脑版剪映音频剪辑.mp4",
+      "source_sha256": "89ef9654b08db89a8db80548bde0f3ab69e2ca9809344d50f65b28272bfbca0f",
+      "principles": 3,
+      "execution_routes": [
+        "workflow:audio_tracks"
+      ]
+    },
+    {
+      "lesson": "L005",
+      "title": "04  剪映文本与贴纸操作0.mp4",
+      "source_sha256": "dc0ec7b6897b66792774eff7a359b7ddd1521bba1c0eac062c11f1351e05a311",
+      "principles": 3,
+      "execution_routes": [
+        "typed:text/keyframes"
+      ]
+    },
+    {
+      "lesson": "L006",
+      "title": "05  剪映特效与转场操作.mp4",
+      "source_sha256": "16be2f968f7ea28b958f6d7f658aefd9c2b316565d376dee1cc02431a71992e4",
+      "principles": 2,
+      "execution_routes": [
+        "workflow:transitions",
+        "external:proprietary_effects"
+      ]
+    },
+    {
+      "lesson": "L007",
+      "title": "06  剪映滤镜与调节操作.mp4",
+      "source_sha256": "8887cae47fa0dbce1a9af594cba2d62a3d9a96f4a3d2f84befe596b5d88b93e5",
+      "principles": 2,
+      "execution_routes": [
+        "typed:color",
+        "workflow:color"
+      ]
+    },
+    {
+      "lesson": "L008",
+      "title": "07  视频剪辑新增功能.mp4",
+      "source_sha256": "c075168be180c0c67dd9a0c5d4c49db1783cde2c3deea8ac51665e9f0e78490a",
+      "principles": 3,
+      "execution_routes": [
+        "typed:mask/keyframes/speed_curve"
+      ]
+    },
+    {
+      "lesson": "L009",
+      "title": "07  剪映几种风格调色方法.mp4",
+      "source_sha256": "4ebb1c7efb0854fd0149607afa09012b8758d7a57ac289b58b1e0c8d3405ee98",
+      "principles": 2,
+      "execution_routes": [
+        "workflow:color",
+        "external:proprietary_looks"
+      ]
+    },
+    {
+      "lesson": "L010",
+      "title": "08  转场调色预览效果制作.mp4",
+      "source_sha256": "c262a56d2e7ba004bb49e752f24fc4ecbca933678c0092973e38f789becab76b",
+      "principles": 3,
+      "execution_routes": [
+        "recipe:compare-wipe"
+      ]
+    },
+    {
+      "lesson": "L011",
+      "title": "09  滤镜卡点视频制作方法.mp4",
+      "source_sha256": "3fdbd31e6452b9eddf41f75fa964486bbbade972a4b6116135bf5919a0457b40",
+      "principles": 2,
+      "execution_routes": [
+        "typed:color/intervals",
+        "workflow:reviewed_audio_cues"
+      ]
+    },
+    {
+      "lesson": "L012",
+      "title": "10  给视频添加电影感字幕.mp4",
+      "source_sha256": "7ea40f0b41dc2f6bc11e493dc21b249fe34fe0f1a66a71ea2fd23e70b7ac86b5",
+      "principles": 2,
+      "execution_routes": [
+        "recipe:letterbox",
+        "workflow:captions"
+      ]
+    },
+    {
+      "lesson": "L013",
+      "title": "11  片头文字开场动画效果.mp4",
+      "source_sha256": "1eb35c4a14b49091c3366c854403ad995f7aa0b36f875558e832a63f08199dbe",
+      "principles": 3,
+      "execution_routes": [
+        "typed:text/keyframes"
+      ]
+    },
+    {
+      "lesson": "L014",
+      "title": "12  剪映发光文字制作教程.mp4",
+      "source_sha256": "63c14323084257cbfc0f4647bab3489e6128ad7ebc28c1d24596a8b7cec4256a",
+      "principles": 1,
+      "execution_routes": [
+        "recipe:glow-title"
+      ]
+    },
+    {
+      "lesson": "L015",
+      "title": "13  镂空文字开场转场效果.mp4",
+      "source_sha256": "0765f345da83e9bacaeb36deaa517ed5b48a9e11a6f87d04c25107a965bdb249",
+      "principles": 2,
+      "execution_routes": [
+        "recipe:hollow-title"
+      ]
+    },
+    {
+      "lesson": "L016",
+      "title": "14  烟雾特效文字制作解析.mp4",
+      "source_sha256": "40ec92bdb67b1d9013309884e88f58d93af3d624d8d084a5ca43d7aeea204710",
+      "principles": 3,
+      "execution_routes": [
+        "recipe:screen-overlay",
+        "external:smoke"
+      ]
+    },
+    {
+      "lesson": "L017",
+      "title": "15  剪映特效素材处理方法.mp4",
+      "source_sha256": "6dff5563c4396c27e7e987e5262ff451ff4fb28c745250046436670fd6842207",
+      "principles": 1,
+      "execution_routes": [
+        "typed:key/blend",
+        "external:effect_media"
+      ]
+    },
+    {
+      "lesson": "L018",
+      "title": "16  剪影风格视频效果制作.mp4",
+      "source_sha256": "aa99f184ed76e5c35d0535f09c8aad45e0d21b4b13275e39ad69cc65a8fc8a03",
+      "principles": 2,
+      "execution_routes": [
+        "knowledge:segmentation_and_silhouette",
+        "external:subject_matte"
+      ]
+    },
+    {
+      "lesson": "L019",
+      "title": "17  视频定格照片特效效果.mp4",
+      "source_sha256": "d5b4bc0d60771158a5e692172922ce9eeaff9d2b228d42f1e7b861ddc2fbd621",
+      "principles": 3,
+      "execution_routes": [
+        "recipe:freeze",
+        "workflow:reviewed_audio_cues"
+      ]
+    },
+    {
+      "lesson": "L020",
+      "title": "18  多个画面定格播放解析.mp4",
+      "source_sha256": "c4feb1b26f3d9a4ae63053f8992d025261fbb476673b41dce33d24e1e82a33d4",
+      "principles": 2,
+      "execution_routes": [
+        "recipe:grid"
+      ]
+    },
+    {
+      "lesson": "L021",
+      "title": "19  剪映抖动卡点如何制作.mp4",
+      "source_sha256": "d3a9e75388f715ea7b0ac5ec92cc3f8d031f3d07571e69cc1fde34d1c337e2f8",
+      "principles": 3,
+      "execution_routes": [
+        "recipe:beat-shake",
+        "workflow:reviewed_audio_cues"
+      ]
+    },
+    {
+      "lesson": "L022",
+      "title": "20  剪映泼墨视频效果教程.mp4",
+      "source_sha256": "b2af64fadd1f6a4f236e9d749994b886ba12a456ca8fff36fff3bd71af10567f",
+      "principles": 3,
+      "execution_routes": [
+        "recipe:screen-overlay",
+        "external:ink"
+      ]
+    },
+    {
+      "lesson": "L023",
+      "title": "21  朋友圈九宫格几种玩法.mp4",
+      "source_sha256": "6c48cddd6903840c9fc4f99481e95d78bce8b007ebe8b1230a5d797d225b9d17",
+      "principles": 2,
+      "execution_routes": [
+        "recipe:grid"
+      ]
+    },
+    {
+      "lesson": "L024",
+      "title": "22  遮罩视频文字效果制作.mp4",
+      "source_sha256": "b6bbd33bd074826e20ed8c300c4a72d5e2d1d8366850f78a34e4f328b83999dd",
+      "principles": 2,
+      "execution_routes": [
+        "typed:mask/text/keyframes"
+      ]
+    },
+    {
+      "lesson": "L025",
+      "title": "23  剪映生日祝福视频效果.mp4",
+      "source_sha256": "b5c2a4e46deea09e23e52d379651fc3180fe55cd55a0d433cab1942c01c72f36",
+      "principles": 3,
+      "execution_routes": [
+        "typed:layers/text/keyframes",
+        "external:decoration_and_blurred_fill"
+      ]
+    },
+    {
+      "lesson": "L026",
+      "title": "24  剪映表白风格视频制作.mp4",
+      "source_sha256": "fdb1a74de3561cffcc31f6d939c1c0038d731fecceddf10bbf5eb3e17bd3af45",
+      "principles": 2,
+      "execution_routes": [
+        "workflow:voiceover",
+        "external:exact_voice"
+      ]
+    },
+    {
+      "lesson": "L027",
+      "title": "25  视频定格卡点效果制作.mp4",
+      "source_sha256": "c97ac639d656384b5c488b3d8ff4f967024070c06cb0e6b0065d22e0ba90cd0a",
+      "principles": 2,
+      "execution_routes": [
+        "workflow:captions",
+        "knowledge:marker_semantics"
+      ]
+    },
+    {
+      "lesson": "L028",
+      "title": "26  如何制作 Siri 的声音.mp4",
+      "source_sha256": "aba2456d64dcfd79dc5e5e8ea797dbacac29ee4ad443565044e0ebb3249bf3ba",
+      "principles": 2,
+      "execution_routes": [
+        "workflow:voiceover",
+        "external:exact_voice"
+      ]
+    },
+    {
+      "lesson": "L029",
+      "title": "27  如何自动添加字幕和标记.mp4",
+      "source_sha256": "043f982e6d9fedac3f886fe154afa3e755f0c0fac0faa321ca3ec24ebabfb3ae",
+      "principles": 3,
+      "execution_routes": [
+        "workflow:captions",
+        "knowledge:manual_marker_review"
+      ]
+    },
+    {
+      "lesson": "L030",
+      "title": "28  如何制作片尾关注动画.mp4",
+      "source_sha256": "bcbc4953e279084e5c25389093f42ceb3aaf53ee5b022606c4fcb4e3fba356a4",
+      "principles": 3,
+      "execution_routes": [
+        "typed:blend/layers/keyframes",
+        "external:avatar_mattes_and_follow_sticker"
+      ]
+    },
+    {
+      "lesson": "L031",
+      "title": "29  单色弹幕和彩色弹幕效果.mp4",
+      "source_sha256": "ac718c855b5d4b5a77261979a0244b9c7b6fd72a0aac79c563e16b0a838ab4f1",
+      "principles": 3,
+      "execution_routes": [
+        "recipe:danmaku"
+      ]
+    }
+  ],
+  "lesson_count": 31,
+  "principle_count": 77,
+  "review": "Full timestamped local ASR plus overview and sampled detailed frames, not continuous video/audio review.",
+  "private_materials_published": false
+}

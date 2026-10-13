@@ -1,0 +1,104 @@
+{
+  "id": "L006",
+  "title": "05  剪映特效与转场操作.mp4",
+  "origin": "User-provided local Jianying tutorial; abstracted principles, not a bundled preset.",
+  "source_sha256": "16be2f968f7ea28b958f6d7f658aefd9c2b316565d376dee1cc02431a71992e4",
+  "source_duration_seconds": 524.148625,
+  "review_scope": {
+    "overview_viewed": true,
+    "detailed_frame_seconds": [
+      174.716,
+      489.205
+    ],
+    "timestamped_asr_reviewed": true,
+    "asr_verified_by_listening": false,
+    "continuous_playback": false
+  },
+  "execution_routes": [
+    "workflow:transitions",
+    "external:proprietary_effects"
+  ],
+  "route_semantics": {
+    "typed": "Supported technique.2.0 fields; build and validate an explicit graph.",
+    "recipe": "Executable builder producing a typed graph.",
+    "workflow": "Existing main workflow; separate confirmation and evidence remain required.",
+    "external": "Not bundled; exact resource/voice/preset needs explicit licensed input.",
+    "knowledge": "Planning abstraction only; no new automatic detector or segmentation implementation."
+  },
+  "techniques": [
+    {
+      "id": "effect_interval_stack",
+      "name": "独立特效轨与叠加",
+      "intent": "在指定区间使用一个或多个可复用效果。",
+      "code_expression": {
+        "inputs": [
+          "video",
+          "effect resource or identified operator",
+          "effect interval start/end"
+        ],
+        "operations": [
+          "EffectSpan(effect_id,start,end,z)",
+          "active effects are applied/composited in specified order",
+          "duplicate span retains interval; split duplicates configuration into two adjoining spans"
+        ],
+        "parameters": {
+          "duration_unit": "seconds",
+          "stack_count": "integer",
+          "blur_example": "Gaussian blur approximation: sigma_total=sqrt(sum(sigma_i^2)) if independent Gaussian passes"
+        },
+        "timing": "effect only active inside its interval; copied span starts at playhead in demonstrated UI",
+        "outputs": [
+          "effect-bearing composite"
+        ]
+      },
+      "execution_equivalence": "asset_required",
+      "pitfalls": [
+        "并非所有特效重复两次都会单调增强，非线性/取反效果可能抵消；必须看结果。",
+        "仅写效果名称不执行；橙色负片、樱花等需实际资源或明确近似。"
+      ],
+      "validation": [
+        "单轨/双轨对比，检查效果时间边界、顺序与画质；资源存在且可加载。"
+      ]
+    },
+    {
+      "id": "transition_as_boundary_operator",
+      "name": "边界转场",
+      "intent": "把相邻镜头的过渡建模为边界上的双输入操作。",
+      "code_expression": {
+        "inputs": [
+          "outgoing clip A",
+          "incoming clip B",
+          "boundary time",
+          "duration seconds"
+        ],
+        "operations": [
+          "u=clamp((t-transition_start)/duration,0,1)",
+          "dissolve=(1-ease(u))*A(t)+ease(u)*B(t)",
+          "apply_all creates explicit transition objects for each eligible boundary"
+        ],
+        "parameters": {
+          "type": "observed dissolve/叠化; other preset internals require asset",
+          "duration": "adjustable seconds; no numeric default verified",
+          "handle_policy": "explicitly choose overlap/source handles; do not infer timeline shortening from UI"
+        },
+        "timing": "transition interval centered or otherwise anchored to chosen boundary by backend contract",
+        "outputs": [
+          "continuous boundary composite"
+        ]
+      },
+      "execution_equivalence": "direct_math",
+      "pitfalls": [
+        "必须保证两端有足够可用帧并显式定义重叠/延长策略。",
+        "UI未显示转场框不等于转场被删除。",
+        "统一应用不意味着每个转场都适合故事。"
+      ],
+      "validation": [
+        "逐段检查边界首/中/尾帧，时长和源取帧合法，移除转场后硬切恢复。"
+      ]
+    }
+  ],
+  "unknowns": [
+    "完整ASR已读，未听审；特效滤镜的内部算法及资源版本未验证。",
+    "转场时长数值、源句柄/时间线重叠的精确旧版实现未从本课细节确认。"
+  ]
+}

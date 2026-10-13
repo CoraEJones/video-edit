@@ -1,0 +1,266 @@
+{
+  "id": "L016",
+  "title": "14  烟雾特效文字制作解析.mp4",
+  "origin": "User-provided local Jianying tutorial; abstracted principles, not a bundled preset.",
+  "source_sha256": "40ec92bdb67b1d9013309884e88f58d93af3d624d8d084a5ca43d7aeea204710",
+  "source_duration_seconds": 779.52875,
+  "review_scope": {
+    "overview_viewed": true,
+    "detailed_frame_seconds": [
+      365,
+      470,
+      746
+    ],
+    "timestamped_asr_reviewed": true,
+    "asr_verified_by_listening": false,
+    "continuous_playback": false
+  },
+  "execution_routes": [
+    "recipe:screen-overlay",
+    "external:smoke"
+  ],
+  "route_semantics": {
+    "typed": "Supported technique.2.0 fields; build and validate an explicit graph.",
+    "recipe": "Executable builder producing a typed graph.",
+    "workflow": "Existing main workflow; separate confirmation and evidence remain required.",
+    "external": "Not bundled; exact resource/voice/preset needs explicit licensed input.",
+    "knowledge": "Planning abstraction only; no new automatic detector or segmentation implementation."
+  },
+  "techniques": [
+    {
+      "id": "smoke-screen-composite",
+      "name": "黑底烟雾滤色叠加与边缘处理",
+      "intent": "使烟雾素材叠在画面文字区域，消除黑底并避免素材边框穿帮。",
+      "code_expression": {
+        "inputs": [
+          {
+            "name": "background",
+            "type": "VideoFrames"
+          },
+          {
+            "name": "smoke",
+            "type": "VideoAssetRef",
+            "requirement": "licensed black-background smoke footage"
+          }
+        ],
+        "operations": [
+          {
+            "op": "trim_source",
+            "keep": "visible smoke interval"
+          },
+          {
+            "op": "rotate_scale_translate",
+            "parameters": [
+              "angle",
+              "scale",
+              "position"
+            ]
+          },
+          {
+            "op": "screen_blend",
+            "formula": "C=1-(1-B)*(1-S)"
+          }
+        ],
+        "parameters": {
+          "angle": {
+            "type": "float",
+            "unit": "degrees"
+          },
+          "scale": {
+            "type": "float",
+            "unit": "ratio"
+          },
+          "position": {
+            "type": "Vector2",
+            "unit": "canvas pixels"
+          },
+          "blend_mode": {
+            "type": "enum",
+            "observed": "screen",
+            "alternative_narrated": "lighten"
+          },
+          "opacity": {
+            "type": "float",
+            "unit": "0..1",
+            "observed": 1.0
+          }
+        },
+        "timing": {
+          "type": "SourceInterval",
+          "rule": "Discard black-only preroll/tail; compose only on the declared caption interval."
+        },
+        "outputs": [
+          {
+            "name": "smoke_composite",
+            "type": "VideoFrames"
+          }
+        ]
+      },
+      "execution_equivalence": "asset_required",
+      "pitfalls": [
+        "Screen blend is deterministic but smoke shape and motion require an actual asset; title alone cannot synthesize exact smoke.",
+        "Screen and lighten differ on bright backgrounds.",
+        "A cropped smoke asset can carry a hard horizontal edge; translating the edge outside the canvas is demonstrated.",
+        "Compositing smoke over text does not prove glyph pixels physically dissolve into simulated particles."
+      ],
+      "validation": [
+        "Black source areas leave the background unchanged under screen.",
+        "Inspect smoke boundary at beginning, peak and disappearance for visible straight edges.",
+        "Check positioned smoke intersects the intended text region and does not cover unintended subjects."
+      ]
+    },
+    {
+      "id": "caption-duration-smoke-retime",
+      "name": "烟雾重定时匹配字幕区间",
+      "intent": "让每段烟雾从字幕开头开始并在该字幕结束时完成。",
+      "code_expression": {
+        "inputs": [
+          {
+            "name": "smoke_source",
+            "type": "VideoSourceInterval"
+          },
+          {
+            "name": "captions",
+            "type": "List<TimelineInterval>"
+          }
+        ],
+        "operations": [
+          {
+            "op": "duplicate_asset_reference",
+            "count": "caption_count"
+          },
+          {
+            "op": "retime_constant_speed",
+            "speed": "source_span/target_span"
+          },
+          {
+            "op": "place_layer",
+            "timeline_start": "caption.start"
+          }
+        ],
+        "parameters": {
+          "target_duration": {
+            "type": "float",
+            "unit": "seconds",
+            "examples": [
+              2.0,
+              4.2,
+              3.3
+            ]
+          },
+          "speed": {
+            "type": "float",
+            "unit": "ratio",
+            "rule": "derive from precise source bounds, not rounded UI values"
+          },
+          "audio": {
+            "type": "boolean",
+            "policy": "mute smoke asset audio"
+          }
+        },
+        "timing": {
+          "type": "TimeMap",
+          "equation": "source_time=source_in+(t-caption_start)*speed",
+          "duration": "(source_out-source_in)/speed=caption_end-caption_start"
+        },
+        "outputs": [
+          {
+            "name": "caption_aligned_smoke_layers",
+            "type": "List<VisualLayer>"
+          }
+        ]
+      },
+      "execution_equivalence": "direct_math",
+      "pitfalls": [
+        "Trimming an animation to2seconds is not equivalent to retiming its complete evolution to2seconds.",
+        "UI duration and speed values are rounded and need not divide exactly.",
+        "Changing speed alters motion smoothness; frame interpolation policy must be chosen explicitly."
+      ],
+      "validation": [
+        "All smoke intervals align with corresponding caption starts/ends within one frame.",
+        "Inspect full smoke evolution at the shortest and longest target durations."
+      ]
+    },
+    {
+      "id": "vertical-typewriter-disappearance",
+      "name": "竖排歌词与逐字出场配合烟雾",
+      "intent": "文字逐步消失时由烟雾掩饰，形成整体消散观感。",
+      "code_expression": {
+        "inputs": [
+          {
+            "name": "verified_caption_text",
+            "type": "List<Caption>"
+          },
+          {
+            "name": "font",
+            "type": "FontAssetRef"
+          }
+        ],
+        "operations": [
+          {
+            "op": "layout_vertical_text",
+            "glyph_advance": "chosen"
+          },
+          {
+            "op": "animate_glyph_visibility",
+            "mode": "progressive disappearance",
+            "curve": "chosen"
+          },
+          {
+            "op": "composite_rgba",
+            "opacity": "chosen"
+          }
+        ],
+        "parameters": {
+          "layout": {
+            "type": "enum",
+            "observed": "vertical"
+          },
+          "opacity": {
+            "type": "float",
+            "unit": "0..1",
+            "narrated_range": [
+              0.8,
+              0.9
+            ]
+          },
+          "animation_duration": {
+            "type": "float",
+            "unit": "seconds",
+            "rule": "caption span"
+          },
+          "glyph_order": {
+            "type": "enum",
+            "exact_preset_order": "unverified"
+          }
+        },
+        "timing": {
+          "type": "CaptionLocalTime",
+          "rule": "Normalize progress over each full caption interval; smoke retiming follows the same interval."
+        },
+        "outputs": [
+          {
+            "name": "animated_vertical_captions",
+            "type": "RGBAFrames"
+          }
+        ]
+      },
+      "execution_equivalence": "approximation",
+      "pitfalls": [
+        "Exact 打字机2 disappearance ordering/interpolation is proprietary and not established by static frames.",
+        "Automatic lyric recognition requires correction before any displayed captions are called accurate.",
+        "Opacity must be checked for readability against the actual background."
+      ],
+      "validation": [
+        "Verify text against audition or authoritative lyrics before use.",
+        "Inspect first/middle/last visible glyph and smoke alignment per caption.",
+        "No glyph remains after its caption interval and no premature disappearance obscures necessary words."
+      ]
+    }
+  ],
+  "unknowns": [
+    "No audio audition or continuous playback performed.",
+    "ASR is unverified; lyric spellings, song name, exact preset behavior and optional filter identity are not certified.",
+    "Exact smoke source/license, proprietary blend color-space behavior and retiming interpolation are unknown."
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "nontransparent_bbox": [
+    0,
+    90,
+    640,
+    270
+  ],
+  "expected_bbox": [
+    0,
+    90,
+    640,
+    270
+  ],
+  "passed": true
+}

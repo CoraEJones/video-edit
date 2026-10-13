@@ -1,0 +1,253 @@
+{
+  "id": "L019",
+  "title": "17  视频定格照片特效效果.mp4",
+  "origin": "User-provided local Jianying tutorial; abstracted principles, not a bundled preset.",
+  "source_sha256": "d5b4bc0d60771158a5e692172922ce9eeaff9d2b228d42f1e7b861ddc2fbd621",
+  "source_duration_seconds": 474.891083,
+  "review_scope": {
+    "overview_viewed": true,
+    "detailed_frame_seconds": [
+      197,
+      266,
+      413
+    ],
+    "timestamped_asr_reviewed": true,
+    "asr_verified_by_listening": false,
+    "continuous_playback": false
+  },
+  "execution_routes": [
+    "recipe:freeze",
+    "workflow:reviewed_audio_cues"
+  ],
+  "route_semantics": {
+    "typed": "Supported technique.2.0 fields; build and validate an explicit graph.",
+    "recipe": "Executable builder producing a typed graph.",
+    "workflow": "Existing main workflow; separate confirmation and evidence remain required.",
+    "external": "Not bundled; exact resource/voice/preset needs explicit licensed input.",
+    "knowledge": "Planning abstraction only; no new automatic detector or segmentation implementation."
+  },
+  "techniques": [
+    {
+      "id": "insert-freeze-frame",
+      "name": "按音乐标记插入定格帧",
+      "intent": "把运动暂停为照片，再从同一源位置恢复播放。",
+      "code_expression": {
+        "inputs": [
+          {
+            "name": "video",
+            "type": "VideoSourceInterval"
+          },
+          {
+            "name": "freeze_source_time",
+            "type": "SourceTimeSeconds"
+          },
+          {
+            "name": "cue",
+            "type": "TimelineTimeSeconds"
+          }
+        ],
+        "operations": [
+          {
+            "op": "split_at_source_time",
+            "time": "s_f"
+          },
+          {
+            "op": "decode_frame",
+            "frame": "nearest declared frame grid at s_f"
+          },
+          {
+            "op": "hold_frame",
+            "duration": "hold_s"
+          },
+          {
+            "op": "concat",
+            "segments": [
+              "before",
+              "hold",
+              "after"
+            ]
+          }
+        ],
+        "parameters": {
+          "hold_s": {
+            "type": "float",
+            "unit": "seconds",
+            "observed_example": 3.0
+          },
+          "s_f": {
+            "type": "float",
+            "unit": "source seconds"
+          },
+          "cue": {
+            "type": "float",
+            "unit": "timeline seconds",
+            "selection": "requires actual audition if based on voice onset"
+          }
+        },
+        "timing": {
+          "type": "PiecewiseTimeMap",
+          "rule": "For local t<k sample s_in+t; k<=t<k+H sample s_f; t>=k+H sample s_in+t-H. Output duration increases byH when hold is inserted."
+        },
+        "outputs": [
+          {
+            "name": "freeze_sequence",
+            "type": "VideoFrames"
+          }
+        ]
+      },
+      "execution_equivalence": "direct_math",
+      "pitfalls": [
+        "Insert-hold and replace-with-hold have different duration and audio alignment.",
+        "Still extraction must use the intended original source frame without an avoidable lossy screenshot.",
+        "Later video events shift by the hold duration; unrelated audio should follow an explicit policy."
+      ],
+      "validation": [
+        "All decoded hold frames are identical before added effects.",
+        "Pre-hold and resume frames map to the intended adjacent source moment without a jump.",
+        "Output duration equals source span plus inserted hold; music cue mapping remains explicit."
+      ]
+    },
+    {
+      "id": "photo-flash-shutter-sync",
+      "name": "闪白与拍照声按可见事件对齐",
+      "intent": "用短白色闪光和同步音效强调照片瞬间。",
+      "code_expression": {
+        "inputs": [
+          {
+            "name": "picture",
+            "type": "VideoFrames"
+          },
+          {
+            "name": "shutter",
+            "type": "AudioAssetRef"
+          }
+        ],
+        "operations": [
+          {
+            "op": "white_pulse",
+            "formula": "C=(1-a(t))*picture+a(t)*white",
+            "envelope": "chosen pulse curve"
+          },
+          {
+            "op": "place_audio_cue",
+            "source_onset": "cue_s",
+            "timeline_event": "flash_onset"
+          }
+        ],
+        "parameters": {
+          "flash_duration_s": {
+            "type": "float",
+            "unit": "seconds",
+            "observed_example": 0.9
+          },
+          "peak_alpha": {
+            "type": "float",
+            "unit": "0..1"
+          },
+          "pulse_curve": {
+            "type": "Curve",
+            "exact_tutorial_transfer": "unknown"
+          },
+          "audio_gain": {
+            "type": "float",
+            "unit": "linear amplitude",
+            "selection": "audition"
+          }
+        },
+        "timing": {
+          "type": "Constraint",
+          "rule": "audio_start=flash_onset-(source_onset-source_in)/speed; flash onset must be measured from the actual rendered effect, not assumed from transition center."
+        },
+        "outputs": [
+          {
+            "name": "photo_accent_video",
+            "type": "VideoFrames"
+          },
+          {
+            "name": "shutter_track",
+            "type": "AudioTimelineClip"
+          }
+        ]
+      },
+      "execution_equivalence": "approximation",
+      "pitfalls": [
+        "The exact proprietary flash envelope and overlap semantics are unknown.",
+        "A shutter asset requires provenance and permission even when the placement math is exact.",
+        "Audio onset inside a sound file can be delayed relative to the file start."
+      ],
+      "validation": [
+        "Inspect flash first/peak/last frames and confirm recovery from white.",
+        "Audition flash and shutter together; verify no excessive level or truncation.",
+        "Check cue against actual flash onset within a chosen tolerance."
+      ]
+    },
+    {
+      "id": "camera-overlay-and-focus-cues",
+      "name": "分时段叠加清晰变化与录像机边框",
+      "intent": "让静止拍照与恢复运动各有视觉提示。",
+      "code_expression": {
+        "inputs": [
+          {
+            "name": "freeze_sequence",
+            "type": "VideoFrames"
+          },
+          {
+            "name": "effects",
+            "type": "EffectAssetRefs"
+          }
+        ],
+        "operations": [
+          {
+            "op": "apply_preset_interval",
+            "preset": "focus_change",
+            "interval": "declared first/second segment spans"
+          },
+          {
+            "op": "overlay_rgba",
+            "asset": "camera_hud",
+            "interval": "resume_start..video_end"
+          }
+        ],
+        "parameters": {
+          "effect_interval": {
+            "type": "TimelineInterval",
+            "unit": "seconds"
+          },
+          "camera_hud": {
+            "type": "RGBAAssetRef"
+          },
+          "focus_curve": {
+            "type": "EffectAssetRef",
+            "exact_behavior": "unverified"
+          }
+        },
+        "timing": {
+          "type": "TimelineIntervals",
+          "rule": "Overlay starts at resumed-motion segment boundary; intervals depend on freeze insertion duration."
+        },
+        "outputs": [
+          {
+            "name": "camera_styled_sequence",
+            "type": "VideoFrames"
+          }
+        ]
+      },
+      "execution_equivalence": "asset_required",
+      "pitfalls": [
+        "The named变清晰 effect does not establish true optical refocusing or recover lost detail.",
+        "A hand-drawn camera HUD would be an approximation, not the exact proprietary asset.",
+        "Overlapping focus effects can compound; exact preset ordering is not established."
+      ],
+      "validation": [
+        "Camera HUD appears only in the intended resumed segment and remains inside safe margins.",
+        "Inspect interval boundaries for unintended jumps.",
+        "Compare focus treatment with the source to avoid over-sharpening or blur artifacts."
+      ]
+    }
+  ],
+  "unknowns": [
+    "No audio audition or continuous playback performed.",
+    "ASR is unverified; music wording and exact effect preset curves remain unknown.",
+    "Static screenshots verify timeline structure and UI values, not the full rendered motion or audible synchronization."
+  ]
+}

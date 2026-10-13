@@ -1,0 +1,256 @@
+{
+  "id": "L013",
+  "title": "11  片头文字开场动画效果.mp4",
+  "origin": "User-provided local Jianying tutorial; abstracted principles, not a bundled preset.",
+  "source_sha256": "1eb35c4a14b49091c3366c854403ad995f7aa0b36f875558e832a63f08199dbe",
+  "source_duration_seconds": 713.2125,
+  "review_scope": {
+    "overview_viewed": true,
+    "detailed_frame_seconds": [
+      323,
+      523
+    ],
+    "timestamped_asr_reviewed": true,
+    "asr_verified_by_listening": false,
+    "continuous_playback": false
+  },
+  "execution_routes": [
+    "typed:text/keyframes"
+  ],
+  "route_semantics": {
+    "typed": "Supported technique.2.0 fields; build and validate an explicit graph.",
+    "recipe": "Executable builder producing a typed graph.",
+    "workflow": "Existing main workflow; separate confirmation and evidence remain required.",
+    "external": "Not bundled; exact resource/voice/preset needs explicit licensed input.",
+    "knowledge": "Planning abstraction only; no new automatic detector or segmentation implementation."
+  },
+  "techniques": [
+    {
+      "id": "independent-glyph-title-layout",
+      "name": "独立字层构成有大小变化的片头标题",
+      "intent": "为每个字设置位置、尺寸与透明度，再与副标题组成可调整的整体。",
+      "code_expression": {
+        "inputs": [
+          {
+            "name": "background",
+            "type": "VideoFrames"
+          },
+          {
+            "name": "glyphs",
+            "type": "List<TextLayer>"
+          },
+          {
+            "name": "font",
+            "type": "FontAssetRef"
+          }
+        ],
+        "operations": [
+          {
+            "op": "shape_text",
+            "font": "font_ref",
+            "text": "one glyph or subtitle"
+          },
+          {
+            "op": "transform_layer",
+            "position": [
+              "x",
+              "y"
+            ],
+            "scale": "glyph_scale"
+          },
+          {
+            "op": "alpha_composite",
+            "opacity": "alpha",
+            "z": "layer_order"
+          }
+        ],
+        "parameters": {
+          "text": {
+            "type": "string"
+          },
+          "position": {
+            "type": "Vector2",
+            "unit": "normalized canvas coordinates"
+          },
+          "font_size": {
+            "type": "float",
+            "unit": "pixels"
+          },
+          "opacity": {
+            "type": "float",
+            "unit": "0..1",
+            "observed": 0.75
+          },
+          "title_duration": {
+            "type": "float",
+            "unit": "seconds",
+            "narrated_example": 5
+          }
+        },
+        "timing": {
+          "type": "TimelineInterval",
+          "rule": "Independent layers share the chosen title interval; the demonstrated layers start together, not a proven staggered start."
+        },
+        "outputs": [
+          {
+            "name": "editable_title_group",
+            "type": "List<TextLayer>"
+          },
+          {
+            "name": "title_video",
+            "type": "VideoFrames"
+          }
+        ]
+      },
+      "execution_equivalence": "direct_math",
+      "pitfalls": [
+        "Exact glyph appearance requires matching available font assets; screen-visible font names do not establish licensing.",
+        "75% is a visual choice for this sky background, not a universal contrast rule.",
+        "Do not infer staggered starts merely because the glyphs are on different tracks.",
+        "The optional English wording is tutorial text, not a mandatory title for other footage."
+      ],
+      "validation": [
+        "View title at full delivery size for contrast and safe margins.",
+        "Check glyph bounding boxes for accidental overlaps and clipping.",
+        "Check subtitle width and optical alignment without stretching text disproportionately."
+      ]
+    },
+    {
+      "id": "per-layer-title-motion",
+      "name": "逐字入场运动与一致的出场",
+      "intent": "将片头动画分解为各层的移动与透明度曲线。",
+      "code_expression": {
+        "inputs": [
+          {
+            "name": "title_layers",
+            "type": "List<TextLayer>"
+          }
+        ],
+        "operations": [
+          {
+            "op": "animate_transform",
+            "channel": "position",
+            "keyframes": "chosen directional entrance"
+          },
+          {
+            "op": "animate_opacity",
+            "keyframes": "chosen common exit envelope"
+          }
+        ],
+        "parameters": {
+          "entrance_direction": {
+            "type": "Vector2",
+            "narrated": "Chinese downward; English leftward"
+          },
+          "entrance_duration_s": {
+            "type": "float",
+            "unit": "seconds",
+            "example": 2
+          },
+          "exit_duration_s": {
+            "type": "float",
+            "unit": "seconds",
+            "example": 2
+          },
+          "easing": {
+            "type": "enum_or_curve",
+            "exact_preset_curve": "unknown"
+          }
+        },
+        "timing": {
+          "type": "LayerLocalTime",
+          "rule": "u=t-layer_start; entrance in[0,d_in], hold until D-d_out, exit in[D-d_out,D]; reject or explicitly resolve overlapping phases."
+        },
+        "outputs": [
+          {
+            "name": "animated_title",
+            "type": "RGBAFrames"
+          }
+        ]
+      },
+      "execution_equivalence": "approximation",
+      "pitfalls": [
+        "A named Jianying preset does not define a reproducible mathematical curve.",
+        "Incorrectly copied animation on one glyph can disrupt the group; tutorial itself demonstrates this correction.",
+        "Do not turn uncertain ASR animation labels into exact capability claims."
+      ],
+      "validation": [
+        "Inspect entrance, hold and exit frames for every glyph and subtitle.",
+        "All layers reach their intended final positions before exit starts.",
+        "No clipping during offscreen entrance; common exit ends together when intended."
+      ]
+    },
+    {
+      "id": "music-tail-and-library-ambience",
+      "name": "音乐尾部淡出与可选环境音分轨",
+      "intent": "将片头的音乐与补充环境音明确作为独立音轨。",
+      "code_expression": {
+        "inputs": [
+          {
+            "name": "music",
+            "type": "AudioAssetRef"
+          },
+          {
+            "name": "ambience",
+            "type": "Optional<AudioAssetRef>",
+            "provenance": "library, not original-location recording"
+          }
+        ],
+        "operations": [
+          {
+            "op": "trim_audio",
+            "end": "video_end"
+          },
+          {
+            "op": "fade_out",
+            "duration": "chosen_fade_s"
+          },
+          {
+            "op": "mix_audio_tracks",
+            "gain": "chosen_per_track"
+          }
+        ],
+        "parameters": {
+          "fade_out_s": {
+            "type": "float",
+            "unit": "seconds",
+            "narrated_example_range": [
+              2,
+              3
+            ]
+          },
+          "ambience_gain": {
+            "type": "float",
+            "unit": "linear amplitude",
+            "value": "requires audition"
+          }
+        },
+        "timing": {
+          "type": "TimelineInterval",
+          "rule": "Audio output must end at chosen picture end; preserve intended music silence only after audition."
+        },
+        "outputs": [
+          {
+            "name": "mixed_audio",
+            "type": "AudioSamples"
+          }
+        ]
+      },
+      "execution_equivalence": "asset_required",
+      "pitfalls": [
+        "The claim that music begins silently and contains bird sounds remains unverified without audition.",
+        "Library ambience must retain provenance and permissions; it cannot be described as location sound.",
+        "Optional sound should not be added to a mute-all or original-only request."
+      ],
+      "validation": [
+        "Audition actual mixed start/end and check levels.",
+        "Confirm audio duration matches video and optional assets have known provenance."
+      ]
+    }
+  ],
+  "unknowns": [
+    "No audio audition or continuous playback performed.",
+    "ASR is unverified, especially animation labels and English font name.",
+    "Exact motion curves, distances, font metrics and library asset rights remain unknown."
+  ]
+}

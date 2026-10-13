@@ -1,0 +1,91 @@
+{
+  "grid": [
+    {
+      "tile": 1,
+      "hold_source_frame": 18,
+      "hold_bar_gray": [
+        36,
+        36,
+        36
+      ],
+      "expected_bar_gray": [
+        36,
+        36,
+        36
+      ],
+      "hold_identical_to_next": true,
+      "hold_identical_to_end": true,
+      "prehold_differs": true,
+      "held_alpha_min": 255
+    },
+    {
+      "tile": 2,
+      "hold_source_frame": 36,
+      "hold_bar_gray": [
+        72,
+        72,
+        72
+      ],
+      "expected_bar_gray": [
+        72,
+        72,
+        72
+      ],
+      "hold_identical_to_next": true,
+      "hold_identical_to_end": true,
+      "prehold_differs": true,
+      "held_alpha_min": 255
+    },
+    {
+      "tile": 3,
+      "hold_source_frame": 54,
+      "hold_bar_gray": [
+        108,
+        108,
+        108
+      ],
+      "expected_bar_gray": [
+        108,
+        108,
+        108
+      ],
+      "hold_identical_to_next": true,
+      "hold_identical_to_end": true,
+      "prehold_differs": true,
+      "held_alpha_min": 255
+    },
+    {
+      "tile": 4,
+      "hold_source_frame": 72,
+      "hold_bar_gray": [
+        144,
+        144,
+        144
+      ],
+      "expected_bar_gray": [
+        144,
+        144,
+        144
+      ],
+      "hold_identical_to_next": true,
+      "hold_identical_to_end": true,
+      "prehold_differs": true,
+      "held_alpha_min": 255
+    }
+  ],
+  "title": {
+    "frame0_alpha_max": 0,
+    "frame24_alpha_max": 44,
+    "last_alpha_max": 255,
+    "last_alpha_midrange_pixels": 11152,
+    "all_corners_transparent": true,
+    "composition_corner_matches_grid": true
+  },
+  "compare": {
+    "first_equals_before": true,
+    "last_equals_after": true,
+    "mid_changed_pixels_vs_before": 4939,
+    "last_alpha_min": 255
+  },
+  "source_hashes_unchanged": true
+}

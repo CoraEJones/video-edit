@@ -1,0 +1,78 @@
+{
+  "id": "L017",
+  "title": "15  剪映特效素材处理方法.mp4",
+  "origin": "User-provided local Jianying tutorial; abstracted principles, not a bundled preset.",
+  "source_sha256": "6dff5563c4396c27e7e987e5262ff451ff4fb28c745250046436670fd6842207",
+  "source_duration_seconds": 238.154583,
+  "review_scope": {
+    "overview_viewed": true,
+    "detailed_frame_seconds": [
+      111.139,
+      176.48
+    ],
+    "timestamped_asr_reviewed": true,
+    "asr_verified_by_listening": false,
+    "continuous_playback": false
+  },
+  "execution_routes": [
+    "typed:key/blend",
+    "external:effect_media"
+  ],
+  "route_semantics": {
+    "typed": "Supported technique.2.0 fields; build and validate an explicit graph.",
+    "recipe": "Executable builder producing a typed graph.",
+    "workflow": "Existing main workflow; separate confirmation and evidence remain required.",
+    "external": "Not bundled; exact resource/voice/preset needs explicit licensed input.",
+    "knowledge": "Planning abstraction only; no new automatic detector or segmentation implementation."
+  },
+  "techniques": [
+    {
+      "id": "neutral_background_blends",
+      "name": "用混合模式合成黑底或白底特效",
+      "intent": "保留烟雾/光斑/图案并让中性底色不遮住主视频。",
+      "code_expression": {
+        "inputs": [
+          "base RGB video B",
+          "effect RGB layer F on neutral black/white",
+          "blend mode",
+          "opacity"
+        ],
+        "operations": [
+          "align frame size/time and effect position",
+          "for black use lighten=max(B,F) or screen=1-(1-B)*(1-F)",
+          "for white use multiply=B*F, linear_burn=max(0,B+F-1), or explicitly defined color_burn",
+          "mix opacity C=(1-alpha)*B+alpha*blend(B,F)"
+        ],
+        "parameters": {
+          "channels": "normalized RGB in declared compositing space",
+          "alpha": "UI shown100%; adjustable",
+          "color_burn": "for F=0 handle branch explicitly; otherwise max(0,1-(1-B)/F)",
+          "scope": "two separate layers; not luma/chroma key"
+        },
+        "timing": {
+          "unit": "seconds",
+          "effect_duration": "independent from base; example source lengths30.2s smoke/15.1s base, must trim or define tail behavior"
+        },
+        "outputs": [
+          "composited effect without opaque neutral background"
+        ]
+      },
+      "execution_equivalence": "direct_math",
+      "pitfalls": [
+        "混合不是抠像，没有恢复真实透明度；multiply会改变有色前景，screen会改变对比度。",
+        "真实灰黑或非纯白底、压缩噪声可能留下雾或边缘。",
+        "颜色加深在零通道有除零分支，必须定义。",
+        "ASR把滤色误作绿色；可见UI已纠正概念。"
+      ],
+      "validation": [
+        "在明暗不同底图比较两种候选，检查烟雾细节及文字颜色变化。",
+        "验证纯黑screen/lighten与纯白multiply是中性；检查效果轨尾部。"
+      ]
+    }
+  ],
+  "unknowns": [
+    "未试听、未连续播放。",
+    "输入色彩空间和颜色加深的原生边界约定未知，必须选定代码定义。",
+    "底色不纯时本课没有教色键/去溢色，不能承诺完全透明抠像。"
+  ]
+}

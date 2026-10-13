@@ -1,0 +1,153 @@
+{
+  "id": "L002",
+  "title": "01更新   剪映界面更新.mp4",
+  "origin": "User-provided local Jianying tutorial; abstracted principles, not a bundled preset.",
+  "source_sha256": "150cade0eb30aa035f9a1335610a74491dd6f40cace2746dca1c26e6d103d39c",
+  "source_duration_seconds": 514.333333,
+  "review_scope": {
+    "overview_viewed": true,
+    "detailed_frame_seconds": [
+      205.733,
+      377.178
+    ],
+    "timestamped_asr_reviewed": true,
+    "asr_verified_by_listening": false,
+    "continuous_playback": false
+  },
+  "execution_routes": [
+    "workflow:inventory",
+    "typed:canvas"
+  ],
+  "route_semantics": {
+    "typed": "Supported technique.2.0 fields; build and validate an explicit graph.",
+    "recipe": "Executable builder producing a typed graph.",
+    "workflow": "Existing main workflow; separate confirmation and evidence remain required.",
+    "external": "Not bundled; exact resource/voice/preset needs explicit licensed input.",
+    "knowledge": "Planning abstraction only; no new automatic detector or segmentation implementation."
+  },
+  "techniques": [
+    {
+      "id": "timeline_split_and_actions",
+      "name": "选择、切割与片段操作",
+      "intent": "在不改源文件的前提下将时间线片段分段并执行片段级操作。",
+      "code_expression": {
+        "inputs": [
+          "source asset",
+          "timeline clip with source_in/source_out/start/speed",
+          "cut_times_seconds"
+        ],
+        "operations": [
+          "split ranges at sorted interior cut times; retain source mapping and linked audio",
+          "apply delete/copy/reverse/mirror/rotate/crop as explicit operations rather than UI coordinates"
+        ],
+        "parameters": {
+          "cut_times": "秒；必须位于片段内部",
+          "speed": "源秒/时间线秒；本课示例未调整",
+          "ui_shortcuts": {
+            "select": "A",
+            "cut": "B",
+            "preview_axis": "S",
+            "scope": "historical demonstrated version only"
+          }
+        },
+        "timing": {
+          "unit": "seconds",
+          "mapping": "source_time = source_in + (timeline_time - clip_start) * speed",
+          "split": "new source boundary = source_in + (cut_time - clip_start) * speed"
+        },
+        "outputs": [
+          "ordered timeline clip records with exact source ranges"
+        ]
+      },
+      "execution_equivalence": "direct_math",
+      "pitfalls": [
+        "菜单入口、快捷键会随版本改变，不能把旧界面步骤当当前API。",
+        "选中片段后才能执行片段动作；删除是否自动吸附要由实际时间线策略明确。",
+        "详图出现定格、倒放等菜单，只证明入口存在，本课没有逐一演示效果。"
+      ],
+      "validation": [
+        "分割前后总时长和源区间并集一致。",
+        "链接音画边界保持一致；复制使用新片段ID。"
+      ]
+    },
+    {
+      "id": "occlusion_sticker",
+      "name": "独立遮挡贴纸层",
+      "intent": "在主视频上方添加有时限的遮挡元素。",
+      "code_expression": {
+        "inputs": [
+          "base video clip",
+          "occlusion sticker asset or explicitly substituted pixelation generator"
+        ],
+        "operations": [
+          "add overlay track above base",
+          "set overlay active interval",
+          "place/scale overlay to cover intended area",
+          "alpha-composite overlay"
+        ],
+        "parameters": {
+          "asset": "剪映遮挡分类彩色马赛克贴纸；资源ID未知",
+          "position": "详图为画面中央示例，不是跟踪",
+          "scale": "未读到准确数值",
+          "opacity": "未示范数值"
+        },
+        "timing": {
+          "unit": "seconds",
+          "overlay_duration": "详情图约3秒资源预览/时间线段；精确入出点未核实，应由任务设定",
+          "source_evidence": 205.733
+        },
+        "outputs": [
+          "video with localized sticker occlusion"
+        ]
+      },
+      "execution_equivalence": "asset_required",
+      "pitfalls": [
+        "该贴纸外观不能等同于对原图像素化算法。",
+        "移动主体若要持续遮挡需额外关键帧或跟踪，本课未示范。"
+      ],
+      "validation": [
+        "在覆盖区间首/中/尾确认遮挡完整且无泄漏。",
+        "资源缺失时报告替代像素化为近似，不能宣称同款。"
+      ]
+    },
+    {
+      "id": "preview_axis_state",
+      "name": "预览指针与编辑播放头分离",
+      "intent": "快速审看同时保留确定的编辑位置。",
+      "code_expression": {
+        "inputs": [
+          "timeline",
+          "playhead_time",
+          "hover_time",
+          "preview_axis_enabled"
+        ],
+        "operations": [
+          "preview_time = hover_time if enabled else playhead_time",
+          "apply edits using explicit selected clip/cut time, not implicit displayed frame"
+        ],
+        "parameters": {
+          "enabled": "教程版本默认打开；可关闭"
+        },
+        "timing": {
+          "unit": "seconds",
+          "preview_time": "non-destructive read-only seek"
+        },
+        "outputs": [
+          "preview frame without changing clip ranges"
+        ]
+      },
+      "execution_equivalence": "direct_math",
+      "pitfalls": [
+        "黄色预览线、黄色切割线与白色播放头的语义不同。"
+      ],
+      "validation": [
+        "悬停预览不得产生剪辑计划变更。"
+      ]
+    }
+  ],
+  "unknowns": [
+    "未试听；ASR将剪映、遮挡、预览等词多次误识别，采用可见UI与上下文校正概念但不冒充音频核实。",
+    "新增蒙版与曲线变速只在开场提及，本课没有教其参数，留给对应教程。",
+    "贴纸准确资源ID、轨道入出点与缩放未知。"
+  ]
+}

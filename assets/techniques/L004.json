@@ -1,0 +1,191 @@
+{
+  "id": "L004",
+  "title": "03  电脑版剪映音频剪辑.mp4",
+  "origin": "User-provided local Jianying tutorial; abstracted principles, not a bundled preset.",
+  "source_sha256": "89ef9654b08db89a8db80548bde0f3ab69e2ca9809344d50f65b28272bfbca0f",
+  "source_duration_seconds": 1013.095417,
+  "review_scope": {
+    "overview_viewed": true,
+    "detailed_frame_seconds": [
+      560.0,
+      608.0,
+      743.0
+    ],
+    "timestamped_asr_reviewed": true,
+    "asr_verified_by_listening": false,
+    "continuous_playback": false
+  },
+  "execution_routes": [
+    "workflow:audio_tracks"
+  ],
+  "route_semantics": {
+    "typed": "Supported technique.2.0 fields; build and validate an explicit graph.",
+    "recipe": "Executable builder producing a typed graph.",
+    "workflow": "Existing main workflow; separate confirmation and evidence remain required.",
+    "external": "Not bundled; exact resource/voice/preset needs explicit licensed input.",
+    "knowledge": "Planning abstraction only; no new automatic detector or segmentation implementation."
+  },
+  "techniques": [
+    {
+      "id": "audio-trim-mix",
+      "name": "Non-destructive audio intervals and independent tracks",
+      "intent": "Keep music editing reversible and represent overlapping audio explicitly.",
+      "code_expression": {
+        "inputs": [
+          "audio assets with provenance",
+          "audio source in/out",
+          "timeline placement"
+        ],
+        "operations": [
+          "decode supported audio and reject unsupported/encrypted formats without renaming extensions",
+          "trim via source interval metadata",
+          "copy references rather than destructively cut source",
+          "sum active audio tracks after per-track gain/envelope"
+        ],
+        "parameters": {
+          "timeline_start": {
+            "example": 30,
+            "units": "seconds",
+            "adjustable": true
+          },
+          "source_in_out": {
+            "units": "source seconds",
+            "adjustable": true
+          },
+          "gain": {
+            "visible": 1.0,
+            "ui_units": "100%",
+            "code_units": "linear amplitude",
+            "adjustable": true
+          }
+        },
+        "timing": "At timeline t, source sample time is source_in+(t-timeline_start)*speed.",
+        "outputs": [
+          "editable audio clips",
+          "mixed audio bus"
+        ]
+      },
+      "execution_equivalence": "direct_math",
+      "pitfalls": [
+        "Overlapping tracks increase summed level and may clip.",
+        "Importing a music library or URL does not establish redistribution rights.",
+        "The old requirement to add video before audio is historical UI behavior, not a mathematical pipeline requirement."
+      ],
+      "validation": [
+        "Original audio hash remains unchanged.",
+        "Restoring trim metadata exposes original content.",
+        "Check mixed peaks and audition intended cues."
+      ]
+    },
+    {
+      "id": "audio-fade-envelope",
+      "name": "Fade-in and fade-out as time-domain gain envelopes",
+      "intent": "Avoid abrupt music start/end by ramping gain over configured intervals.",
+      "code_expression": {
+        "inputs": [
+          "trimmed audio clip"
+        ],
+        "operations": [
+          "choose fade intervals on the final clip duration",
+          "compute envelope from elapsed time and remaining time",
+          "multiply source samples by gain envelope",
+          "mix after envelope"
+        ],
+        "parameters": {
+          "fade_in_s": {
+            "visible": 7.1,
+            "units": "seconds",
+            "adjustable": true
+          },
+          "fade_out_s": {
+            "visible": 7.1,
+            "units": "seconds",
+            "adjustable": true
+          },
+          "curve": {
+            "units": "function from0..1 to0..1",
+            "adjustable": true,
+            "default_for_code": "linear only if chosen; tutorial exact proprietary curve unknown"
+          },
+          "gain": {
+            "visible": 1.0,
+            "adjustable": true
+          }
+        },
+        "timing": "u=t-timeline_start; a_in=clamp(u/fade_in,0,1), a_out=clamp((duration-u)/fade_out,0,1); use a chosen envelope policy for overlap.",
+        "outputs": [
+          "smooth start/end audio"
+        ]
+      },
+      "execution_equivalence": "direct_math",
+      "pitfalls": [
+        "7.1 s is a demonstration value, not a default for every edit.",
+        "Applying to all clips can override deliberately different gains.",
+        "Exact Jianying fade curve is not proven from a waveform screenshot."
+      ],
+      "validation": [
+        "Envelope reaches silence at intended boundaries.",
+        "Audition actual render for clicks, pacing and audible fade lengths; this review did not audition."
+      ]
+    },
+    {
+      "id": "audio-speed-pitch-markers",
+      "name": "Separate audio speed, pitch policy and beat markers",
+      "intent": "Retiming and timing guides should stay explicit and independently adjustable.",
+      "code_expression": {
+        "inputs": [
+          "audio clip",
+          "speed ratio or target duration",
+          "pitch mode",
+          "beat marker times"
+        ],
+        "operations": [
+          "derive speed=source_duration/target_duration when duration is specified",
+          "use time-stretch when pitch should remain stable",
+          "use resampling when pitch should follow speed",
+          "store detected/manual markers in source-relative seconds",
+          "map source markers to timeline after trim/speed"
+        ],
+        "parameters": {
+          "speed": {
+            "visible_example": 2.0,
+            "units": "ratio",
+            "adjustable": true
+          },
+          "pitch_follow_speed": {
+            "narrated_default": false,
+            "units": "boolean",
+            "adjustable": true
+          },
+          "markers": {
+            "units": "source seconds",
+            "adjustable": true
+          }
+        },
+        "timing": "output_duration=(source_out-source_in)/speed; timeline_marker=timeline_start+(source_marker-source_in)/speed. UI times are rounded.",
+        "outputs": [
+          "retimed audio",
+          "timeline beat guides"
+        ]
+      },
+      "execution_equivalence": "direct_math",
+      "pitfalls": [
+        "Resampling and pitch-preserving time stretch have different audible results.",
+        "Do not copy rounded UI duration as exact source timing.",
+        "Beat detection is a suggestion and does not establish which visual cut is appropriate.",
+        "Historical library-only beat restriction should not be imposed on a modern local detector."
+      ],
+      "validation": [
+        "Verify duration mathematically and decoded sample count.",
+        "Audition artifacts and pitch policy.",
+        "Check marker movement after speed or trim changes."
+      ]
+    }
+  ],
+  "unknowns": [
+    "No audio audition or continuous playback performed.",
+    "ASR is unverified and has homophone/shortcut errors.",
+    "Exact time-stretch algorithm, fade interpolation and current application UI capabilities are not established.",
+    "Original library asset rights and availability are unknown."
+  ]
+}

@@ -1,0 +1,149 @@
+{
+  "id": "L029",
+  "title": "27  如何自动添加字幕和标记.mp4",
+  "origin": "User-provided local Jianying tutorial; abstracted principles, not a bundled preset.",
+  "source_sha256": "043f982e6d9fedac3f886fe154afa3e755f0c0fac0faa321ca3ec24ebabfb3ae",
+  "source_duration_seconds": 378.84,
+  "review_scope": {
+    "overview_viewed": true,
+    "detailed_frame_seconds": [
+      151.536,
+      362
+    ],
+    "timestamped_asr_reviewed": true,
+    "asr_verified_by_listening": false,
+    "continuous_playback": false
+  },
+  "execution_routes": [
+    "workflow:captions",
+    "knowledge:manual_marker_review"
+  ],
+  "route_semantics": {
+    "typed": "Supported technique.2.0 fields; build and validate an explicit graph.",
+    "recipe": "Executable builder producing a typed graph.",
+    "workflow": "Existing main workflow; separate confirmation and evidence remain required.",
+    "external": "Not bundled; exact resource/voice/preset needs explicit licensed input.",
+    "knowledge": "Planning abstraction only; no new automatic detector or segmentation implementation."
+  },
+  "techniques": [
+    {
+      "id": "caption_recognition_review_style",
+      "name": "自动字幕、逐段纠错与共享样式",
+      "intent": "以有时间戳的语音识别创建字幕，同时分离每句内容与全组视觉样式。",
+      "code_expression": {
+        "inputs": [
+          "speech audio from selected source ranges",
+          "ASR timestamps",
+          "reviewed corrections",
+          "shared caption style"
+        ],
+        "operations": [
+          "transcribe audio and preserve uncertain recognition status",
+          "map source timestamps through trims/retiming to timeline",
+          "create per-segment text/start/end records",
+          "store shared style ID for group and optional explicit local overrides",
+          "apply verified corrections to individual content without rewriting every segment"
+        ],
+        "parameters": {
+          "language": "must be supported by chosen recognizer; do not generalize old editor restrictions",
+          "apply_all": "style/layout group behavior; content remains per caption",
+          "style": "font/color/position/outline plus allowed bubble/word-art assets"
+        },
+        "timing": {
+          "unit": "seconds",
+          "mapping": "time map must reflect actual edits, not original source timestamps after cuts"
+        },
+        "outputs": [
+          "editable reviewed subtitle segments and shared style"
+        ]
+      },
+      "execution_equivalence": "unverified",
+      "pitfalls": [
+        "ASR不是核实对白；本次未试听，不能把自动结果标为已验证。",
+        "不要把apply-all误作修改全部句子内容。",
+        "字幕位置和视觉样式改变不应破坏单句起止时间。"
+      ],
+      "validation": [
+        "听审并核对每句内容，检查首/中/尾同步和可读性。",
+        "改全局样式后检查所有字幕；单句纠错只影响对应句。"
+      ]
+    },
+    {
+      "id": "local_music_recognition_workaround",
+      "name": "本地歌曲转视频后走语音识别的历史绕行",
+      "intent": "绕过当时编辑器歌词识别的导入限制。",
+      "code_expression": {
+        "inputs": [
+          "local audio asset"
+        ],
+        "operations": [
+          "extract/normalize audio directly for local ASR",
+          "choose speech/lyric-capable recognizer explicitly",
+          "retain timestamped uncertain captions and review"
+        ],
+        "parameters": {
+          "workaround": "现代本地处理可直接读音频；无需有损包装视频",
+          "version_scope": "L005曾示范本地歌词识别，本课口述限制不同，不能当跨版本事实"
+        },
+        "timing": {
+          "unit": "seconds",
+          "audio_origin": "preserve exact audio offset through any wrapper"
+        },
+        "outputs": [
+          "timestamped recognition candidates"
+        ]
+      },
+      "execution_equivalence": "unverified",
+      "pitfalls": [
+        "两课对本地歌曲限制存在差异，说明是版本/入口差异或不确定信息。",
+        "把歌曲包装成视频不会提高识别模型对唱腔的能力。"
+      ],
+      "validation": [
+        "核实当前能力；实际试听审校歌词，不据旧教程保证识别语言/准确度。"
+      ]
+    },
+    {
+      "id": "instructional_symbol_layers",
+      "name": "教学符号贴纸",
+      "intent": "在特定讲解时段突出界面目标。",
+      "code_expression": {
+        "inputs": [
+          "authorized sticker/vector asset",
+          "verified screen target coordinates",
+          "instruction interval"
+        ],
+        "operations": [
+          "place explicit overlay track",
+          "scale/rotate to target",
+          "schedule start/end tied to instruction cue",
+          "optional explicit keyframes if target moves"
+        ],
+        "parameters": {
+          "position": "normalized display coordinates; no values taught",
+          "asset": "original sticker ID unknown; simple vector replacement is approximation",
+          "tracking": "not demonstrated"
+        },
+        "timing": {
+          "unit": "seconds",
+          "interval": "must be set from reviewed instruction/effect timing"
+        },
+        "outputs": [
+          "instructional marker overlay plan"
+        ]
+      },
+      "execution_equivalence": "asset_required",
+      "pitfalls": [
+        "本课介绍内置标记资源，未演示自动理解教学内容并自动定位。",
+        "预览资源不等于已加入时间线或已导出效果。"
+      ],
+      "validation": [
+        "看实际输出确认箭头指向准确、不会遮住被解释文字，贴纸首尾与讲解一致。"
+      ]
+    }
+  ],
+  "unknowns": [
+    "未试听或连续播放。",
+    "歌词限制属于历史且与L005不完全一致；当前软件能力未查询。",
+    "标记素材只是预览，准确位置、时长、动画和跟踪均未教。"
+  ]
+}

@@ -1,0 +1,160 @@
+{
+  "id": "L008",
+  "title": "07  视频剪辑新增功能.mp4",
+  "origin": "User-provided local Jianying tutorial; abstracted principles, not a bundled preset.",
+  "source_sha256": "c075168be180c0c67dd9a0c5d4c49db1783cde2c3deea8ac51665e9f0e78490a",
+  "source_duration_seconds": 856.066667,
+  "review_scope": {
+    "overview_viewed": true,
+    "detailed_frame_seconds": [
+      285.356,
+      570.711
+    ],
+    "timestamped_asr_reviewed": true,
+    "asr_verified_by_listening": false,
+    "continuous_playback": false
+  },
+  "execution_routes": [
+    "typed:mask/keyframes/speed_curve"
+  ],
+  "route_semantics": {
+    "typed": "Supported technique.2.0 fields; build and validate an explicit graph.",
+    "recipe": "Executable builder producing a typed graph.",
+    "workflow": "Existing main workflow; separate confirmation and evidence remain required.",
+    "external": "Not bundled; exact resource/voice/preset needs explicit licensed input.",
+    "knowledge": "Planning abstraction only; no new automatic detector or segmentation implementation."
+  },
+  "techniques": [
+    {
+      "id": "detach_audio",
+      "name": "音画分离后独立剪辑",
+      "intent": "视频切点改变时保留完整原声，或允许声音单独剪辑。",
+      "code_expression": {
+        "inputs": [
+          "video with embedded audio"
+        ],
+        "operations": [
+          "create video-only timeline clip",
+          "create audio clip referencing same source stream/range",
+          "align identical timeline onset",
+          "allow independent trims"
+        ],
+        "parameters": {
+          "video_audio_gain": "分离后主视频关闭内嵌声，避免双声",
+          "link": "false for independent edits"
+        },
+        "timing": {
+          "unit": "seconds",
+          "sync": "audio_start=video_start initially, source offsets identical"
+        },
+        "outputs": [
+          "independent picture and sound tracks"
+        ]
+      },
+      "execution_equivalence": "direct_math",
+      "pitfalls": [
+        "分离不代表自动挪到正确位置，须明确起点。",
+        "不同时速变换会破坏同步；本课后续视频曲线变速时独立音频并未证明跟随。"
+      ],
+      "validation": [
+        "检查一次原声输出，无双声/错位；独立剪辑不意外删声音。"
+      ]
+    },
+    {
+      "id": "geometric_alpha_mask",
+      "name": "可羽化、反转、旋转的几何蒙版",
+      "intent": "选择性显示画面，构成分屏、形状窗口或暗角。",
+      "code_expression": {
+        "inputs": [
+          "foreground clip",
+          "optional background/lower track",
+          "shape mask spec"
+        ],
+        "operations": [
+          "transform pixel into mask-local coordinates",
+          "evaluate signed distance / shape coverage",
+          "feather coverage with explicit width",
+          "invert alpha if requested",
+          "multiply source alpha and composite"
+        ],
+        "parameters": {
+          "shape": "linear, mirrored band, ellipse, rounded_rect, star, heart",
+          "center": "normalized x/y recommended",
+          "size": "normalized canvas w/h recommended",
+          "rotation": "degrees",
+          "feather": "UI scalar unknown; code must define px or normalized width",
+          "invert": "boolean",
+          "corner_radius": "rounded rectangle; unit explicitly defined"
+        },
+        "timing": {
+          "unit": "seconds",
+          "mask": "static in this lesson; no mask keyframe animation demonstrated"
+        },
+        "outputs": [
+          "masked clip with genuine alpha, composited over chosen background"
+        ]
+      },
+      "execution_equivalence": "direct_math",
+      "pitfalls": [
+        "黑色是空背景显示，不应硬烘焙黑色代替透明蒙版。",
+        "矩形裁剪不能充当椭圆/心形或人物抠像。",
+        "精确羽化传递曲线、星形/心形几何未测量，同形状的具体外观可有差别。"
+      ],
+      "validation": [
+        "检查正/反蒙版互补、边缘羽化、旋转与形状尺寸。",
+        "叠在彩色下层验证透明区域。"
+      ]
+    },
+    {
+      "id": "continuous_speed_ramp",
+      "name": "连续曲线变速",
+      "intent": "以平滑速度变化强调动作，独立于恒速分段。",
+      "code_expression": {
+        "inputs": [
+          "source range [s0,s1]",
+          "ordered speed knots with explicitly declared source-time domain",
+          "interpolation policy",
+          "target output FPS"
+        ],
+        "operations": [
+          "evaluate positive continuous v(s)",
+          "integrate T(s)=integral(s0..s, 1/v(u) du)",
+          "invert s=T^-1(t) for every output timestamp",
+          "sample/interpolate source frames at s(t)",
+          "mute or independently retime audio according to explicit policy"
+        ],
+        "parameters": {
+          "speed": "dimensionless multiplier; demonstrated UI bounds 0.1..10",
+          "knots": "source_time_seconds,speed; this is proposed code contract",
+          "interpolation": "native Jianying interpolation unknown; monotone/shape-preserving spline is explicit approximation",
+          "sampling": "nearest/blend/optical flow are different policies; none demonstrated"
+        },
+        "timing": {
+          "unit": "seconds",
+          "output_duration": "T(s1), recomputed after knot edits",
+          "frame_mapping": "source_time=T_inverse(output_time)"
+        },
+        "outputs": [
+          "true continuously retimed clip plus measured duration/time map"
+        ]
+      },
+      "execution_equivalence": "approximation",
+      "pitfalls": [
+        "一组恒速片段不等于连续速度曲线。",
+        "不要把UI曲线横轴直接假定为源时间或输出时间；该域未核实，代码合同须明确。",
+        "UI垂直坐标与速率未证明线性；不要按图像像素简单线性取值。",
+        "慢放帧生成方式与音频处理均需声明，不冒称光流。"
+      ],
+      "validation": [
+        "验证v(s)>0、T单调、首尾源秒准确。",
+        "输出时长与积分相符；动作在锚点前后连续，不出现跳帧式切点。",
+        "与教程精确预设等价需要原生资源或实测，当前只承诺数学近似。"
+      ]
+    }
+  ],
+  "unknowns": [
+    "未试听或连续播放。",
+    "本课音频导入菜单说明为历史版本，不应固定当前界面坐标。",
+    "曲线插值、横轴域、羽化单位及原生形状精确数学未核实。"
+  ]
+}

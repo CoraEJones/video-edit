@@ -1,0 +1,163 @@
+{
+  "id": "L005",
+  "title": "04  剪映文本与贴纸操作0.mp4",
+  "origin": "User-provided local Jianying tutorial; abstracted principles, not a bundled preset.",
+  "source_sha256": "dc0ec7b6897b66792774eff7a359b7ddd1521bba1c0eac062c11f1351e05a311",
+  "source_duration_seconds": 957.873583,
+  "review_scope": {
+    "overview_viewed": true,
+    "detailed_frame_seconds": [
+      447.008,
+      894.015
+    ],
+    "timestamped_asr_reviewed": true,
+    "asr_verified_by_listening": false,
+    "continuous_playback": false
+  },
+  "execution_routes": [
+    "typed:text/keyframes"
+  ],
+  "route_semantics": {
+    "typed": "Supported technique.2.0 fields; build and validate an explicit graph.",
+    "recipe": "Executable builder producing a typed graph.",
+    "workflow": "Existing main workflow; separate confirmation and evidence remain required.",
+    "external": "Not bundled; exact resource/voice/preset needs explicit licensed input.",
+    "knowledge": "Planning abstraction only; no new automatic detector or segmentation implementation."
+  },
+  "techniques": [
+    {
+      "id": "text_style_layer",
+      "name": "文字作为独立可布局图层",
+      "intent": "将标题或识别字幕拆成内容、样式、几何变换和时间范围。",
+      "code_expression": {
+        "inputs": [
+          "text string",
+          "font asset",
+          "canvas",
+          "style",
+          "start/end"
+        ],
+        "operations": [
+          "layout multiline/vertical glyphs",
+          "render fill, optional outline, background/frame, and offset blurred shadow",
+          "apply anchor-based scale/rotation/translation",
+          "alpha-composite above video"
+        ],
+        "parameters": {
+          "opacity": "percent UI -> 0..1 code",
+          "outline": "本课默认未勾选；启用时默认黑色，宽度可调；UI单位未核实",
+          "frame": "默认关闭；示例黑色，可调颜色/不透明度",
+          "shadow": "默认关闭；颜色/透明度/模糊/距离/角度可调",
+          "letter_spacing": "示例20；UI单位未知，不能径直称像素",
+          "line_spacing": "讲解示例3或20；单位未知",
+          "alignment": "left/center/right and vertical variants"
+        },
+        "timing": {
+          "unit": "seconds",
+          "placement": "explicit timeline start; trim handles set duration"
+        },
+        "outputs": [
+          "editable text layer / rasterized text overlay"
+        ]
+      },
+      "execution_equivalence": "asset_required",
+      "pitfalls": [
+        "精确字体/花字/气泡依赖资源和许可；教程所称字体版权提示不是本次法律判断。",
+        "文字描边、边框和阴影是三个独立属性。",
+        "UI数值需标注单位未知，转换为像素须在目标分辨率验证。"
+      ],
+      "validation": [
+        "检查实际输出文字内容、边缘、遮挡、对比度与安全边距。",
+        "跨分辨率保持布局比例；精确字体缺失需明确替代。"
+      ]
+    },
+    {
+      "id": "asr_tts_tracks",
+      "name": "识别字幕与文字朗读分轨",
+      "intent": "把音频内容及语音合成落实为有来源的独立字幕和音频片段。",
+      "code_expression": {
+        "inputs": [
+          "speech or singing audio",
+          "ASR model",
+          "verified text",
+          "TTS voice"
+        ],
+        "operations": [
+          "transcribe with timestamps",
+          "human/model-review recognized words against audio before final use",
+          "create caption segments",
+          "optional synthesize text and measure resulting duration",
+          "align independent audio and text ranges"
+        ],
+        "parameters": {
+          "recognition": "speech and lyric modes are distinct; neither guaranteed accurate",
+          "voice": "教程内置三类为历史版本资源，当前可用性未知"
+        },
+        "timing": {
+          "unit": "seconds",
+          "captions": "retain onset/offset per segment",
+          "tts": "measure synthesized asset; do not truncate blindly"
+        },
+        "outputs": [
+          "caption records",
+          "separate synthesized audio asset and track"
+        ]
+      },
+      "execution_equivalence": "unverified",
+      "pitfalls": [
+        "未试听本教程，不能复述其语音质量。",
+        "教程称识别准确度高不构成保证；字幕编辑后朗读音轨不会自动被证明同步。",
+        "分割动画段可重新从头播放动画，代码须明确局部/全局动画相位。"
+      ],
+      "validation": [
+        "逐段核实词句和时间；检查朗读首尾完整及字幕可读时长。"
+      ]
+    },
+    {
+      "id": "sticker_composition",
+      "name": "多贴纸叠加和入出场动画",
+      "intent": "以独立资源、轨道层级和动画相位表达贴纸组合。",
+      "code_expression": {
+        "inputs": [
+          "transparent/animated sticker assets",
+          "layer z order",
+          "transform and animation specs"
+        ],
+        "operations": [
+          "resolve sticker asset",
+          "schedule overlay on independent track",
+          "apply horizontal mirror if selected",
+          "evaluate position/scale/rotation/opacity animation in clip-local time",
+          "composite by z-order"
+        ],
+        "parameters": {
+          "animation": "named Jianying preset requires asset/curve; generic slide/fade is approximation",
+          "duration": "可调，示例精确值未读到",
+          "mirror": "x flip, sign of scale_x"
+        },
+        "timing": {
+          "unit": "seconds",
+          "entry": "[start,start+in_duration]",
+          "exit": "[end-out_duration,end]",
+          "loop": "explicit period/phase; unspecified here"
+        },
+        "outputs": [
+          "composited overlays retaining independent trims"
+        ]
+      },
+      "execution_equivalence": "asset_required",
+      "pitfalls": [
+        "贴纸内容自带动画与图层入出场动画不是同一层。",
+        "添加多轨须规定覆盖顺序；分割后动画保留不代表连续相位。"
+      ],
+      "validation": [
+        "检查叠层顺序、透明边缘、首尾入出场及镜像后文字方向。"
+      ]
+    }
+  ],
+  "unknowns": [
+    "没有连续播放或试听。",
+    "字体、花字、贴纸、气泡、预设动画与朗读音色的资源ID未知。",
+    "文字尺寸、阴影模糊、字行距的UI单位及实际默认数值未核实。"
+  ]
+}

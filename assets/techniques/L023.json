@@ -1,0 +1,125 @@
+{
+  "id": "L023",
+  "title": "21  朋友圈九宫格几种玩法.mp4",
+  "origin": "User-provided local Jianying tutorial; abstracted principles, not a bundled preset.",
+  "source_sha256": "6c48cddd6903840c9fc4f99481e95d78bce8b007ebe8b1230a5d797d225b9d17",
+  "source_duration_seconds": 1186.977458,
+  "review_scope": {
+    "overview_viewed": true,
+    "detailed_frame_seconds": [
+      395.659,
+      982.99,
+      1145.72
+    ],
+    "timestamped_asr_reviewed": true,
+    "asr_verified_by_listening": false,
+    "continuous_playback": false
+  },
+  "execution_routes": [
+    "recipe:grid"
+  ],
+  "route_semantics": {
+    "typed": "Supported technique.2.0 fields; build and validate an explicit graph.",
+    "recipe": "Executable builder producing a typed graph.",
+    "workflow": "Existing main workflow; separate confirmation and evidence remain required.",
+    "external": "Not bundled; exact resource/voice/preset needs explicit licensed input.",
+    "knowledge": "Planning abstraction only; no new automatic detector or segmentation implementation."
+  },
+  "techniques": [
+    {
+      "id": "template_windows_blend",
+      "name": "黑色窗口模板上叠出动态九宫格",
+      "intent": "在静态截图的局部区域呈现运动，保留白色UI和网格线。",
+      "code_expression": {
+        "inputs": [
+          "user-provided screenshot/template with black windows",
+          "one/two video sources",
+          "explicit canvas aspect",
+          "window rectangles and z-order"
+        ],
+        "operations": [
+          "set portrait canvas explicitly instead of relying on import order",
+          "crop/scale video to 1:1 or window cover fit",
+          "place video below template and clip to intended window regions",
+          "composite template using lighten=max(template,video) where demonstrated",
+          "for two distinct windows schedule independent video layers below UI",
+          "trim all tracks and music to common end"
+        ],
+        "parameters": {
+          "aspect": "portrait template-derived; nine-grid target square",
+          "blend": "lighten preferred in tutorial; screen alternative changes appearance",
+          "music_fade_in_s": {
+            "example": 2,
+            "adjustable": true
+          },
+          "music_fade_out_s": {
+            "example": 3,
+            "adjustable": true
+          },
+          "z_order": "UI template above moving content"
+        },
+        "timing": {
+          "unit": "seconds",
+          "duration": "template/video/music share explicit endpoint; no music-only black tail"
+        },
+        "outputs": [
+          "portrait video with locally animated template windows"
+        ]
+      },
+      "execution_equivalence": "asset_required",
+      "pitfalls": [
+        "此九宫格是一段视频在整块正方形窗口后连续显示，网格线来自模板；不是九段独立视频。",
+        "全局变亮会让截图所有黑字也透出视频，须限制视频覆盖区域或改用显式蒙版并声明实现差异。",
+        "导入顺序决定画幅是旧软件行为，代码应显式设定画布。",
+        "模板需用户提供或授权资源，不复制教程里的个人账户界面到公开技能包。"
+      ],
+      "validation": [
+        "首中尾检查网格线、头像、文字不被遮挡，动态区域不穿帮。",
+        "音轨结尾与视频一致，音乐淡出实际听审另做。"
+      ]
+    },
+    {
+      "id": "animated_qr_experiment",
+      "name": "二维码深色模块填入动态视频",
+      "intent": "在保留二维码几何结构的同时尝试颜色动效。",
+      "code_expression": {
+        "inputs": [
+          "authorized QR image",
+          "video background",
+          "QR region geometry"
+        ],
+        "operations": [
+          "align video inside card bounds",
+          "apply demonstrated lighten composite only inside QR region",
+          "preserve module boundaries and quiet zone",
+          "optionally protect fixed finder patterns/contrast as a declared safer variation"
+        ],
+        "parameters": {
+          "mode": "demonstrated lighten; no guaranteed decoding",
+          "contrast": "time-varying dark-module luminance must remain separable from white",
+          "video": "tutorial suggests visually contrasting colors; no numeric threshold demonstrated"
+        },
+        "timing": {
+          "unit": "seconds",
+          "validation_sampling": "decode rendered frames across whole animation, not only first frame"
+        },
+        "outputs": [
+          "experimental animated QR overlay requiring decode validation"
+        ]
+      },
+      "execution_equivalence": "unverified",
+      "pitfalls": [
+        "仅保留图形外观不保证扫码；亮帧、压缩与缩放可能破坏码块对比度。",
+        "未实际扫描或联系二维码所属人，不把教程声称写成已验证。"
+      ],
+      "validation": [
+        "若真正交付二维码，解码检查多个关键帧和压缩后文件，并验证quiet zone及最小模块尺寸。"
+      ]
+    }
+  ],
+  "unknowns": [
+    "未试听或连续播放。",
+    "模板资产、窗口准确像素坐标、视频来源许可未核实。",
+    "二维码可扫描性未验证；含个人界面的截图只保留私有证据，不进入公开文档。"
+  ]
+}

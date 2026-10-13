@@ -1,0 +1,123 @@
+{
+  "id": "L027",
+  "title": "25  视频定格卡点效果制作.mp4",
+  "origin": "User-provided local Jianying tutorial; abstracted principles, not a bundled preset.",
+  "source_sha256": "c97ac639d656384b5c488b3d8ff4f967024070c06cb0e6b0065d22e0ba90cd0a",
+  "source_duration_seconds": 673.756417,
+  "review_scope": {
+    "overview_viewed": true,
+    "detailed_frame_seconds": [
+      359.337,
+      449.171,
+      628.839
+    ],
+    "timestamped_asr_reviewed": true,
+    "asr_verified_by_listening": false,
+    "continuous_playback": false
+  },
+  "execution_routes": [
+    "workflow:captions",
+    "knowledge:marker_semantics"
+  ],
+  "route_semantics": {
+    "typed": "Supported technique.2.0 fields; build and validate an explicit graph.",
+    "recipe": "Executable builder producing a typed graph.",
+    "workflow": "Existing main workflow; separate confirmation and evidence remain required.",
+    "external": "Not bundled; exact resource/voice/preset needs explicit licensed input.",
+    "knowledge": "Planning abstraction only; no new automatic detector or segmentation implementation."
+  },
+  "techniques": [
+    {
+      "id": "phrase_aligned_freeze_schedule",
+      "name": "乐句标记驱动的动静交替",
+      "intent": "在歌词/音乐分句处拍照定格，让动态片段与静帧停留交替。",
+      "code_expression": {
+        "inputs": [
+          "video",
+          "verified phrase-start beat markers",
+          "selected freeze frames",
+          "target music interval"
+        ],
+        "operations": [
+          "construct ordered motion/freeze intervals",
+          "motion sample_time=source_cursor+local_time*speed",
+          "freeze sample_time=selected_source_time constant throughout hold",
+          "advance source_cursor only during motion; inserted holds advance timeline only",
+          "trim/allocate tail so final timeline ends at target duration"
+        ],
+        "parameters": {
+          "target_duration_seconds": 20.3,
+          "example_holds_seconds": [
+            2.3,
+            2.9,
+            2.4
+          ],
+          "music_fadeout_seconds": 1,
+          "speed": "visible0.7X; source-time mapping must be explicit"
+        },
+        "timing": "freeze starts/ends align selected musical phrase markers; output intervals are frame quantized",
+        "outputs": [
+          "editable motion/freeze sequence",
+          "separate music track"
+        ]
+      },
+      "execution_equivalence": "direct_math",
+      "pitfalls": [
+        "先把视频拉到音乐时长再插定格会增加总时长；必须重新规划或修剪末尾。",
+        "标记是乐句而非所有鼓点；未听审不能自动宣称已对齐。",
+        "每次定格应取其动态片段正确源帧，不能使用同一静帧凑数。"
+      ],
+      "validation": [
+        "静帧期间像素/源时码恒定；冻结前后动作合理；音乐尾与画面尾一致。"
+      ]
+    },
+    {
+      "id": "flash_shutter_freeze_bundle",
+      "name": "闪白、快门声和相机效果的时序束",
+      "intent": "用光/声提示拍照，静止期间维持照片观感。",
+      "code_expression": {
+        "inputs": [
+          "freeze intervals",
+          "transition duration",
+          "licensed shutter SFX",
+          "optional camera overlay/LUT"
+        ],
+        "operations": [
+          "flash pulse white opacity rises and falls across freeze boundary",
+          "SFX.start=transition.start, not necessarily freeze.start",
+          "vignette span=[freeze.start,freeze.end)",
+          "camera_overlay span=[freeze.start-lead,freeze.end)",
+          "global look over full output"
+        ],
+        "parameters": {
+          "flash_duration": "not verified; explicit configurable seconds",
+          "overlay_lead": "slightly before freeze, exact seconds unverified",
+          "resources": [
+            "拍照声",
+            "相机网格",
+            "清透滤镜"
+          ],
+          "vignette": "reconstructible radial mask; proprietary curve needs labeled approximation"
+        },
+        "timing": "related effects share a named freeze event; lead offsets are explicit, not independently guessed",
+        "outputs": [
+          "coordinated photo-freeze effect with audio accents"
+        ]
+      },
+      "execution_equivalence": "asset_required",
+      "pitfalls": [
+        "快门音需实际素材及试听；仅音效名不代表已混入。",
+        "相机网格/滤镜外观未知时不能标作专有预设完全复现。",
+        "过长闪白可能侵占短停留或压倒画面，需预览。"
+      ],
+      "validation": [
+        "逐个事件检查闪白峰、快门瞬态、静帧起止；效果分区无越界；实际听审音画同步。"
+      ]
+    }
+  ],
+  "unknowns": [
+    "完整ASR已读，未试听或连续播放；词句和音乐标记未独立核实。",
+    "闪白精确时长、网格提前量、特效强度与滤镜资源未取得。",
+    "屏录25fps不证明工程fps；输出计划需另设时间基准。"
+  ]
+}

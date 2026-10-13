@@ -1,0 +1,298 @@
+{
+  "id": "L025",
+  "title": "23  剪映生日祝福视频效果.mp4",
+  "origin": "User-provided local Jianying tutorial; abstracted principles, not a bundled preset.",
+  "source_sha256": "b5c2a4e46deea09e23e52d379651fc3180fe55cd55a0d433cab1942c01c72f36",
+  "source_duration_seconds": 931.931,
+  "review_scope": {
+    "overview_viewed": true,
+    "detailed_frame_seconds": [
+      446,
+      683,
+      868
+    ],
+    "timestamped_asr_reviewed": true,
+    "asr_verified_by_listening": false,
+    "continuous_playback": false
+  },
+  "execution_routes": [
+    "typed:layers/text/keyframes",
+    "external:decoration_and_blurred_fill"
+  ],
+  "route_semantics": {
+    "typed": "Supported technique.2.0 fields; build and validate an explicit graph.",
+    "recipe": "Executable builder producing a typed graph.",
+    "workflow": "Existing main workflow; separate confirmation and evidence remain required.",
+    "external": "Not bundled; exact resource/voice/preset needs explicit licensed input.",
+    "knowledge": "Planning abstraction only; no new automatic detector or segmentation implementation."
+  },
+  "techniques": [
+    {
+      "id": "portrait-blurred-background-still",
+      "name": "单张照片竖屏适配与模糊背景",
+      "intent": "保留照片主体比例，使用同图模糊填充竖屏上下空隙。",
+      "code_expression": {
+        "inputs": [
+          {
+            "name": "image",
+            "type": "ImageAssetRef"
+          },
+          {
+            "name": "canvas",
+            "type": "CanvasSize"
+          },
+          {
+            "name": "duration",
+            "type": "DurationSeconds"
+          }
+        ],
+        "operations": [
+          {
+            "op": "duplicate_reference",
+            "outputs": [
+              "foreground",
+              "background"
+            ]
+          },
+          {
+            "op": "scale_cover_center_crop",
+            "layer": "background"
+          },
+          {
+            "op": "gaussian_blur",
+            "layer": "background",
+            "sigma": "chosen"
+          },
+          {
+            "op": "scale_contain_center",
+            "layer": "foreground"
+          },
+          {
+            "op": "composite",
+            "order": [
+              "background",
+              "foreground"
+            ]
+          },
+          {
+            "op": "hold_image",
+            "duration": "music_duration"
+          }
+        ],
+        "parameters": {
+          "canvas_ratio": {
+            "type": "AspectRatio",
+            "observed": "9:16"
+          },
+          "blur_sigma": {
+            "type": "float",
+            "unit": "pixels",
+            "legacy_blur2_mapping": "unknown"
+          },
+          "duration_s": {
+            "type": "float",
+            "unit": "seconds",
+            "observed_example": 11.8
+          }
+        },
+        "timing": {
+          "type": "TimelineInterval",
+          "start": 0,
+          "end": "music_duration",
+          "geometry": "contain_scale=min(W/w,H/h), cover_scale=max(W/w,H/h)"
+        },
+        "outputs": [
+          {
+            "name": "portrait_still_video",
+            "type": "VideoFrames"
+          }
+        ]
+      },
+      "execution_equivalence": "approximation",
+      "pitfalls": [
+        "Exact legacy blur2 kernel/intensity is unknown; do not map it to sigma2 automatically.",
+        "Foreground must preserve displayed aspect ratio; filling the entire canvas by stretching changes faces.",
+        "The demonstrated11.8seconds is a result of selected music, not a universal template duration."
+      ],
+      "validation": [
+        "Check output9:16 dimensions, foreground aspect and absence of unintended black bars.",
+        "Inspect background for distracting enlarged details and foreground for clipping.",
+        "Video and music end at the intended same timeline time."
+      ]
+    },
+    {
+      "id": "cue-sequenced-wishes-and-final-title",
+      "name": "按语音提示排列祝福文字并处理末句动画",
+      "intent": "把每条可替换祝福分配到音乐提示区间，末句保留到结束。",
+      "code_expression": {
+        "inputs": [
+          {
+            "name": "wishes",
+            "type": "List<VerifiedText>"
+          },
+          {
+            "name": "cues",
+            "type": "List<TimelineTimeSeconds>",
+            "selection": "auditioned speech/music onsets"
+          },
+          {
+            "name": "font",
+            "type": "FontAssetRef"
+          }
+        ],
+        "operations": [
+          {
+            "op": "place_text_interval",
+            "start": "cue[i]",
+            "end": "cue[i+1]"
+          },
+          {
+            "op": "style_text",
+            "parameters": [
+              "font",
+              "opacity",
+              "tracking",
+              "line_spacing",
+              "position"
+            ]
+          },
+          {
+            "op": "animate_scale",
+            "entrance": "chosen enlarge curve",
+            "exit": "chosen shrink curve"
+          },
+          {
+            "op": "override_final_text",
+            "exit_animation": "none",
+            "end": "video_end"
+          }
+        ],
+        "parameters": {
+          "opacity": {
+            "type": "float",
+            "unit": "0..1",
+            "narrated_example": 0.9
+          },
+          "cue_times": {
+            "type": "List<float>",
+            "unit": "timeline seconds"
+          },
+          "text_content": {
+            "type": "List<string>",
+            "rule": "user-provided or approved wording"
+          },
+          "entrance_exit_curve": {
+            "type": "Curve",
+            "exact_preset": "unknown"
+          }
+        },
+        "timing": {
+          "type": "IntervalConstraints",
+          "rule": "Wishes occupy adjacent chosen cue intervals; final wish starts at final cue and ends at picture end. Intro date/sticker ends at first wish start."
+        },
+        "outputs": [
+          {
+            "name": "wish_text_timeline",
+            "type": "List<AnimatedTextLayer>"
+          }
+        ]
+      },
+      "execution_equivalence": "approximation",
+      "pitfalls": [
+        "Copying a layer also copies unwanted exit animation; the tutorial explicitly removes it for the final title.",
+        "Preset scale curves and exact timing fractions are unknown.",
+        "ASR cannot establish exact audible cue locations; no audio was auditioned here.",
+        "Birthday date and example wishes are inputs, not facts about the current user."
+      ],
+      "validation": [
+        "Verify text content and dates before rendering.",
+        "Inspect every cue boundary and entrance/hold/exit at full size.",
+        "Final title remains present through intended final frame and no inherited shrink hides it.",
+        "Audition cue synchronization and the narrated1.5-second music-tail fade if used."
+      ]
+    },
+    {
+      "id": "birthday-decoration-intervals",
+      "name": "日期贴纸、整体氛围和尾部彩带分层定时",
+      "intent": "把装饰组织为有明确开始与结束的独立图层。",
+      "code_expression": {
+        "inputs": [
+          {
+            "name": "date",
+            "type": "UserConfirmedDate"
+          },
+          {
+            "name": "stickers",
+            "type": "List<RGBAAssetRef>"
+          },
+          {
+            "name": "effects",
+            "type": "List<EffectAssetRef>"
+          }
+        ],
+        "operations": [
+          {
+            "op": "overlay_intro",
+            "layers": [
+              "date_text",
+              "sticker"
+            ],
+            "interval": "0..first_wish_start"
+          },
+          {
+            "op": "apply_global_effect",
+            "interval": "0..video_end"
+          },
+          {
+            "op": "apply_gap_effect",
+            "interval": "last_regular_wish_end..final_celebration_start"
+          },
+          {
+            "op": "apply_final_effect",
+            "interval": "final_celebration_start..video_end"
+          }
+        ],
+        "parameters": {
+          "asset_ref": {
+            "type": "AssetRef",
+            "provenance_required": true
+          },
+          "position_scale": {
+            "type": "Transform2D"
+          },
+          "effect_intensity": {
+            "type": "float",
+            "unit": "asset-specific",
+            "exact_value": "unknown"
+          }
+        },
+        "timing": {
+          "type": "TimelineIntervalConstraints",
+          "rule": "Resolve intervals from the actual title/cue timeline; do not hard-code tutorial dates or source-video lesson timestamps as output timing."
+        },
+        "outputs": [
+          {
+            "name": "decorated_birthday_video",
+            "type": "VideoFrames"
+          }
+        ]
+      },
+      "execution_equivalence": "asset_required",
+      "pitfalls": [
+        "Exact animated sticker/confetti assets require provenance; generic replacements are approximations.",
+        "An intro date must be confirmed, not copied from historical tutorial footage.",
+        "Full-frame effects can cover faces and text or violate a simpler user style preference."
+      ],
+      "validation": [
+        "Check intro and all decorative interval boundaries.",
+        "Inspect facial visibility, date readability and final title under confetti.",
+        "Verify no unintentional visual gap or abrupt decorative cut at interval handoffs."
+      ]
+    }
+  ],
+  "unknowns": [
+    "No audio audition or continuous playback performed.",
+    "ASR is unverified; exact musical onsets, several font/effect names and source music licensing remain unknown.",
+    "Legacy blur strength and animation interpolation are not calibrated."
+  ]
+}

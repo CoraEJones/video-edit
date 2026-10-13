@@ -1,0 +1,130 @@
+{
+  "id": "L009",
+  "title": "07  剪映几种风格调色方法.mp4",
+  "origin": "User-provided local Jianying tutorial; abstracted principles, not a bundled preset.",
+  "source_sha256": "4ebb1c7efb0854fd0149607afa09012b8758d7a57ac289b58b1e0c8d3405ee98",
+  "source_duration_seconds": 608.04,
+  "review_scope": {
+    "overview_viewed": true,
+    "detailed_frame_seconds": [
+      121.608,
+      130.14,
+      225.05,
+      445.896,
+      607.94
+    ],
+    "timestamped_asr_reviewed": true,
+    "asr_verified_by_listening": false,
+    "continuous_playback": false
+  },
+  "execution_routes": [
+    "workflow:color",
+    "external:proprietary_looks"
+  ],
+  "route_semantics": {
+    "typed": "Supported technique.2.0 fields; build and validate an explicit graph.",
+    "recipe": "Executable builder producing a typed graph.",
+    "workflow": "Existing main workflow; separate confirmation and evidence remain required.",
+    "external": "Not bundled; exact resource/voice/preset needs explicit licensed input.",
+    "knowledge": "Planning abstraction only; no new automatic detector or segmentation implementation."
+  },
+  "techniques": [
+    {
+      "id": "grade_recipe_with_comparison",
+      "name": "调色配方与原片对照",
+      "intent": "保留原片对照，用基础调节加风格资源形成可微调的外观。",
+      "code_expression": {
+        "inputs": [
+          "original SDR RGB frames",
+          "manual correction parameters",
+          "optional LUT/filter asset",
+          "strength"
+        ],
+        "operations": [
+          "decode original once",
+          "baseline correction -> selected look operator",
+          "processed=(1-strength)*corrected+strength*look(corrected)",
+          "render paired original/graded comparison at same source timestamp"
+        ],
+        "parameters": {
+          "unit": "all numeric examples are proprietary Jianying slider points, not exposure stops/Kelvin",
+          "adjustment_range_guidance": "about ±10 UI points, as demonstrated; not an automatic universal rule",
+          "observed_cold_intermediate_at_130_140": {
+            "contrast": 50,
+            "saturation": -25,
+            "sharpen": 30,
+            "color_temperature": -10,
+            "tint": 0
+          },
+          "asr_cold_final_unverified": {
+            "brightness": -20,
+            "tint": -15
+          },
+          "observed_japanese_filter_at_225_050": {
+            "name": "霓虹光",
+            "strength": 10
+          },
+          "observed_document_at_607_940": {
+            "title": "食物调色法2",
+            "brightness": 15,
+            "sharpen": 15,
+            "contrast": 10,
+            "saturation": 20,
+            "filter": "暗夜"
+          }
+        },
+        "timing": "grade attaches to clip interval; compare at identical source seconds",
+        "outputs": [
+          "parameterized grade chain",
+          "before/after preview"
+        ]
+      },
+      "execution_equivalence": "approximation",
+      "pitfalls": [
+        "源画面、曝光和白平衡不同，配方不能机械套用。",
+        "锐化与色彩参数直接映射到其他库不等价；必须校准或声明近似。",
+        "细节帧可能为输入过程中的中间值；不要将其混作最终配方。"
+      ],
+      "validation": [
+        "用相同源帧比较；检查白色花瓣高光、蓝天梯度、肤色与锐化光晕；相邻镜头先匹配再套风格。"
+      ]
+    },
+    {
+      "id": "filter_stack_dependency",
+      "name": "有资源依赖的滤镜叠加",
+      "intent": "将滤镜作为有版本和强度的可执行资源，而不是仅保存名称。",
+      "code_expression": {
+        "inputs": [
+          "filter/LUT assets with IDs and hashes",
+          "ordered spans",
+          "intensity"
+        ],
+        "operations": [
+          "LookChain=[correction,filter_A(strength_A),filter_B(strength_B)]",
+          "evaluate in declared order; remove previous trial effects before new comparison"
+        ],
+        "parameters": {
+          "intensity": "normalize UI0..100 to0..1 only when blend model matches",
+          "resource": "name + version/hash + color-space contract"
+        },
+        "timing": "all intended layers cover grade interval without accidental remnants",
+        "outputs": [
+          "deterministic look if resources available; otherwise labeled approximation"
+        ]
+      },
+      "execution_equivalence": "asset_required",
+      "pitfalls": [
+        "滤镜顺序不可交换，重复前次轨道会改变外观。",
+        "未拥有专有滤镜不能声称代码重现完全一致。"
+      ],
+      "validation": [
+        "检查资源实际存在、加载成功、强度和顺序；无资源时用参考帧验收近似外观。"
+      ]
+    }
+  ],
+  "unknowns": [
+    "未试听；ASR数字、滤镜名称有错误，如末段ASR称第三种而可见文档题为食物调色法2。",
+    "专有滑块曲线、滤镜LUT、默认强度与处理色彩空间未取得；不能将课中UI值直接标为通用物理参数。",
+    "本课没有HDR处理证据。"
+  ]
+}

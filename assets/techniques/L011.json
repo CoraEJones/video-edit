@@ -1,0 +1,142 @@
+{
+  "id": "L011",
+  "title": "09  滤镜卡点视频制作方法.mp4",
+  "origin": "User-provided local Jianying tutorial; abstracted principles, not a bundled preset.",
+  "source_sha256": "3fdbd31e6452b9eddf41f75fa964486bbbade972a4b6116135bf5919a0457b40",
+  "source_duration_seconds": 760.6,
+  "review_scope": {
+    "overview_viewed": true,
+    "detailed_frame_seconds": [
+      354.947,
+      456.36,
+      709.893
+    ],
+    "timestamped_asr_reviewed": true,
+    "asr_verified_by_listening": false,
+    "continuous_playback": false
+  },
+  "execution_routes": [
+    "typed:color/intervals",
+    "workflow:reviewed_audio_cues"
+  ],
+  "route_semantics": {
+    "typed": "Supported technique.2.0 fields; build and validate an explicit graph.",
+    "recipe": "Executable builder producing a typed graph.",
+    "workflow": "Existing main workflow; separate confirmation and evidence remain required.",
+    "external": "Not bundled; exact resource/voice/preset needs explicit licensed input.",
+    "knowledge": "Planning abstraction only; no new automatic detector or segmentation implementation."
+  },
+  "techniques": [
+    {
+      "id": "beat_color_overlays",
+      "name": "按重音区间切换颜色覆盖层",
+      "intent": "随规律的短重音组切换色调，长间隔使用不同滤镜，形成视觉节奏。",
+      "code_expression": {
+        "inputs": [
+          "base video",
+          "music excerpt",
+          "reviewed beat timestamps",
+          "tint color sequence",
+          "title"
+        ],
+        "operations": [
+          "fit source duration to music interval using explicit speed/time map",
+          "schedule full-frame solid-color overlays on selected beat-to-beat intervals",
+          "set C_out=(1-alpha)*C_base+alpha*C_tint under defined compositing color space",
+          "create title layer below tint as demonstrated",
+          "fade music tail"
+        ],
+        "parameters": {
+          "tint_alpha": {
+            "demonstrated": 0.4,
+            "adjustable": true
+          },
+          "title_alpha": {
+            "demonstrated": 0.4,
+            "adjustable": true
+          },
+          "music_fade_out_s": {
+            "demonstrated_range": [
+              1.5,
+              2
+            ],
+            "adjustable": true
+          },
+          "target_duration_s": {
+            "example": 22.7,
+            "not_universal": true
+          },
+          "title_letter_spacing": {
+            "example_delta": 2,
+            "unit": "UI unknown"
+          }
+        },
+        "timing": {
+          "unit": "seconds",
+          "intervals": "[beat_i,beat_i+1) for selected short gaps; not every beat must be filled",
+          "layer_order": "base video -> title -> full-range base filter as editor assigns -> beat tint layers; actual filter scope must be explicit"
+        },
+        "outputs": [
+          "beat-scheduled solid overlays and matched sound/picture duration"
+        ]
+      },
+      "execution_equivalence": "direct_math",
+      "pitfalls": [
+        "教程用巨型点号造色片；代码直接纯色矩形更确定，需注明实现表达替换。",
+        "尚未试听，鼓点位置不能凭ASR生成或假称已核实。",
+        "原文视频时长变速适用于演示风景；讲话/重要动作不宜无条件拉伸。",
+        "颜色混合所在色彩空间改变观感，应固定并视觉验证。"
+      ],
+      "validation": [
+        "在真实输出逐个检查色片边界与核实的音乐重音同步。",
+        "0.4只是起始值，检查高亮、标题可读性及叠层次序。"
+      ]
+    },
+    {
+      "id": "long_gap_filters_transition",
+      "name": "长间隙滤镜与特效衔接",
+      "intent": "长拍间隙换风格而保持色变段落和音乐总长度一致。",
+      "code_expression": {
+        "inputs": [
+          "long beat gaps",
+          "filter/LUT assets",
+          "old-photo texture effect asset",
+          "transition spec"
+        ],
+        "operations": [
+          "apply resolved filter with explicit scope and interval",
+          "blend filtered/unfiltered output according to defined intensity",
+          "at effect onset create overlap or transition envelope",
+          "recompute timeline duration and realign effect/audio anchors after transition"
+        ],
+        "parameters": {
+          "filter_strength": "示例约60 UI；若0–100确认后转0.6；不能先验假定所有滤镜同尺度",
+          "transition": "叠画；具体时长未读到",
+          "speed": "0.7×可见于详图，后讲0.6×用于时长补偿，均为示例"
+        },
+        "timing": {
+          "unit": "seconds",
+          "length_rule": "adding overlap may shorten timeline; use explicit overlap accounting, avoid silent drift"
+        },
+        "outputs": [
+          "filtered long-gap sections with transition and preserved overall audio alignment"
+        ]
+      },
+      "execution_equivalence": "asset_required",
+      "pitfalls": [
+        "同名滤镜/LUT和老照片纹理需要资源；泛化颜色矩阵不是原生同款。",
+        "把叠画加在同源连续视频切点，不一定能平滑独立特效的开关；代码应直接平滑特效强度并标注实现差异。",
+        "不能通过任意变速掩盖错误的转场时长模型。"
+      ],
+      "validation": [
+        "核查前后时长、每个节拍标记与视觉事件仍对齐。",
+        "看特效进入前/中/后及纹理透明边缘，确认效果是实际合成。"
+      ]
+    }
+  ],
+  "unknowns": [
+    "无试听、无连续播放；鼓点秒值、音乐来源许可未审定。",
+    "滤镜精确资源ID、强度范围、叠画时长及色彩空间未知。",
+    "教程源秒与示例22.7秒时间线不同，不可混用。"
+  ]
+}

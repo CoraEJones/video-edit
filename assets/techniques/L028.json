@@ -1,0 +1,212 @@
+{
+  "id": "L028",
+  "title": "26  如何制作 Siri 的声音.mp4",
+  "origin": "User-provided local Jianying tutorial; abstracted principles, not a bundled preset.",
+  "source_sha256": "aba2456d64dcfd79dc5e5e8ea797dbacac29ee4ad443565044e0ebb3249bf3ba",
+  "source_duration_seconds": 394.352292,
+  "review_scope": {
+    "overview_viewed": true,
+    "detailed_frame_seconds": [
+      263,
+      346
+    ],
+    "timestamped_asr_reviewed": true,
+    "asr_verified_by_listening": false,
+    "continuous_playback": false
+  },
+  "execution_routes": [
+    "workflow:voiceover",
+    "external:exact_voice"
+  ],
+  "route_semantics": {
+    "typed": "Supported technique.2.0 fields; build and validate an explicit graph.",
+    "recipe": "Executable builder producing a typed graph.",
+    "workflow": "Existing main workflow; separate confirmation and evidence remain required.",
+    "external": "Not bundled; exact resource/voice/preset needs explicit licensed input.",
+    "knowledge": "Planning abstraction only; no new automatic detector or segmentation implementation."
+  },
+  "techniques": [
+    {
+      "id": "corrected-caption-driven-tts",
+      "name": "校正识别文字后分段生成配音",
+      "intent": "从原讲话提取并校正内容，再由指定语音引擎重新朗读。",
+      "code_expression": {
+        "inputs": [
+          {
+            "name": "source_speech",
+            "type": "AudioSourceInterval"
+          },
+          {
+            "name": "verified_text",
+            "type": "List<VerifiedCaption>"
+          },
+          {
+            "name": "voice",
+            "type": "TTSVoiceRef"
+          }
+        ],
+        "operations": [
+          {
+            "op": "transcribe",
+            "status": "unverified_draft"
+          },
+          {
+            "op": "correct_text",
+            "approval_basis": "actual audition or supplied authoritative text"
+          },
+          {
+            "op": "synthesize_speech",
+            "text": "corrected_caption.text",
+            "voice": "configured_available_voice"
+          },
+          {
+            "op": "probe_generated_audio",
+            "fields": [
+              "sample_rate",
+              "duration"
+            ]
+          },
+          {
+            "op": "place_generated_audio",
+            "start": "chosen narration schedule"
+          }
+        ],
+        "parameters": {
+          "voice_ref": {
+            "type": "TTSVoiceRef",
+            "historical_ui_label": "小姐姐",
+            "exact_Siri_match": "unverified"
+          },
+          "text": {
+            "type": "string",
+            "requirement": "corrected before synthesis"
+          },
+          "speech_rate": {
+            "type": "float",
+            "unit": "provider-specific ratio",
+            "tutorial_value": "unknown"
+          },
+          "overflow_policy": {
+            "type": "enum",
+            "values": [
+              "extend_visual",
+              "condense_verified_text",
+              "explicit_bounded_time_stretch"
+            ],
+            "rule": "never truncate a sentence silently"
+          }
+        },
+        "timing": {
+          "type": "NarrationSchedule",
+          "rule": "Generated sample duration is measured, not assumed equal to original caption duration. Resolve overlaps and visual timing after synthesis."
+        },
+        "outputs": [
+          {
+            "name": "generated_narration_clips",
+            "type": "List<AudioTimelineClip>"
+          },
+          {
+            "name": "corrected_transcript",
+            "type": "List<Caption>"
+          }
+        ]
+      },
+      "execution_equivalence": "asset_required",
+      "pitfalls": [
+        "This is speech resynthesis from text, not a demonstrated pitch/voice conversion of original audio.",
+        "The tutorial's claim that小姐姐isSiri is not verified by this review and does not establish voice identity.",
+        "A historical UI voice name does not guarantee present availability or offline support.",
+        "ASR errors become spoken errors if not corrected.",
+        "Independent TTS clips can exceed their source caption windows and overlap; screenshot layering does not prove correct audio timing."
+      ],
+      "validation": [
+        "Verify exact text and pronunciation, especially names and foreign terms, by audition.",
+        "Measure generated durations and check overlaps/gaps against the intended narration schedule.",
+        "Use only a configured available engine/voice and retain provider/asset provenance.",
+        "Audition the actual voice before claiming any named-voice similarity."
+      ]
+    },
+    {
+      "id": "replacement-narration-audio-routing",
+      "name": "替换配音时关闭原声并独立控制字幕显示",
+      "intent": "避免原讲话与新配音重复播放，字幕显示不决定配音是否保留。",
+      "code_expression": {
+        "inputs": [
+          {
+            "name": "original_video_audio",
+            "type": "AudioTrack"
+          },
+          {
+            "name": "narration",
+            "type": "List<AudioTimelineClip>"
+          },
+          {
+            "name": "captions",
+            "type": "List<Caption>"
+          }
+        ],
+        "operations": [
+          {
+            "op": "set_gain",
+            "track": "original_video_audio",
+            "linear_gain": 0
+          },
+          {
+            "op": "mix_narration",
+            "tracks": "generated clips only plus explicitly allowed audio"
+          },
+          {
+            "op": "set_caption_visibility",
+            "enabled": "user preference"
+          }
+        ],
+        "parameters": {
+          "original_gain": {
+            "type": "float",
+            "unit": "linear amplitude",
+            "required_for_replacement": 0
+          },
+          "captions_enabled": {
+            "type": "boolean"
+          },
+          "narration_gain": {
+            "type": "float",
+            "unit": "linear amplitude",
+            "value": "audition/mix decision"
+          }
+        },
+        "timing": {
+          "type": "AudioBusPolicy",
+          "rule": "Mute original throughout the replacement narration scope; caption visibility is separate from the persistent generated-audio asset reference."
+        },
+        "outputs": [
+          {
+            "name": "replacement_audio_bus",
+            "type": "AudioSamples"
+          },
+          {
+            "name": "optional_visible_captions",
+            "type": "CaptionLayers"
+          }
+        ]
+      },
+      "execution_equivalence": "direct_math",
+      "pitfalls": [
+        "Muting preview UI is not sufficient unless the render audio bus also applies gain0.",
+        "Deleting a linked caption in some editors may affect generated audio; code should model visibility and asset ownership explicitly.",
+        "Remaining source sound must follow the confirmed audio policy rather than be restored accidentally."
+      ],
+      "validation": [
+        "Verify original track gain0 in rendered audio routing.",
+        "Audition for doubled speech, overlap and clipping.",
+        "Changing caption visibility leaves narration sample content and timing unchanged when intended."
+      ]
+    }
+  ],
+  "unknowns": [
+    "No audio audition or continuous playback performed.",
+    "ASR is unverified, including spoken comparison between original and the allegedSiri voice.",
+    "Exact voice model, voice identity, provider terms and current UI availability are unknown.",
+    "The lesson demonstrates only part of its caption set; it does not show generating every caption's voice to completion."
+  ]
+}

@@ -1,0 +1,114 @@
+{
+  "id": "L024",
+  "title": "22  遮罩视频文字效果制作.mp4",
+  "origin": "User-provided local Jianying tutorial; abstracted principles, not a bundled preset.",
+  "source_sha256": "b6bbd33bd074826e20ed8c300c4a72d5e2d1d8366850f78a34e4f328b83999dd",
+  "source_duration_seconds": 1068.12,
+  "review_scope": {
+    "overview_viewed": true,
+    "detailed_frame_seconds": [
+      356.04,
+      569.664,
+      712.08
+    ],
+    "timestamped_asr_reviewed": true,
+    "asr_verified_by_listening": false,
+    "continuous_playback": false
+  },
+  "execution_routes": [
+    "typed:mask/text/keyframes"
+  ],
+  "route_semantics": {
+    "typed": "Supported technique.2.0 fields; build and validate an explicit graph.",
+    "recipe": "Executable builder producing a typed graph.",
+    "workflow": "Existing main workflow; separate confirmation and evidence remain required.",
+    "external": "Not bundled; exact resource/voice/preset needs explicit licensed input.",
+    "knowledge": "Planning abstraction only; no new automatic detector or segmentation implementation."
+  },
+  "techniques": [
+    {
+      "id": "video_filled_glyphs",
+      "name": "动态纹理填充字形",
+      "intent": "把光点、火焰、烟雾或实景视频限制在文字轮廓内。",
+      "code_expression": {
+        "inputs": [
+          "text/font glyph alpha G",
+          "pattern/footage P",
+          "white background"
+        ],
+        "operations": [
+          "generate true glyph alpha directly; no intermediate lossy export needed",
+          "result=G*P+(1-G)*white",
+          "equivalent binary white-background black-text plate M=1-G: screen(P,M)=1-(1-P)*(1-M)",
+          "lighten=max(P,M) is another demonstrated option, but differs from screen at gray edges"
+        ],
+        "parameters": {
+          "example_duration_seconds": 8,
+          "initial_title_plate_seconds": "approximately8..10",
+          "font": "Maker example; owned local font required",
+          "texture_types": [
+            "particles/light",
+            "fire",
+            "smoke",
+            "real footage"
+          ],
+          "halo": "not inherently produced by clipping texture; blurred-alpha glow is a separate optional operation"
+        },
+        "timing": "align title and texture start/end; source_in skips empty texture section",
+        "outputs": [
+          "animated texture-filled title on white"
+        ]
+      },
+      "execution_equivalence": "direct_math",
+      "pitfalls": [
+        "滤色和变亮仅在二值黑白蒙版处近似等价，抗锯齿灰边不同。",
+        "教程称发光，但主要方法是纹理填充，不能只加Gaussian glow冒充。",
+        "火焰、烟雾素材必须实际提供或另行生成；名称不能代替画面。"
+      ],
+      "validation": [
+        "检查字形边缘、背景白色、字内纹理清晰；首帧不能全空火焰/烟雾；两层长度一致。"
+      ]
+    },
+    {
+      "id": "title_plate_layout_and_resources",
+      "name": "文字版面偏移与效果组合",
+      "intent": "复用标题合成，改变构图和外观。",
+      "code_expression": {
+        "inputs": [
+          "title composite",
+          "background footage",
+          "owned overlays/effect resources"
+        ],
+        "operations": [
+          "blurred_cover(background)",
+          "translate title plate horizontally, clip to canvas",
+          "append explicit effect spans and transform keyframes with declared order"
+        ],
+        "parameters": {
+          "blur": "UIsecond level; sigma unverified",
+          "translation": "adjustable pixels/normalized canvas units; exact source value unverified",
+          "animation": "preset curve requires asset or labeled approximation"
+        },
+        "timing": "all intended full-span effects cover title duration; movement interval explicit",
+        "outputs": [
+          "asymmetric title layout",
+          "optional animated variant"
+        ]
+      },
+      "execution_equivalence": "asset_required",
+      "pitfalls": [
+        "位置变化会裁掉部分字，需确认信息仍表达完整。",
+        "预览效果不代表已入轨；不要堆名称声称完成。",
+        "专有组合动画与光效无资源时只能声明近似。"
+      ],
+      "validation": [
+        "检查版面平衡、被裁字是否符合意图、背景与字形对比；逐层开关确认结果。"
+      ]
+    }
+  ],
+  "unknowns": [
+    "完整ASR已读，未试听、未连续播放。",
+    "原Maker字体文件、纹理视频、贴纸及专有动画资源未提取；没有完全复刻这些资源的证据。",
+    "图层偏移、模糊参数和动画曲线的精确值未显示于已审细节。"
+  ]
+}

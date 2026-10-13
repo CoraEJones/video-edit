@@ -1,0 +1,272 @@
+{
+  "id": "L022",
+  "title": "20  剪映泼墨视频效果教程.mp4",
+  "origin": "User-provided local Jianying tutorial; abstracted principles, not a bundled preset.",
+  "source_sha256": "b2af64fadd1f6a4f236e9d749994b886ba12a456ca8fff36fff3bd71af10567f",
+  "source_duration_seconds": 888.4,
+  "review_scope": {
+    "overview_viewed": true,
+    "detailed_frame_seconds": [
+      364,
+      369,
+      381,
+      415,
+      533,
+      709
+    ],
+    "timestamped_asr_reviewed": true,
+    "asr_verified_by_listening": false,
+    "continuous_playback": false
+  },
+  "execution_routes": [
+    "recipe:screen-overlay",
+    "external:ink"
+  ],
+  "route_semantics": {
+    "typed": "Supported technique.2.0 fields; build and validate an explicit graph.",
+    "recipe": "Executable builder producing a typed graph.",
+    "workflow": "Existing main workflow; separate confirmation and evidence remain required.",
+    "external": "Not bundled; exact resource/voice/preset needs explicit licensed input.",
+    "knowledge": "Planning abstraction only; no new automatic detector or segmentation implementation."
+  },
+  "techniques": [
+    {
+      "id": "animated-ink-matte-reveal",
+      "name": "白底黑墨素材滤色显照片",
+      "intent": "用动态墨迹限定照片可见区域，形成白底泼墨边缘。",
+      "code_expression": {
+        "inputs": [
+          {
+            "name": "photo",
+            "type": "ImageAssetRef"
+          },
+          {
+            "name": "ink",
+            "type": "VideoAssetRef",
+            "requirement": "white-background black-ink animation"
+          }
+        ],
+        "operations": [
+          {
+            "op": "trim_ink_active_motion",
+            "source_in_out": "chosen interval"
+          },
+          {
+            "op": "retime_constant_speed",
+            "speed": "ink_source_span/photo_span"
+          },
+          {
+            "op": "scale_position_matte",
+            "coverage": "full intended photo area"
+          },
+          {
+            "op": "screen_blend",
+            "formula": "C=1-(1-photo)*(1-ink)",
+            "meaning": "white ink background becomes white output; black ink reveals the photo"
+          }
+        ],
+        "parameters": {
+          "target_duration": {
+            "type": "float",
+            "unit": "seconds",
+            "examples": [
+              5.8,
+              5.6,
+              6.4,
+              5.0
+            ]
+          },
+          "matte_transform": {
+            "type": "Transform2D"
+          },
+          "blend": {
+            "type": "enum",
+            "observed": "screen"
+          },
+          "opacity": {
+            "type": "float",
+            "unit": "0..1",
+            "observed": 1.0
+          }
+        },
+        "timing": {
+          "type": "TimeMap",
+          "equation": "s=ink_in+(t-photo_start)*speed; speed=(ink_out-ink_in)/photo_duration"
+        },
+        "outputs": [
+          {
+            "name": "ink_revealed_photo",
+            "type": "VideoFrames"
+          }
+        ]
+      },
+      "execution_equivalence": "asset_required",
+      "pitfalls": [
+        "Screen has opposite visual consequences for black-bottom smoke and white-background ink: white becomes white, not transparency.",
+        "Exact ink shape needs a sourced animation; a procedural blob is only an approximation.",
+        "A matte smaller than the photo leaves straight uncovered bands.",
+        "Changing matte speed is not equivalent to extending a frozen end frame.",
+        "UI speeds are rounded; derive from exact source and target spans."
+      ],
+      "validation": [
+        "Black matte pixels reveal photo and white matte pixels output white under the chosen screen implementation.",
+        "Inspect the full canvas and all edges for uncovered bands.",
+        "Check first/middle/end frames show intended ink evolution and target duration."
+      ]
+    },
+    {
+      "id": "beat-aligned-photo-overlap-budget",
+      "name": "加入重叠转场后维持照片拍点",
+      "intent": "使照片更换与音乐提示保持同步，显式补偿转场的时间重叠。",
+      "code_expression": {
+        "inputs": [
+          {
+            "name": "photos",
+            "type": "List<ImageAssetRef>"
+          },
+          {
+            "name": "music_cues",
+            "type": "List<TimelineTimeSeconds>"
+          },
+          {
+            "name": "transition_overlaps",
+            "type": "List<DurationSeconds>"
+          }
+        ],
+        "operations": [
+          {
+            "op": "solve_clip_start_constraints",
+            "targets": "chosen cue/event times"
+          },
+          {
+            "op": "allocate_transition_handles",
+            "duration": "overlap_s"
+          },
+          {
+            "op": "crossfade_images",
+            "curve": "chosen"
+          },
+          {
+            "op": "recheck_matte_placement",
+            "rule": "visual event remains at its intended cue"
+          }
+        ],
+        "parameters": {
+          "overlap_s": {
+            "type": "float",
+            "unit": "seconds",
+            "narrated_example": 1.2
+          },
+          "cue_event_policy": {
+            "type": "enum",
+            "values": [
+              "transition_start",
+              "transition_midpoint",
+              "transition_end",
+              "new_image_start"
+            ]
+          },
+          "clip_duration_s": {
+            "type": "float",
+            "unit": "seconds",
+            "rule": "solve from declared overlap semantics"
+          }
+        },
+        "timing": {
+          "type": "ConstraintSystem",
+          "equation": "start[i+1]=start[i]+duration[i]-overlap[i]; if next start must equal cue[i+1], duration[i]=cue[i+1]-start[i]+overlap[i]"
+        },
+        "outputs": [
+          {
+            "name": "cue_aligned_photo_timeline",
+            "type": "VisualTimeline"
+          }
+        ]
+      },
+      "execution_equivalence": "direct_math",
+      "pitfalls": [
+        "Adding1.2seconds to all images is specific to the demonstrated overlap behavior, not universal for every editor.",
+        "Transition center, start and completed image change are different cue policies.",
+        "Any duration change requires checking ink layer intervals again.",
+        "Manual lyric onset markers remain unverified without audition."
+      ],
+      "validation": [
+        "Recompute all starts after transitions and compare intended events with cue times.",
+        "Check total timeline duration from overlaps, not sum of visible UI clip durations.",
+        "Audition actual music synchronization and inspect photo/matte boundaries."
+      ]
+    },
+    {
+      "id": "global-and-event-effect-intervals",
+      "name": "整体氛围与末段重音特效分开定时",
+      "intent": "让装饰特效分别覆盖全片、最后照片及音乐中特殊提示区间。",
+      "code_expression": {
+        "inputs": [
+          {
+            "name": "timeline",
+            "type": "VideoFrames"
+          },
+          {
+            "name": "effect_assets",
+            "type": "List<EffectAssetRef>"
+          }
+        ],
+        "operations": [
+          {
+            "op": "apply_effect_interval",
+            "effect": "global",
+            "interval": "0..end"
+          },
+          {
+            "op": "apply_effect_interval",
+            "effect": "last_photo",
+            "interval": "last_photo_start..end"
+          },
+          {
+            "op": "apply_effect_interval",
+            "effect": "final_cue",
+            "interval": "cue..end"
+          }
+        ],
+        "parameters": {
+          "effect_ref": {
+            "type": "EffectAssetRef",
+            "exact_asset": "unknown"
+          },
+          "start": {
+            "type": "float",
+            "unit": "timeline seconds"
+          },
+          "end": {
+            "type": "float",
+            "unit": "timeline seconds"
+          }
+        },
+        "timing": {
+          "type": "TimelineIntervals",
+          "rule": "Effect starts derive from resolved picture boundaries or auditioned music events after transition scheduling."
+        },
+        "outputs": [
+          {
+            "name": "decorated_video",
+            "type": "VideoFrames"
+          }
+        ]
+      },
+      "execution_equivalence": "asset_required",
+      "pitfalls": [
+        "ASR effect names are uncertain; no exact preset should be inferred from homophones.",
+        "Global decoration can reduce face/text visibility and should remain optional."
+      ],
+      "validation": [
+        "Inspect each effect onset and final frame for continuity.",
+        "Check the central subject remains readable and the intended event timing is preserved."
+      ]
+    }
+  ],
+  "unknowns": [
+    "No audio audition or continuous playback performed.",
+    "ASR is unverified; song name, lyric onsets and several optional effect names are not certified.",
+    "Exact screen blend working space, ink asset rights and proprietary transition envelope remain unknown."
+  ]
+}

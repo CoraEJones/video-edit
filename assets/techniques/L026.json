@@ -1,0 +1,138 @@
+{
+  "id": "L026",
+  "title": "24  剪映表白风格视频制作.mp4",
+  "origin": "User-provided local Jianying tutorial; abstracted principles, not a bundled preset.",
+  "source_sha256": "fdb1a74de3561cffcc31f6d939c1c0038d731fecceddf10bbf5eb3e17bd3af45",
+  "source_duration_seconds": 706.288917,
+  "review_scope": {
+    "overview_viewed": true,
+    "detailed_frame_seconds": [
+      240.26,
+      574.01
+    ],
+    "timestamped_asr_reviewed": true,
+    "asr_verified_by_listening": false,
+    "continuous_playback": false
+  },
+  "execution_routes": [
+    "workflow:voiceover",
+    "external:exact_voice"
+  ],
+  "route_semantics": {
+    "typed": "Supported technique.2.0 fields; build and validate an explicit graph.",
+    "recipe": "Executable builder producing a typed graph.",
+    "workflow": "Existing main workflow; separate confirmation and evidence remain required.",
+    "external": "Not bundled; exact resource/voice/preset needs explicit licensed input.",
+    "knowledge": "Planning abstraction only; no new automatic detector or segmentation implementation."
+  },
+  "techniques": [
+    {
+      "id": "countdown_reveal_cues",
+      "name": "倒计时与人声起点触发表白文字",
+      "intent": "以准备—倒计时—揭题建立短片节奏，让文字、图片运动和特效共用同一个提示点。",
+      "code_expression": {
+        "inputs": [
+          "photo",
+          "music with reviewed vocal cue",
+          "countdown strings",
+          "final message",
+          "font/decoration assets"
+        ],
+        "operations": [
+          "define reveal cue from verified vocal onset",
+          "place three countdown captions in consecutive one-second slots ending at reveal",
+          "start final message at reveal and end with music",
+          "render contain-fit foreground photo over cover-fit blurred duplicate background",
+          "animate first photo with explicit position/scale keyframes",
+          "add photo transition using explicit overlap timing, then re-evaluate cue anchors"
+        ],
+        "parameters": {
+          "canvas_aspect": "9:16",
+          "intro_duration_s": {
+            "example": 4,
+            "adjustable": true
+          },
+          "countdown_clip_s": {
+            "example": 1,
+            "adjustable": true
+          },
+          "countdown_entry_s": "讲解1s目标；240.260s UI尚0.5s，最终值未读取",
+          "final_entry_s": "约3；574.010s可见3.3s设置，示例值",
+          "background_blur": "预设2或更强；不是sigma=2",
+          "music_fade_out_s": {
+            "example": 1,
+            "adjustable": true
+          }
+        },
+        "timing": {
+          "unit": "seconds",
+          "countdown": "[cue-3,cue-2),[cue-2,cue-1),[cue-1,cue)",
+          "last_message": "[cue,common_end)",
+          "transition": "all dependent events recomputed after overlap; avoid caption overlap"
+        },
+        "outputs": [
+          "portrait countdown reveal with synchronized independent captions/music/image"
+        ]
+      },
+      "execution_equivalence": "approximation",
+      "pitfalls": [
+        "动作名不足以执行，须写位移/缩放/透明度随时间的曲线；原生组合/收拢预设未解出数学。",
+        "转场会移动轨道和时长，不能保持过期的文字/音乐秒数。",
+        "9:16模糊背景不是把主体拉伸。",
+        "本次没有试听，人声提示点需实际交付时核实。"
+      ],
+      "validation": [
+        "检查one/two/three/最终文字交界无重叠或空缺。",
+        "播放提示点前后，确认最终文字/光效与核实的人声起点同步。",
+        "验证背景覆盖完整且人物比例自然。"
+      ]
+    },
+    {
+      "id": "cue_aligned_decorations",
+      "name": "特效与短贴纸按文字提示点对齐",
+      "intent": "把装饰作为可控局部事件，避免随意贯穿遮挡主体。",
+      "code_expression": {
+        "inputs": [
+          "cue markers",
+          "effect/sticker assets",
+          "caption intervals",
+          "layer order"
+        ],
+        "operations": [
+          "schedule one short overlay per countdown caption",
+          "schedule final-reveal effect group starting at reveal cue",
+          "define local animation phase and trim all layers to common end",
+          "limit decorative coverage around face/text"
+        ],
+        "parameters": {
+          "sticker_duration_s": {
+            "example": 1,
+            "adjustable": true
+          },
+          "effect_assets": "星河/金粉散落等原生资源；ID未知",
+          "scope": "countdown local, final reveal group, optional full-span effect"
+        },
+        "timing": {
+          "unit": "seconds",
+          "dependencies": "overlay_start/end references caption/cue instead of independent hard-coded times"
+        },
+        "outputs": [
+          "cue-linked decorative overlay records"
+        ]
+      },
+      "execution_equivalence": "asset_required",
+      "pitfalls": [
+        "同名花字/粒子/贴纸需要资产，通用爱心或粒子仅是替代。",
+        "叠层过亮会淹没文字或面部，应审看实际输出。"
+      ],
+      "validation": [
+        "首中尾检查透明度、遮挡、边界和资源存在性。"
+      ]
+    }
+  ],
+  "unknowns": [
+    "未试听、无连续播放。",
+    "音乐起唱准确秒值、花字/字体/动画/贴纸资源ID未知。",
+    "倒计时入场时长讲解与设置过程帧不同，未冒称最终1.0s已视觉核定。"
+  ]
+}

@@ -1,0 +1,109 @@
+{
+  "id": "L012",
+  "title": "10  给视频添加电影感字幕.mp4",
+  "origin": "User-provided local Jianying tutorial; abstracted principles, not a bundled preset.",
+  "source_sha256": "7ea40f0b41dc2f6bc11e493dc21b249fe34fe0f1a66a71ea2fd23e70b7ac86b5",
+  "source_duration_seconds": 458.416292,
+  "review_scope": {
+    "overview_viewed": true,
+    "detailed_frame_seconds": [
+      244.489,
+      366.733
+    ],
+    "timestamped_asr_reviewed": true,
+    "asr_verified_by_listening": false,
+    "continuous_playback": false
+  },
+  "execution_routes": [
+    "recipe:letterbox",
+    "workflow:captions"
+  ],
+  "route_semantics": {
+    "typed": "Supported technique.2.0 fields; build and validate an explicit graph.",
+    "recipe": "Executable builder producing a typed graph.",
+    "workflow": "Existing main workflow; separate confirmation and evidence remain required.",
+    "external": "Not bundled; exact resource/voice/preset needs explicit licensed input.",
+    "knowledge": "Planning abstraction only; no new automatic detector or segmentation implementation."
+  },
+  "techniques": [
+    {
+      "id": "letterbox_caption_design",
+      "name": "黑边中的简洁字幕",
+      "intent": "把文字放在稳定暗区，调整视觉对比和字距。",
+      "code_expression": {
+        "inputs": [
+          "video clip",
+          "verified caption text and cue intervals",
+          "music asset",
+          "font file"
+        ],
+        "operations": [
+          "retime video only if slow motion fits motion/source fps",
+          "create top/bottom solid black rectangles",
+          "render centered text to RGBA with per-glyph tracking",
+          "alpha composite text above bars and video"
+        ],
+        "parameters": {
+          "music_and_video_duration_seconds": 24,
+          "observed_speed_at_detail": "0.4X",
+          "text_opacity": "approximately0.8; visible at366.733 is81%",
+          "tracking": "UI5..8 points, example6; map explicitly to renderer px/em",
+          "font": "system font example; exact file/license must be available",
+          "bar_height": "not numerically specified; choose explicit relative canvas fraction and review"
+        },
+        "timing": "captions preserve cue start/end; film bars cover complete segment",
+        "outputs": [
+          "letterboxed video",
+          "separate editable caption and music tracks"
+        ]
+      },
+      "execution_equivalence": "direct_math",
+      "pitfalls": [
+        "自动歌词仍需文字与时码核实；不能把未核实歌词复制给成片。",
+        "5–8 UI点不能盲当像素；字体替换会改变宽度和折行。",
+        "字幕必须在下黑边安全区，留出底边余量。"
+      ],
+      "validation": [
+        "所有字幕首/中/尾帧可读、无裁切；对比柔和仍清晰；画幅条贯穿且字幕居中。"
+      ]
+    },
+    {
+      "id": "vignette_for_focus",
+      "name": "按素材亮度调整暗角",
+      "intent": "压低四周，引导注意力到主体。",
+      "code_expression": {
+        "inputs": [
+          "linearized frame",
+          "vignette center/radii/amount"
+        ],
+        "operations": [
+          "r=elliptical_distance(pixel,center)",
+          "gain=1-amount*smoothstep(inner_radius,outer_radius,r)",
+          "out=frame*gain",
+          "if repeated multiplicative passes, gain_total=gain_1*gain_2"
+        ],
+        "parameters": {
+          "amount": "adjustable by reference preview; no exact preset strength identified",
+          "pass_count": "example2; optional0 or1 per footage"
+        },
+        "timing": "same interval as video; avoid sudden discontinuity at cuts",
+        "outputs": [
+          "edge-darkened frames"
+        ]
+      },
+      "execution_equivalence": "approximation",
+      "pitfalls": [
+        "内建暗角的曲线未知；两次近似乘法不是保证与剪映一致。",
+        "不要用暗角掩盖整体曝光问题或压死人物边缘。"
+      ],
+      "validation": [
+        "检查四角与主体曝光、黑边交界；比较单次/双次暗角。"
+      ]
+    }
+  ],
+  "unknowns": [
+    "未试听音乐或歌词；课中音乐名及版权不构成可重用许可。",
+    "电影画幅精确黑边高度、暗角算法、系统字体实际文件未确认。",
+    "ASR说库内部分字体不能商用，这只是教程陈述；应查实际字体授权而非将所有字体统一判定。"
+  ]
+}

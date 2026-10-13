@@ -1,0 +1,299 @@
+{
+  "id": "L031",
+  "title": "29  单色弹幕和彩色弹幕效果.mp4",
+  "origin": "User-provided local Jianying tutorial; abstracted principles, not a bundled preset.",
+  "source_sha256": "ac718c855b5d4b5a77261979a0244b9c7b6fd72a0aac79c563e16b0a838ab4f1",
+  "source_duration_seconds": 1457.72,
+  "review_scope": {
+    "overview_viewed": true,
+    "detailed_frame_seconds": [
+      389,
+      1069,
+      1360
+    ],
+    "timestamped_asr_reviewed": true,
+    "asr_verified_by_listening": false,
+    "continuous_playback": false
+  },
+  "execution_routes": [
+    "recipe:danmaku"
+  ],
+  "route_semantics": {
+    "typed": "Supported technique.2.0 fields; build and validate an explicit graph.",
+    "recipe": "Executable builder producing a typed graph.",
+    "workflow": "Existing main workflow; separate confirmation and evidence remain required.",
+    "external": "Not bundled; exact resource/voice/preset needs explicit licensed input.",
+    "knowledge": "Planning abstraction only; no new automatic detector or segmentation implementation."
+  },
+  "techniques": [
+    {
+      "id": "grouped-monochrome-marquee",
+      "name": "多行单色文字块滚动及重复接续",
+      "intent": "用一个多行文字块快速形成同色弹幕，再复制接续延长覆盖。",
+      "code_expression": {
+        "inputs": [
+          {
+            "name": "text_block",
+            "type": "MultilineText"
+          },
+          {
+            "name": "font",
+            "type": "FontAssetRef"
+          },
+          {
+            "name": "canvas",
+            "type": "CanvasSize"
+          }
+        ],
+        "operations": [
+          {
+            "op": "shape_multiline_text",
+            "alignment": "left",
+            "line_spacing": "chosen"
+          },
+          {
+            "op": "measure_text_bounds",
+            "output": "text_width,text_height"
+          },
+          {
+            "op": "animate_translate_x",
+            "path": "right-to-left across canvas"
+          },
+          {
+            "op": "duplicate_with_offset",
+            "start": "next_block_start",
+            "text": "optional replacement"
+          }
+        ],
+        "parameters": {
+          "font_size": {
+            "type": "float",
+            "unit": "pixels"
+          },
+          "line_spacing": {
+            "type": "float",
+            "unit": "pixels",
+            "legacy_ui_example": 6,
+            "mapping": "uncalibrated"
+          },
+          "traverse_duration_s": {
+            "type": "float",
+            "unit": "seconds",
+            "narrated_example": 5
+          },
+          "lane_top": {
+            "type": "float",
+            "unit": "normalized canvas height"
+          },
+          "fill_color": {
+            "type": "RGBA",
+            "observed": "white"
+          }
+        },
+        "timing": {
+          "type": "ParametricMotion",
+          "equation": "u=t-start; x(u)=W-(W+text_width+padding)*u/T for one chosen linear traverse; repeat/next block uses explicit phase and start",
+          "tutorial_preset_curve": "unverified"
+        },
+        "outputs": [
+          {
+            "name": "monochrome_marquee_layers",
+            "type": "List<AnimatedTextLayer>"
+          }
+        ]
+      },
+      "execution_equivalence": "direct_math",
+      "pitfalls": [
+        "One text block shares a common color/style in the demonstrated UI; independent message colors require separate layers or a richer text renderer.",
+        "Copying blocks does not automatically prevent gaps or duplicate overlap; check actual bounding boxes over time.",
+        "Exact proprietary marquee wrap/easing behavior is unknown; linear traverse is an explicit code choice.",
+        "Historical text length limits are UI-specific, not intrinsic to the compiler."
+      ],
+      "validation": [
+        "Inspect text entry, midpoint and exit to confirm direction and intended pace.",
+        "Check repeated blocks for visual gaps and unreadable overlap.",
+        "Verify line spacing and readable placement without covering the important subject."
+      ]
+    },
+    {
+      "id": "independent-colored-bullet-lanes",
+      "name": "分层弹幕行、错时出现和独立颜色",
+      "intent": "让每条弹幕具备自己的内容、行位置、速度、开始时间和颜色。",
+      "code_expression": {
+        "inputs": [
+          {
+            "name": "messages",
+            "type": "List<BulletMessage>",
+            "fields": [
+              "text",
+              "lane",
+              "start_s",
+              "traverse_s",
+              "fill_rgba",
+              "font_ref",
+              "style_ref"
+            ]
+          }
+        ],
+        "operations": [
+          {
+            "op": "assign_lane",
+            "y": "lane_y[lane]"
+          },
+          {
+            "op": "shape_measure_text",
+            "output": "width_i"
+          },
+          {
+            "op": "animate_translate_x",
+            "x": "W-(W+width_i+padding)*(t-start_i)/traverse_i"
+          },
+          {
+            "op": "style_per_message",
+            "fill": "fill_i",
+            "optional_asset": "style_ref"
+          },
+          {
+            "op": "schedule_start_offsets",
+            "policy": "explicit offsets or seeded jitter"
+          }
+        ],
+        "parameters": {
+          "lane_count": {
+            "type": "int",
+            "observed_example": 3
+          },
+          "group_count": {
+            "type": "int",
+            "narrated_example": 7
+          },
+          "traverse_s": {
+            "type": "float",
+            "unit": "seconds",
+            "narrated_range": [
+              4,
+              5
+            ]
+          },
+          "fill_rgba": {
+            "type": "RGBA"
+          },
+          "jitter_s": {
+            "type": "float",
+            "unit": "seconds",
+            "implementation_note": "Seeded jitter is a reproducibility choice, not a tutorial-demonstrated algorithm."
+          },
+          "collision_policy": {
+            "type": "enum",
+            "values": [
+              "allow_intentional_overlap",
+              "avoid_same_lane_overlap"
+            ]
+          }
+        },
+        "timing": {
+          "type": "PerMessageMotion",
+          "equation": "speed_i=(W+width_i+padding)/traverse_i; x_i depends on local t-start_i",
+          "rule": "Longer text moves farther in the same traverse time; changing text requires measuring width again."
+        },
+        "outputs": [
+          {
+            "name": "colored_bullet_timeline",
+            "type": "List<AnimatedTextLayer>"
+          },
+          {
+            "name": "reusable_message_recipe",
+            "type": "ParameterizedRecipe"
+          }
+        ]
+      },
+      "execution_equivalence": "direct_math",
+      "pitfalls": [
+        "Equal durations do not imply equal pixel speeds for unequal text widths.",
+        "Random-looking start shifts can produce collisions; the screenshots do not prove collision-free scheduling.",
+        "Seven groups and21tracks are examples, not required architecture or upper limits.",
+        "Exact flower-text/bubble presets need assets; plain per-message color is mathematically direct.",
+        "After changing content, reuse lane/layout structure but recompute widths and collision checks."
+      ],
+      "validation": [
+        "Measure text widths with the actual font and verify intended traverse timing.",
+        "Inspect same-lane bounding boxes through overlapping time intervals.",
+        "Check colors for contrast against actual moving backgrounds.",
+        "Re-run layout/collision checks after text, font or canvas changes; fixed seed reproduces chosen jitter."
+      ]
+    },
+    {
+      "id": "library-instrument-audio",
+      "name": "可选乐器库音与淡入淡出",
+      "intent": "在允许的声音方案中为静音画面增加独立、标明来源的配乐。",
+      "code_expression": {
+        "inputs": [
+          {
+            "name": "library_audio",
+            "type": "AudioAssetRef",
+            "provenance": "library accompaniment"
+          }
+        ],
+        "operations": [
+          {
+            "op": "trim_audio",
+            "end": "video_end"
+          },
+          {
+            "op": "apply_gain_envelope",
+            "fade_in": "chosen",
+            "fade_out": "chosen"
+          },
+          {
+            "op": "mix_allowed_audio_tracks"
+          }
+        ],
+        "parameters": {
+          "fade_in_s": {
+            "type": "float",
+            "unit": "seconds",
+            "narrated_example": 1
+          },
+          "fade_out_s": {
+            "type": "float",
+            "unit": "seconds",
+            "narrated_example_range": [
+              1,
+              2
+            ]
+          },
+          "gain": {
+            "type": "float",
+            "unit": "linear amplitude",
+            "value": "requires audition"
+          }
+        },
+        "timing": {
+          "type": "TimelineInterval",
+          "rule": "Audio ends with intended picture interval; fades operate on final trimmed audio duration."
+        },
+        "outputs": [
+          {
+            "name": "optional_accompaniment",
+            "type": "AudioSamples"
+          }
+        ]
+      },
+      "execution_equivalence": "asset_required",
+      "pitfalls": [
+        "Added guitar-library sound is not evidence of the guitarist's original performance or synchronization.",
+        "Do not add library music to original-only or mute-all requests.",
+        "Source silence and audio quality require actual inspection/audition, not ASR alone."
+      ],
+      "validation": [
+        "Confirm provenance and permitted use of library sound.",
+        "Audition gain/fades and ending; avoid falsely presenting accompaniment as original synchronous sound."
+      ]
+    }
+  ],
+  "unknowns": [
+    "No audio audition or continuous playback performed.",
+    "ASR is unverified; source silence and optional guitar sound identity are not certified.",
+    "Exact proprietary marquee easing, wrap positions, flower-text styles and current UI limits are unknown."
+  ]
+}

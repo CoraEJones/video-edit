@@ -1,0 +1,191 @@
+{
+  "id": "L007",
+  "title": "06  剪映滤镜与调节操作.mp4",
+  "origin": "User-provided local Jianying tutorial; abstracted principles, not a bundled preset.",
+  "source_sha256": "8887cae47fa0dbce1a9af594cba2d62a3d9a96f4a3d2f84befe596b5d88b93e5",
+  "source_duration_seconds": 549.6,
+  "review_scope": {
+    "overview_viewed": true,
+    "detailed_frame_seconds": [
+      235.0,
+      451.0
+    ],
+    "timestamped_asr_reviewed": true,
+    "asr_verified_by_listening": false,
+    "continuous_playback": false
+  },
+  "execution_routes": [
+    "typed:color",
+    "workflow:color"
+  ],
+  "route_semantics": {
+    "typed": "Supported technique.2.0 fields; build and validate an explicit graph.",
+    "recipe": "Executable builder producing a typed graph.",
+    "workflow": "Existing main workflow; separate confirmation and evidence remain required.",
+    "external": "Not bundled; exact resource/voice/preset needs explicit licensed input.",
+    "knowledge": "Planning abstraction only; no new automatic detector or segmentation implementation."
+  },
+  "techniques": [
+    {
+      "id": "ordered-filter-stack",
+      "name": "叠加有强度与时间范围的滤镜",
+      "intent": "将多个外观处理表达为有序的非破坏性时间节点。",
+      "code_expression": {
+        "inputs": [
+          {
+            "name": "frames",
+            "type": "VideoFrames",
+            "color_space": "declared SDR working space"
+          },
+          {
+            "name": "looks",
+            "type": "OrderedList<LookAssetRef>"
+          }
+        ],
+        "operations": [
+          {
+            "op": "apply_look",
+            "input": "previous_frames",
+            "asset": "look_id",
+            "strength": "mix_ratio",
+            "enabled": "start <= t < end",
+            "output": "processed_frames"
+          }
+        ],
+        "parameters": {
+          "look_id": {
+            "type": "AssetRef",
+            "unit": "identifier",
+            "required": true
+          },
+          "mix_ratio": {
+            "type": "float",
+            "unit": "0..1",
+            "adjustable": true
+          },
+          "order": {
+            "type": "int",
+            "unit": "processing order"
+          },
+          "ui_strength": {
+            "observed": 100,
+            "unit": "legacy UI slider",
+            "mapping_to_code": "unverified; do not assume identity"
+          }
+        },
+        "timing": {
+          "type": "TimelineInterval",
+          "start": "s",
+          "end": "s",
+          "rule": "Each look is active only on its interval; stacking evaluates in declared order."
+        },
+        "outputs": [
+          {
+            "name": "styled_video",
+            "type": "VideoFrames"
+          }
+        ]
+      },
+      "execution_equivalence": "asset_required",
+      "pitfalls": [
+        "The proprietary 蒸汽波 look is not defined by the title or screenshot; exact recreation needs a matching licensed LUT/algorithm.",
+        "Two copies are not necessarily equal to doubling a single intensity slider.",
+        "Look order can change the result; clipping destroys detail."
+      ],
+      "validation": [
+        "Compare source and processed frames at the same source timestamp.",
+        "Check every look interval boundary for unintended changes.",
+        "Inspect clipped channels and confirm the intended stack order."
+      ]
+    },
+    {
+      "id": "time-scoped-adjustment",
+      "name": "时间范围内的调节层与局部预览",
+      "intent": "把调色范围、处理顺序与参数明确分开。",
+      "code_expression": {
+        "inputs": [
+          {
+            "name": "frames",
+            "type": "VideoFrames"
+          },
+          {
+            "name": "adjustments",
+            "type": "OrderedList<ColorAdjustment>"
+          }
+        ],
+        "operations": [
+          {
+            "op": "gate_interval",
+            "rule": "start <= t < end"
+          },
+          {
+            "op": "color_adjust",
+            "input": "previous_frames",
+            "parameters": [
+              "exposure_stops",
+              "contrast_ratio",
+              "saturation_ratio",
+              "white_balance",
+              "tone_curve"
+            ],
+            "output": "adjusted_frames"
+          }
+        ],
+        "parameters": {
+          "exposure_stops": {
+            "type": "float",
+            "unit": "stops",
+            "mapping": "choose and calibrate separately"
+          },
+          "contrast_ratio": {
+            "type": "float",
+            "unit": "ratio",
+            "mapping": "choose and calibrate separately"
+          },
+          "saturation_ratio": {
+            "type": "float",
+            "unit": "ratio"
+          },
+          "legacy_ui_values": {
+            "brightness": 29,
+            "contrast": -42,
+            "mapping_to_physical_parameters": "unverified"
+          }
+        },
+        "timing": {
+          "type": "TimelineInterval",
+          "unit": "seconds",
+          "rule": "Preview time must fall within the selected node; copy/split changes interval metadata, not source media."
+        },
+        "outputs": [
+          {
+            "name": "graded_video",
+            "type": "VideoFrames"
+          },
+          {
+            "name": "adjustment_intervals",
+            "type": "EditableMetadata"
+          }
+        ]
+      },
+      "execution_equivalence": "approximation",
+      "pitfalls": [
+        "Legacy slider brightness29 is not FFmpeg brightness0.29 and contrast-42 is not a physical contrast ratio.",
+        "The exact highlight/shadow algorithms and neutral parameter mapping are unknown.",
+        "A layer can extend beyond the source clip and affect other clips unless scoped deliberately.",
+        "Stacked corrections can accumulate unwanted tint, clipping or noise."
+      ],
+      "validation": [
+        "Neutral settings produce unchanged frames within tolerance.",
+        "Frames immediately outside the interval are unchanged.",
+        "Inspect before/after at equal source seconds and compare adjacent shots.",
+        "Validate working color space before applying SDR adjustments."
+      ]
+    }
+  ],
+  "unknowns": [
+    "No audio audition or continuous playback performed.",
+    "ASR contains homophone errors; statements about highlight-slider direction are not accepted as calibrated behavior.",
+    "Exact proprietary filter assets and slider transfer functions are unavailable."
+  ]
+}

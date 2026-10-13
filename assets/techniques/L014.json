@@ -1,0 +1,87 @@
+{
+  "id": "L014",
+  "title": "12  剪映发光文字制作教程.mp4",
+  "origin": "User-provided local Jianying tutorial; abstracted principles, not a bundled preset.",
+  "source_sha256": "63c14323084257cbfc0f4647bab3489e6128ad7ebc28c1d24596a8b7cec4256a",
+  "source_duration_seconds": 503.920083,
+  "review_scope": {
+    "overview_viewed": true,
+    "detailed_frame_seconds": [
+      313.43,
+      436.731,
+      461.69
+    ],
+    "timestamped_asr_reviewed": true,
+    "asr_verified_by_listening": false,
+    "continuous_playback": false
+  },
+  "execution_routes": [
+    "recipe:glow-title"
+  ],
+  "route_semantics": {
+    "typed": "Supported technique.2.0 fields; build and validate an explicit graph.",
+    "recipe": "Executable builder producing a typed graph.",
+    "workflow": "Existing main workflow; separate confirmation and evidence remain required.",
+    "external": "Not bundled; exact resource/voice/preset needs explicit licensed input.",
+    "knowledge": "Planning abstraction only; no new automatic detector or segmentation implementation."
+  },
+  "techniques": [
+    {
+      "id": "glowing_text_group",
+      "name": "隔离文字后叠加发光并混合回画面",
+      "intent": "让亮色文字发光，避免对整个视频的所有边缘施加发光。",
+      "code_expression": {
+        "inputs": [
+          "verified caption segments",
+          "bright text style/font",
+          "base video",
+          "edge-glow resource or explicitly approximate glow"
+        ],
+        "operations": [
+          "render text group to transparent/black background without compressing intermediate",
+          "isolate text group before effect",
+          "apply glow to text group, optionally repeated passes",
+          "composite glow text above video using lighten=max(base,glow) or screen=1-(1-base)*(1-glow)",
+          "resolve audio once; preserve caption timing"
+        ],
+        "parameters": {
+          "text_color": "bright purple example; adjustable",
+          "glow_passes": "约3次示例；不是固定要求",
+          "blend": "lighten demonstrated, screen alternative; different math",
+          "glow_radius_gain": "native preset controls not provided",
+          "example_group_duration_s": 24,
+          "music_fades_s": [
+            1,
+            2
+          ]
+        },
+        "timing": {
+          "unit": "seconds",
+          "captions": "preserve generated segment start/end",
+          "group": "active across captions; base duration matching was tutorial example, not universal instruction"
+        },
+        "outputs": [
+          "isolated glowing text overlay group",
+          "composited video retaining caption timing"
+        ]
+      },
+      "execution_equivalence": "approximation",
+      "pitfalls": [
+        "直接给整画面加边缘发光会改变人物和背景；应先隔离文字组。",
+        "原生边缘发光的算法/资源未知；blur/dilate/add是近似，不能冒称原生同款。",
+        "变亮与滤色不是同一算法，黑底仅在数学条件下消失；压缩噪声会残留。",
+        "不沿袭教程反复有损导出的工作习惯；用无损缓存或合成组并保持可编辑。",
+        "人物变速只是适配演示，不强制将讲话/动作拉成24秒。"
+      ],
+      "validation": [
+        "查看文字开始/中间/结束，确认光晕自然、内容可读且背景未发光。",
+        "用黑底与实际画面分别验证blend；确保无双音乐和字幕错时。"
+      ]
+    }
+  ],
+  "unknowns": [
+    "未试听或连续播放。",
+    "精确边缘发光实现、字体/颜色数值、预设参数未知。",
+    "第二幅详图处播放头为无字幕时刻；发光结果依据436.731秒及概览，不据黑帧臆测。"
+  ]
+}

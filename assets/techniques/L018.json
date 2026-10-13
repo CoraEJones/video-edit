@@ -1,0 +1,108 @@
+{
+  "id": "L018",
+  "title": "16  剪影风格视频效果制作.mp4",
+  "origin": "User-provided local Jianying tutorial; abstracted principles, not a bundled preset.",
+  "source_sha256": "aa99f184ed76e5c35d0535f09c8aad45e0d21b4b13275e39ad69cc65a8fc8a03",
+  "source_duration_seconds": 424.841083,
+  "review_scope": {
+    "overview_viewed": true,
+    "detailed_frame_seconds": [
+      198.259,
+      339.873
+    ],
+    "timestamped_asr_reviewed": true,
+    "asr_verified_by_listening": false,
+    "continuous_playback": false
+  },
+  "execution_routes": [
+    "knowledge:segmentation_and_silhouette",
+    "external:subject_matte"
+  ],
+  "route_semantics": {
+    "typed": "Supported technique.2.0 fields; build and validate an explicit graph.",
+    "recipe": "Executable builder producing a typed graph.",
+    "workflow": "Existing main workflow; separate confirmation and evidence remain required.",
+    "external": "Not bundled; exact resource/voice/preset needs explicit licensed input.",
+    "knowledge": "Planning abstraction only; no new automatic detector or segmentation implementation."
+  },
+  "techniques": [
+    {
+      "id": "screen_silhouette_double_exposure",
+      "name": "白底深色剪影的滤色合成",
+      "intent": "利用深色人物形状保留下层动态影像，白色背景保持明亮，形成双重曝光观感。",
+      "code_expression": {
+        "inputs": [
+          "base video B",
+          "white-background dark silhouette S"
+        ],
+        "operations": [
+          "cover(S,canvas)",
+          "screen(B,S)=1-(1-B)*(1-S)",
+          "for pure black subject/white background: result=(1-M)*B+M*white where M=luma(S)"
+        ],
+        "parameters": {
+          "duration_seconds": 17,
+          "base_speed": "visible0.6X",
+          "blend": "screen / 滤色",
+          "resource": "silhouette image/video with actual usable outline and rights"
+        },
+        "timing": "silhouette and base share interval; dynamic mask keeps own sample time if used",
+        "outputs": [
+          "bright-background double-exposure silhouette composite"
+        ]
+      },
+      "execution_equivalence": "direct_math",
+      "pitfalls": [
+        "灰色剪影带来柔和混合，不能声称是精确二值人物抠像。",
+        "白底不纯或影像尺寸不足会留边；本课没有自动人物分割证据。"
+      ],
+      "validation": [
+        "检查人物轮廓、白底纯度、内部动作和四边覆盖；分别检查屏幕混合输入输出。"
+      ]
+    },
+    {
+      "id": "silhouette_texture_look_and_caption",
+      "name": "剪影外观资源与同画面字幕",
+      "intent": "在基础合成后增加可控外观与文字。",
+      "code_expression": {
+        "inputs": [
+          "composite",
+          "identified LUT/texture/light-leak assets",
+          "verified captions/font"
+        ],
+        "operations": [
+          "apply declared look chain",
+          "screen/add owned light-leak overlay with controlled opacity",
+          "render text on separately timed layer"
+        ],
+        "parameters": {
+          "look_assets": [
+            "潘多拉",
+            "老照片",
+            "彩虹光II",
+            "漏光噪点"
+          ],
+          "color": "sample background hue then choose readable luminance contrast; exact RGB not verified"
+        },
+        "timing": "effects full17-second interval; captions use checked cue times",
+        "outputs": [
+          "styled silhouette video with editable subtitles"
+        ]
+      },
+      "execution_equivalence": "asset_required",
+      "pitfalls": [
+        "专有滤镜/光效需要资源或明确声明近似。",
+        "预览效果不等于已入轨；339.873秒漏光噪点正在预览。",
+        "识别歌词与音乐时码未经听审不能直接发布。"
+      ],
+      "validation": [
+        "逐一开关资源检查贡献与叠加顺序；检查字幕对比和边界，无过曝/过量纹理。"
+      ]
+    }
+  ],
+  "unknowns": [
+    "全文ASR已读但未听审；部分效果名称来自画面核实，音乐名称和歌词不作为授权或核实台词。",
+    "滤色名称由合成结果与ASR误识语境判断，精确当前UI资源ID/混合色域未提取。",
+    "效果精确强度、剪影素材原始图像和字体文件未收集。"
+  ]
+}
