@@ -3,7 +3,7 @@ No editor dependency, compressed intermediates, or source movie copies.
 """
 from __future__ import annotations
 import json, os, re, subprocess, time
-from .common import EditError, progress
+from .common import EditError, progress, filter_script_args
 from .color import hdr_filter, input_color_filter
 
 PROCESS_FLAGS = subprocess.CREATE_NO_WINDOW if os.name == 'nt' else 0
@@ -57,7 +57,7 @@ def producer(plan, assets, shot, cfg, work, seq):
     filters.append(f'[{prev}]scale=in_range=auto:out_range=tv:out_color_matrix=bt709,format=yuv444p10le,setparams=range=limited:color_primaries=bt709:color_trc=bt709:colorspace=bt709[finished]')
     filter_path=work/f'shot-{seq:04d}-filter.txt';filter_path.write_text(';'.join(filters),encoding='utf-8')
     progress_path=work/f'shot-{seq:04d}-progress.txt'
-    cmd+=['-filter_complex_threads','1','-filter_complex_script',filter_path,'-map','[finished]','-an','-frames:v',nframes(shot['duration'],fps),
+    cmd+=['-filter_complex_threads','1',*filter_script_args(cfg['ffmpeg'],filter_path),'-map','[finished]','-an','-frames:v',nframes(shot['duration'],fps),
         '-c:v','rawvideo','-threads','1','-pix_fmt','yuv444p10le','-color_range','tv','-colorspace','bt709','-color_primaries','bt709','-color_trc','bt709',
         '-progress',progress_path,'-f','rawvideo','pipe:1']
     return strs(cmd),progress_path
@@ -96,7 +96,7 @@ def final_command(plan,assets,folder,cfg,work,out):
         filters.append(f"[mt][bottom]overlay=x=0:y='{h//2}+{h//2}*{t}':enable='{enable}':format=auto[mb]");prev='mb'
     filters.append(f'[{prev}]ass=preview.ass:fontsdir=assets/fonts,scale=in_range=auto:out_range=tv:out_color_matrix=bt709,format=yuv420p,setparams=range=limited:color_primaries=bt709:color_trc=bt709:colorspace=bt709[finished]')
     filter_path=work/'final-filter.txt';filter_path.write_text(';'.join(filters),encoding='utf-8')
-    cmd+=['-filter_complex_threads','1','-filter_complex_script',filter_path,'-map','[finished]','-map','1:a:0',*encoder_args(cfg),
+    cmd+=['-filter_complex_threads','1',*filter_script_args(cfg['ffmpeg'],filter_path),'-map','[finished]','-map','1:a:0',*encoder_args(cfg),
         '-pix_fmt','yuv420p','-color_range','tv','-colorspace','bt709','-color_primaries','bt709','-color_trc','bt709',
         '-r',fps,'-fps_mode','cfr','-frames:v',nframes(plan['duration'],fps),'-c:a','aac','-b:a','320k','-ar','48000','-ac','2','-t',plan['duration'],
         '-movflags','+faststart','-progress',work/'final-progress.txt','-n',out]
@@ -187,10 +187,11 @@ def render(plan,assets,folder,cfg,out):
         partial.rename(out)
         return report
     except BaseException as exc:
-        if enc and enc.poll() is None:
+        if enc:
             try:enc.stdin.close()
             except (OSError,ValueError):pass
-            enc.kill();enc.wait()
+            if enc.poll() is None:
+                enc.kill();enc.wait()
         save(work/'failure.json',{'error':repr(exc),'partial':str(partial),'commands':str(work/'commands.json'),'shot_frame_counts':shot_counts})
         raise EditError('MP4_RENDER_FAILED', 'MP4 渲染未完成，请查看失败记录后生成新版本。', {'work': str(work), 'cause': str(exc)}) from exc
 

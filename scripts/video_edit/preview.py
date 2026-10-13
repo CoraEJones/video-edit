@@ -99,7 +99,7 @@ def render_preview(plan,assets,folder,cfg):
     filters.append(f'[{prev}]ass=preview.ass:fontsdir=assets/fonts,scale=in_range=auto:out_range=tv:out_color_matrix=bt709,format=yuv420p,setparams=range=limited:color_primaries=bt709:color_trc=bt709:colorspace=bt709[finished]')
     # Filter scripts avoid Windows command-line length limits for many moving layers.
     filter_path=work/'final-filter.txt';filter_path.write_text(';'.join(filters),encoding='utf8')
-    cmd+=['-filter_complex_threads','1','-filter_complex_script',filter_path,'-map','[finished]','-map','1:a:0',
+    cmd+=['-filter_complex_threads','1',*filter_script_args(cfg['ffmpeg'],filter_path),'-map','[finished]','-map','1:a:0',
           '-c:v','libx264','-threads',cfg['ffmpeg_threads'],'-preset',quality['preset'],'-crf',quality['crf'],
           '-pix_fmt','yuv420p','-color_range','tv','-colorspace','bt709','-color_primaries','bt709','-color_trc','bt709',
           '-r',fps,'-fps_mode','cfr','-frames:v',round(plan['duration']*fps),'-c:a','aac','-b:a','320k','-t',plan['duration'],'-movflags','+faststart','-y',movie]

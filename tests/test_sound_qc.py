@@ -94,7 +94,7 @@ class SoundQcTests(unittest.TestCase):
         final = report['measurements']['final_encoded']
         self.assertEqual(final['status'], 'measured', final)
         self.assertAlmostEqual(final['integrated_lufs'], report['measurements']['mix_wav']['integrated_lufs'], delta=.5)
-        self.assertEqual(final['path'], str(encoded))
+        self.assertEqual(Path(final['path']).resolve(), encoded.resolve())
 
     @unittest.skipUnless(os.environ.get('VIDEO_EDIT_FFMPEG'), 'Set VIDEO_EDIT_FFMPEG for actual no-audio detection')
     def test_real_file_without_audio_is_explicit(self):

@@ -8,6 +8,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+from functools import lru_cache
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -46,6 +47,25 @@ def run(args, timeout=600, **kwargs):
 
 def progress(message):
     print(message, file=sys.stderr, flush=True)
+
+@lru_cache(maxsize=8)
+def _filter_script_option(ffmpeg):
+    """FFmpeg 7 introduced option files; 9 removed filter_complex_script."""
+    banner = run([ffmpeg, '-version'], timeout=30).stdout.decode('utf-8', 'replace')
+    version = re.search(r'^ffmpeg version (?:n)?(\d+)\.', banner, re.M)
+    if version:
+        modern = int(version.group(1)) >= 7
+    else:
+        # Git/nightly builds often have no release number in their banner.
+        library = re.search(r'libavutil\s+(\d+)\.', banner)
+        if not library:
+            raise EditError('FFMPEG_VERSION_UNKNOWN', '无法识别 FFmpeg 版本。', {'program': str(ffmpeg)})
+        modern = int(library.group(1)) >= 59
+    return '-/filter_complex' if modern else '-filter_complex_script'
+
+def filter_script_args(ffmpeg, path):
+    # Keep graphs on disk: hundreds of layers can exceed Windows argv limits.
+    return [_filter_script_option(str(ffmpeg)), str(path)]
 
 def sha256(path):
     digest = hashlib.sha256()

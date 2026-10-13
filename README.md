@@ -2,7 +2,7 @@
 
 让 Codex **或** DeepSeek Harness 把旅行、家庭和活动素材剪成有故事的短片。两者只需一个；你可以只拿 MP4，也可以同时保留剪映可编辑工程。
 
-**v1.7.0：磁盘素材记忆、分批交接、缓存与证据校验、20套原创调色。** [查看更新](CHANGELOG.md) · [下载最新版本](https://github.com/CoraEJones/video-edit/releases/latest)
+**v1.7.1：磁盘素材记忆、分批交接、缓存与证据校验、20套原创调色，兼容新版FFmpeg。** [查看更新](CHANGELOG.md) · [下载最新版本](https://github.com/CoraEJones/video-edit/releases/latest)
 
 这是由助手调用的 Skill 和本地工具。助手负责看画面、编故事和作剪辑判断；是否能听音、调用子智能体或生成艺术字，取决于当前会话实际提供的工具。
 

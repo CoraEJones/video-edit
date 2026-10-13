@@ -1,5 +1,11 @@
 # 本机验证记录
 
+## 1.7.1 新版FFmpeg兼容补丁（2026-10-13）
+
+- 本机150项完整回归通过，无跳过，包括实际MP4、预览、逐镜调色与AAC测量；新增4项文件参数版本选择测试。Skill格式校验通过。
+- 1.7.0发布后的Windows/Python 3.12/FFmpeg 9.0.2云端回归发现3项渲染错误及1项Windows短路径断言失败。本补丁改用FFmpeg 7引入的 `-/filter_complex` 文件参数，旧版保留旧语法，修复路径比较并关闭失败管道。[FFmpeg官方变更记录](https://raw.githubusercontent.com/FFmpeg/FFmpeg/n7.0/Changelog)记录了新语法引入版本。
+- 云端复验结果以[GitHub Actions](https://github.com/CoraEJones/video-edit/actions/workflows/tests.yml)中对应提交为准。本补丁不重新声明200段分析、独立前向试剪或人工审美评估，以下1.7记录仍保留其原有范围。
+
 ## 1.7 磁盘记忆、严格证据、20套调色与公开200段（2026-10-13）
 
 - 本轮Python完整回归146项全部通过，启用真实FFmpeg项，无跳过；包含分阶段缓存、结构化证据、源区间、租约/范围/失效/精审归档、有限检索、20配方与真实调色、WAV/AAC响度测量、公开下载器。Skill格式和本地文档链接检查通过。
