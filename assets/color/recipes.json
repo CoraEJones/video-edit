@@ -1,0 +1,1069 @@
+[
+  {
+    "number": 1,
+    "slug": "natural_vivid",
+    "name": "自然通透",
+    "category": "自然",
+    "tip": "轻微 S 曲线和饱和度提升；先看白色海浪是否仍有层次。",
+    "brightness": 0.0,
+    "contrast": 1.03,
+    "gamma": 1.02,
+    "saturation": 1.08,
+    "curve": [
+      [
+        0,
+        0
+      ],
+      [
+        0.2,
+        0.18
+      ],
+      [
+        0.75,
+        0.78
+      ],
+      [
+        1,
+        1
+      ]
+    ],
+    "shadows": [
+      0,
+      0,
+      0
+    ],
+    "midtones": [
+      0,
+      0,
+      0
+    ],
+    "highlights": [
+      0,
+      0,
+      0
+    ],
+    "hue_bands": [],
+    "skin_protect": 0.25,
+    "channel_curves": {},
+    "matrix": null,
+    "recommended_strength": "70–100%",
+    "stem": "01_natural_vivid"
+  },
+  {
+    "number": 2,
+    "slug": "airy_daylight",
+    "name": "日系空气感",
+    "category": "柔和",
+    "tip": "抬黑位、压白位、降低饱和度；避免把阴天画面提成灰雾。",
+    "brightness": 0.012,
+    "contrast": 0.94,
+    "gamma": 1.07,
+    "saturation": 0.79,
+    "curve": [
+      [
+        0,
+        0.025
+      ],
+      [
+        0.25,
+        0.28
+      ],
+      [
+        0.75,
+        0.77
+      ],
+      [
+        1,
+        0.965
+      ]
+    ],
+    "shadows": [
+      0,
+      0.008,
+      0.016
+    ],
+    "midtones": [
+      0,
+      0,
+      0
+    ],
+    "highlights": [
+      0.018,
+      0.012,
+      -0.012
+    ],
+    "hue_bands": [],
+    "skin_protect": 0.25,
+    "channel_curves": {},
+    "matrix": null,
+    "recommended_strength": "60–80%",
+    "stem": "02_airy_daylight"
+  },
+  {
+    "number": 3,
+    "slug": "golden_hour",
+    "name": "金色暖阳",
+    "category": "暖调",
+    "tip": "高光加红减蓝，保留稍冷暗部；肤色过黄时降低 LUT 强度。",
+    "brightness": 0.0,
+    "contrast": 1.0,
+    "gamma": 1.025,
+    "saturation": 1.04,
+    "curve": [
+      [
+        0,
+        0
+      ],
+      [
+        1,
+        1
+      ]
+    ],
+    "shadows": [
+      -0.008,
+      0.002,
+      0.012
+    ],
+    "midtones": [
+      0.023,
+      0.006,
+      -0.018
+    ],
+    "highlights": [
+      0.05,
+      0.022,
+      -0.046
+    ],
+    "hue_bands": [],
+    "skin_protect": 0.3,
+    "channel_curves": {},
+    "matrix": null,
+    "recommended_strength": "60–80%",
+    "stem": "03_golden_hour"
+  },
+  {
+    "number": 4,
+    "slug": "teal_orange",
+    "name": "青橙电影",
+    "category": "电影",
+    "tip": "暗部偏青、高光偏橙；用暖色保护减轻肤色被青色污染。",
+    "brightness": 0.0,
+    "contrast": 1.04,
+    "gamma": 1.0,
+    "saturation": 0.9,
+    "curve": [
+      [
+        0,
+        0.012
+      ],
+      [
+        0.22,
+        0.19
+      ],
+      [
+        0.75,
+        0.78
+      ],
+      [
+        1,
+        0.98
+      ]
+    ],
+    "shadows": [
+      -0.045,
+      0.028,
+      0.037
+    ],
+    "midtones": [
+      0,
+      0,
+      0
+    ],
+    "highlights": [
+      0.048,
+      0.014,
+      -0.038
+    ],
+    "hue_bands": [],
+    "skin_protect": 0.4,
+    "channel_curves": {},
+    "matrix": null,
+    "recommended_strength": "60–80%",
+    "stem": "04_teal_orange"
+  },
+  {
+    "number": 5,
+    "slug": "nordic_cool",
+    "name": "北欧冷调",
+    "category": "冷调",
+    "tip": "降低整体色彩并向蓝青偏移；白墙过蓝时先减高光蓝。",
+    "brightness": 0.0,
+    "contrast": 0.99,
+    "gamma": 1.03,
+    "saturation": 0.74,
+    "curve": [
+      [
+        0,
+        0
+      ],
+      [
+        1,
+        1
+      ]
+    ],
+    "shadows": [
+      -0.021,
+      0.012,
+      0.037
+    ],
+    "midtones": [
+      -0.015,
+      0.006,
+      0.02
+    ],
+    "highlights": [
+      -0.011,
+      0.006,
+      0.021
+    ],
+    "hue_bands": [],
+    "skin_protect": 0.35,
+    "channel_curves": {},
+    "matrix": null,
+    "recommended_strength": "60–80%",
+    "stem": "05_nordic_cool"
+  },
+  {
+    "number": 6,
+    "slug": "pastel_pink",
+    "name": "柔粉奶油",
+    "category": "柔和",
+    "tip": "降低反差并添加少量洋红；以白墙和脸部检查粉色强度。",
+    "brightness": 0.0,
+    "contrast": 0.92,
+    "gamma": 1.06,
+    "saturation": 0.78,
+    "curve": [
+      [
+        0,
+        0.025
+      ],
+      [
+        0.5,
+        0.52
+      ],
+      [
+        1,
+        0.955
+      ]
+    ],
+    "shadows": [
+      0,
+      0,
+      0
+    ],
+    "midtones": [
+      0.023,
+      -0.01,
+      0.015
+    ],
+    "highlights": [
+      0.026,
+      -0.007,
+      0.012
+    ],
+    "hue_bands": [],
+    "skin_protect": 0.25,
+    "channel_curves": {},
+    "matrix": null,
+    "recommended_strength": "60–80%",
+    "stem": "06_pastel_pink"
+  },
+  {
+    "number": 7,
+    "slug": "vintage_fade",
+    "name": "褪色旧时光",
+    "category": "复古",
+    "tip": "抬起黑位并压低白点，暗部略偏紫；适合回忆段落。",
+    "brightness": 0.0,
+    "contrast": 1.0,
+    "gamma": 1.0,
+    "saturation": 0.76,
+    "curve": [
+      [
+        0,
+        0.065
+      ],
+      [
+        0.22,
+        0.25
+      ],
+      [
+        0.7,
+        0.7
+      ],
+      [
+        1,
+        0.93
+      ]
+    ],
+    "shadows": [
+      0.025,
+      -0.008,
+      0.028
+    ],
+    "midtones": [
+      0,
+      0,
+      0
+    ],
+    "highlights": [
+      0.025,
+      0.014,
+      -0.02
+    ],
+    "hue_bands": [],
+    "skin_protect": 0.2,
+    "channel_curves": {},
+    "matrix": null,
+    "recommended_strength": "60–80%",
+    "stem": "07_vintage_fade"
+  },
+  {
+    "number": 8,
+    "slug": "warm_print",
+    "name": "暖调胶片感",
+    "category": "复古",
+    "tip": "温和 S 曲线、暖高光、略冷阴影；该风格仅模拟色调，不包含颗粒。",
+    "brightness": 0.0,
+    "contrast": 1.0,
+    "gamma": 1.02,
+    "saturation": 0.92,
+    "curve": [
+      [
+        0,
+        0.012
+      ],
+      [
+        0.18,
+        0.145
+      ],
+      [
+        0.65,
+        0.68
+      ],
+      [
+        1,
+        0.96
+      ]
+    ],
+    "shadows": [
+      -0.01,
+      0.005,
+      0.013
+    ],
+    "midtones": [
+      0.012,
+      0.003,
+      -0.008
+    ],
+    "highlights": [
+      0.035,
+      0.012,
+      -0.03
+    ],
+    "hue_bands": [],
+    "skin_protect": 0.3,
+    "channel_curves": {},
+    "matrix": null,
+    "recommended_strength": "60–80%",
+    "stem": "08_warm_print"
+  },
+  {
+    "number": 9,
+    "slug": "cool_slide",
+    "name": "清冷反转片感",
+    "category": "冷调",
+    "tip": "加深蓝色并增强绿色；避免海水蓝色饱和过高。",
+    "brightness": 0.0,
+    "contrast": 1.045,
+    "gamma": 1.0,
+    "saturation": 1.12,
+    "curve": [
+      [
+        0,
+        0
+      ],
+      [
+        1,
+        1
+      ]
+    ],
+    "shadows": [
+      -0.012,
+      0.004,
+      0.026
+    ],
+    "midtones": [
+      0,
+      0,
+      0
+    ],
+    "highlights": [
+      -0.005,
+      0.004,
+      0.014
+    ],
+    "hue_bands": [
+      {
+        "center": 220,
+        "width": 35,
+        "hue": 4,
+        "sat": 1.08
+      },
+      {
+        "center": 115,
+        "width": 32,
+        "hue": 2,
+        "sat": 1.05
+      }
+    ],
+    "skin_protect": 0.3,
+    "channel_curves": {},
+    "matrix": null,
+    "recommended_strength": "60–80%",
+    "stem": "09_cool_slide"
+  },
+  {
+    "number": 10,
+    "slug": "olive_cinema",
+    "name": "橄榄电影",
+    "category": "电影",
+    "tip": "绿色向黄绿偏移并降低饱和度，配合暖亮部；重点检查树叶。",
+    "brightness": 0.0,
+    "contrast": 1.0,
+    "gamma": 1.0,
+    "saturation": 0.8,
+    "curve": [
+      [
+        0,
+        0.018
+      ],
+      [
+        0.22,
+        0.18
+      ],
+      [
+        0.72,
+        0.74
+      ],
+      [
+        1,
+        0.96
+      ]
+    ],
+    "shadows": [
+      0.004,
+      0.018,
+      -0.01
+    ],
+    "midtones": [
+      0,
+      0,
+      0
+    ],
+    "highlights": [
+      0.027,
+      0.023,
+      -0.028
+    ],
+    "hue_bands": [
+      {
+        "center": 110,
+        "width": 38,
+        "hue": -15,
+        "sat": 0.76
+      }
+    ],
+    "skin_protect": 0.3,
+    "channel_curves": {},
+    "matrix": null,
+    "recommended_strength": "60–80%",
+    "stem": "10_olive_cinema"
+  },
+  {
+    "number": 11,
+    "slug": "mediterranean",
+    "name": "地中海青蓝",
+    "category": "自然",
+    "tip": "蓝色略向青色偏移，保持白色浪花；适合晴天海岸。",
+    "brightness": 0.0,
+    "contrast": 1.0,
+    "gamma": 1.02,
+    "saturation": 1.08,
+    "curve": [
+      [
+        0,
+        0
+      ],
+      [
+        1,
+        1
+      ]
+    ],
+    "shadows": [
+      -0.015,
+      0.014,
+      0.02
+    ],
+    "midtones": [
+      0,
+      0,
+      0
+    ],
+    "highlights": [
+      0.014,
+      0.009,
+      -0.006
+    ],
+    "hue_bands": [
+      {
+        "center": 215,
+        "width": 35,
+        "hue": -13,
+        "sat": 1.12
+      }
+    ],
+    "skin_protect": 0.35,
+    "channel_curves": {},
+    "matrix": null,
+    "recommended_strength": "60–80%",
+    "stem": "11_mediterranean"
+  },
+  {
+    "number": 12,
+    "slug": "emerald_forest",
+    "name": "翡翠森林",
+    "category": "自然",
+    "tip": "黄绿向绿色偏移并加强绿色；绿色噪点明显时降低局部饱和。",
+    "brightness": 0.0,
+    "contrast": 1.025,
+    "gamma": 1.0,
+    "saturation": 0.96,
+    "curve": [
+      [
+        0,
+        0
+      ],
+      [
+        1,
+        1
+      ]
+    ],
+    "shadows": [
+      -0.018,
+      0.018,
+      0.01
+    ],
+    "midtones": [
+      0,
+      0,
+      0
+    ],
+    "highlights": [
+      0,
+      0,
+      0
+    ],
+    "hue_bands": [
+      {
+        "center": 85,
+        "width": 38,
+        "hue": 15,
+        "sat": 1.15
+      }
+    ],
+    "skin_protect": 0.3,
+    "channel_curves": {},
+    "matrix": null,
+    "recommended_strength": "60–80%",
+    "stem": "12_emerald_forest"
+  },
+  {
+    "number": 13,
+    "slug": "cocoa_brown",
+    "name": "可可棕调",
+    "category": "暖调",
+    "tip": "压低蓝绿饱和，暗部与亮部加入棕暖色；适合街景和室内。",
+    "brightness": 0.0,
+    "contrast": 1.0,
+    "gamma": 1.0,
+    "saturation": 0.64,
+    "curve": [
+      [
+        0,
+        0.026
+      ],
+      [
+        0.2,
+        0.18
+      ],
+      [
+        0.75,
+        0.73
+      ],
+      [
+        1,
+        0.95
+      ]
+    ],
+    "shadows": [
+      0.025,
+      0.009,
+      -0.018
+    ],
+    "midtones": [
+      0.025,
+      0.007,
+      -0.022
+    ],
+    "highlights": [
+      0.034,
+      0.017,
+      -0.032
+    ],
+    "hue_bands": [
+      {
+        "center": 210,
+        "width": 55,
+        "hue": -4,
+        "sat": 0.7
+      }
+    ],
+    "skin_protect": 0.25,
+    "channel_curves": {},
+    "matrix": null,
+    "recommended_strength": "60–80%",
+    "stem": "13_cocoa_brown"
+  },
+  {
+    "number": 14,
+    "slug": "moody_blue",
+    "name": "深蓝情绪",
+    "category": "电影",
+    "tip": "降低中间调、暗部加蓝；暗光素材建议减弱强度以免压黑。",
+    "brightness": -0.015,
+    "contrast": 1.0,
+    "gamma": 0.97,
+    "saturation": 0.78,
+    "curve": [
+      [
+        0,
+        0.007
+      ],
+      [
+        0.25,
+        0.19
+      ],
+      [
+        0.75,
+        0.72
+      ],
+      [
+        1,
+        0.965
+      ]
+    ],
+    "shadows": [
+      -0.03,
+      0.002,
+      0.052
+    ],
+    "midtones": [
+      -0.018,
+      -0.004,
+      0.023
+    ],
+    "highlights": [
+      0,
+      0,
+      0
+    ],
+    "hue_bands": [],
+    "skin_protect": 0.4,
+    "channel_curves": {},
+    "matrix": null,
+    "recommended_strength": "40–70%",
+    "stem": "14_moody_blue"
+  },
+  {
+    "number": 15,
+    "slug": "violet_neon",
+    "name": "紫青霓虹",
+    "category": "风格化",
+    "tip": "暗部青蓝、亮部洋红，蓝色向紫色偏移；适合音乐与夜景表达。",
+    "brightness": 0.0,
+    "contrast": 1.02,
+    "gamma": 1.0,
+    "saturation": 1.08,
+    "curve": [
+      [
+        0,
+        0
+      ],
+      [
+        1,
+        1
+      ]
+    ],
+    "shadows": [
+      -0.018,
+      0.004,
+      0.045
+    ],
+    "midtones": [
+      0.018,
+      -0.022,
+      0.022
+    ],
+    "highlights": [
+      0.05,
+      -0.025,
+      0.035
+    ],
+    "hue_bands": [
+      {
+        "center": 225,
+        "width": 40,
+        "hue": 16,
+        "sat": 1.08
+      }
+    ],
+    "skin_protect": 0.35,
+    "channel_curves": {},
+    "matrix": null,
+    "recommended_strength": "35–65%",
+    "stem": "15_violet_neon"
+  },
+  {
+    "number": 16,
+    "slug": "bleach_bypass",
+    "name": "漂白旁路感",
+    "category": "电影",
+    "tip": "低饱和配强反差；暗部容易丢失细节，避免继续叠加对比。",
+    "brightness": 0.0,
+    "contrast": 1.0,
+    "gamma": 1.0,
+    "saturation": 0.42,
+    "curve": [
+      [
+        0,
+        0
+      ],
+      [
+        0.17,
+        0.1
+      ],
+      [
+        0.5,
+        0.49
+      ],
+      [
+        0.82,
+        0.88
+      ],
+      [
+        1,
+        0.99
+      ]
+    ],
+    "shadows": [
+      -0.008,
+      0.001,
+      0.012
+    ],
+    "midtones": [
+      0,
+      0,
+      0
+    ],
+    "highlights": [
+      0.012,
+      0.006,
+      -0.006
+    ],
+    "hue_bands": [],
+    "skin_protect": 0.1,
+    "channel_curves": {},
+    "matrix": null,
+    "recommended_strength": "40–75%",
+    "stem": "16_bleach_bypass"
+  },
+  {
+    "number": 17,
+    "slug": "cross_process",
+    "name": "交叉冲洗感",
+    "category": "风格化",
+    "tip": "红绿蓝采用不同曲线产生色偏；中性色偏移属于该风格特点。",
+    "brightness": 0.0,
+    "contrast": 1.0,
+    "gamma": 1.0,
+    "saturation": 1.03,
+    "curve": [
+      [
+        0,
+        0
+      ],
+      [
+        1,
+        1
+      ]
+    ],
+    "shadows": [
+      0,
+      0,
+      0
+    ],
+    "midtones": [
+      0,
+      0,
+      0
+    ],
+    "highlights": [
+      0,
+      0,
+      0
+    ],
+    "hue_bands": [],
+    "skin_protect": 0.25,
+    "channel_curves": {
+      "r": [
+        [
+          0,
+          0.025
+        ],
+        [
+          0.25,
+          0.19
+        ],
+        [
+          0.7,
+          0.78
+        ],
+        [
+          1,
+          1
+        ]
+      ],
+      "g": [
+        [
+          0,
+          0.01
+        ],
+        [
+          0.25,
+          0.28
+        ],
+        [
+          0.75,
+          0.79
+        ],
+        [
+          1,
+          0.98
+        ]
+      ],
+      "b": [
+        [
+          0,
+          0.06
+        ],
+        [
+          0.25,
+          0.29
+        ],
+        [
+          0.75,
+          0.68
+        ],
+        [
+          1,
+          0.92
+        ]
+      ]
+    },
+    "matrix": null,
+    "recommended_strength": "35–65%",
+    "stem": "17_cross_process"
+  },
+  {
+    "number": 18,
+    "slug": "sepia_memory",
+    "name": "怀旧棕褐",
+    "category": "黑白与单色",
+    "tip": "先去色，再以棕褐矩阵着色；适合有明确回忆语义的段落。",
+    "brightness": 0.0,
+    "contrast": 1.0,
+    "gamma": 1.0,
+    "saturation": 0,
+    "curve": [
+      [
+        0,
+        0.025
+      ],
+      [
+        0.25,
+        0.24
+      ],
+      [
+        0.75,
+        0.76
+      ],
+      [
+        1,
+        0.93
+      ]
+    ],
+    "shadows": [
+      0,
+      0,
+      0
+    ],
+    "midtones": [
+      0,
+      0,
+      0
+    ],
+    "highlights": [
+      0,
+      0,
+      0
+    ],
+    "hue_bands": [],
+    "skin_protect": 0.0,
+    "channel_curves": {},
+    "matrix": [
+      [
+        1.07,
+        0,
+        0
+      ],
+      [
+        0,
+        0.96,
+        0
+      ],
+      [
+        0,
+        0,
+        0.78
+      ]
+    ],
+    "recommended_strength": "70–100%",
+    "stem": "18_sepia_memory"
+  },
+  {
+    "number": 19,
+    "slug": "monochrome_crisp",
+    "name": "经典高反差黑白",
+    "category": "黑白与单色",
+    "tip": "完全去色并加 S 曲线；用衣服和头发检查暗部细节。",
+    "brightness": 0.0,
+    "contrast": 1.0,
+    "gamma": 1.0,
+    "saturation": 0,
+    "curve": [
+      [
+        0,
+        0
+      ],
+      [
+        0.2,
+        0.14
+      ],
+      [
+        0.5,
+        0.5
+      ],
+      [
+        0.8,
+        0.87
+      ],
+      [
+        1,
+        1
+      ]
+    ],
+    "shadows": [
+      0,
+      0,
+      0
+    ],
+    "midtones": [
+      0,
+      0,
+      0
+    ],
+    "highlights": [
+      0,
+      0,
+      0
+    ],
+    "hue_bands": [],
+    "skin_protect": 0.0,
+    "channel_curves": {},
+    "matrix": null,
+    "recommended_strength": "100%",
+    "stem": "19_monochrome_crisp"
+  },
+  {
+    "number": 20,
+    "slug": "monochrome_matte",
+    "name": "柔雾黑白",
+    "category": "黑白与单色",
+    "tip": "完全去色、抬黑压白并提中间调；适合柔和人物与日常记录。",
+    "brightness": 0.0,
+    "contrast": 1.0,
+    "gamma": 1.04,
+    "saturation": 0,
+    "curve": [
+      [
+        0,
+        0.055
+      ],
+      [
+        0.25,
+        0.29
+      ],
+      [
+        0.75,
+        0.75
+      ],
+      [
+        1,
+        0.94
+      ]
+    ],
+    "shadows": [
+      0,
+      0,
+      0
+    ],
+    "midtones": [
+      0,
+      0,
+      0
+    ],
+    "highlights": [
+      0,
+      0,
+      0
+    ],
+    "hue_bands": [],
+    "skin_protect": 0.0,
+    "channel_curves": {},
+    "matrix": null,
+    "recommended_strength": "100%",
+    "stem": "20_monochrome_matte"
+  }
+]

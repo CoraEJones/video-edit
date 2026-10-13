@@ -36,3 +36,8 @@
 [requirements.txt](requirements.txt) 列出的 NumPy、Pillow、fontTools、faster-whisper 及其传递依赖，安装后仍分别遵循上游许可证。Python、FFmpeg、语音模型及额外下载的运行组件也遵循各自许可；公开源码包不包含这些运行时、模型缓存或安装后的环境。另行分发离线运行包时，应保留实际组件的许可证、来源及对应版本记录，不能直接套用本项目 MIT。
 
 剪映软件、DLL 与其资源不随本项目分发，使用接收电脑已安装的剪映。用户导入的照片、视频、录音、配乐和扩展字体不因本项目采用 MIT 而改变其权利归属或获得新的授权，也不包含在公开仓库内。
+# Original color recipes and public benchmark media
+
+The 20 BT.709 SDR creative recipes and their generator are original project assets under the repository MIT license. Official Adobe, Blackmagic Design and FFmpeg documentation is linked as tool-principle research; recipes are not copied commercial presets or exact branded film emulations. No private reference videos or previews are included.
+
+Public benchmark videos retain their individual Commons licenses and creator attribution. The repository distributes download/replay tools and source/attribution manifests, not the video files. Downloaded official transcodes are recorded as such. Source-page metadata and discovery groups are not human-verified visual or speech annotations. See references/benchmark.md and benchmarks/commons-200 when the corpus manifest is included.

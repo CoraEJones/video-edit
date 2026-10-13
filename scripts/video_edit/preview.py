@@ -2,6 +2,7 @@ from __future__ import annotations
 from pathlib import Path
 from .common import *
 from .text import text_items
+from .color import input_color_filter
 
 def timecode(t,ass=False):
     if ass:
@@ -36,10 +37,8 @@ def render_preview(plan,assets,folder,cfg):
             if a['kind']=='image':cmd+=['-loop','1','-framerate',fps,'-i',a['video']]
             else:cmd+=['-ss',item['source_in'],'-i',a['video']]
         for i,item in enumerate(items):
-            a=assets[item['id']];hdr=''
-            if a.get('source_metadata',{}).get('color_transfer') in ('arib-std-b67','smpte2084'):
-                hdr='zscale=t=linear:npl=100,format=gbrpf32le,tonemap=tonemap=mobius:desat=0,zscale=p=bt709:t=bt709:m=bt709:r=tv,'
-            filters.append(f'[{i}:v]setpts=(PTS-STARTPTS)/{item["speed"]},fps={fps},'+hdr+
+            a=assets[item['id']]
+            filters.append(f'[{i}:v]setpts=(PTS-STARTPTS)/{item["speed"]},fps={fps},'+input_color_filter(plan,item,a,folder,s if panel else None)+
                 f'scale={w}:{h}:force_original_aspect_ratio=decrease:force_divisible_by=2:flags=lanczos,pad={w}:{h}:(ow-iw)/2:(oh-ih)/2,setsar=1,trim=duration={s["duration"]},setpts=PTS-STARTPTS[v{i}]')
         if panel:
             filters.append(f'color=black:s={w}x{h}:r={fps}:d={s["duration"]}[bg]');prev='bg'
@@ -78,11 +77,8 @@ def render_preview(plan,assets,folder,cfg):
         else:cmd+=['-ss',layer['source_in'],'-i',asset['video']]
         metadata=asset.get('source_metadata',{});sw,sh=metadata['width'],metadata['height']
         fit=min(w/sw,h/sh)*layer['scale'];lw,lh=max(1,round(sw*fit)),max(1,round(sh*fit))
-        hdr=''
-        if metadata.get('color_transfer') in ('arib-std-b67','smpte2084'):
-            hdr='zscale=t=linear:npl=100,format=gbrpf32le,tonemap=tonemap=mobius:desat=0,zscale=p=bt709:t=bt709:m=bt709:r=tv,'
         frames=round(layer['duration']*fps);start_frame=round(layer['start']*fps)
-        filters.append(f'[{input_index}:v]setpts=(PTS-STARTPTS)/{layer["speed"]},fps={fps},'+hdr+
+        filters.append(f'[{input_index}:v]setpts=(PTS-STARTPTS)/{layer["speed"]},fps={fps},'+input_color_filter(plan,layer,asset,folder)+
             f'format=rgba,scale={lw}:{lh}:flags=lanczos,setsar=1,trim=end_frame={frames},settb=expr=1/{fps},setpts=N+{start_frame}[layer{i}]')
         x=position_expression(layer,'x');y=position_expression(layer,'y')
         end=layer['start']+layer['duration']
@@ -117,9 +113,13 @@ def render_preview(plan,assets,folder,cfg):
         raise EditError('PREVIEW_FRAME_MISMATCH','预览帧数与计划不一致，未通过导出验收。',{'expected':round(plan['duration']*fps),'actual':frame_count})
     if (measured['width'],measured['height'])!=(w,h):
         raise EditError('PREVIEW_SIZE_MISMATCH','预览分辨率与计划不一致。',measured)
+    from .sound import write_audio_qc
+    audio_qc=write_audio_qc(folder,cfg,preview_encoded=movie)
     quality.update(codec='h264',pixel_format=measured['pix_fmt'],video_encodes_per_frame=2,frame_count=frame_count,
         intermediate_codec='ffv1',intermediate_compression_lossless=True,lossy_video_encodes_per_frame=1,
         lossless=False,color_output='SDR',fps=fps,measured=measured,
+        color_report=str(folder/'color-report.json') if (folder/'color-report.json').is_file() else None,
+        audio_qc_path=str(folder/'audio-qc.json'),audio_qc=audio_qc,
         hdr_tonemapped_preview_only=[k for k,a in assets.items() if a.get('source_metadata',{}).get('color_transfer') in ('arib-std-b67','smpte2084')],
         note='高画质预览仍需编码；剪映工程使用原片。最终成片请在剪映选择匹配原素材的分辨率、帧率、码率与 HDR 设置。')
     write(folder/'preview-quality.json',quality)

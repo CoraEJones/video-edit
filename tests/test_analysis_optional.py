@@ -104,5 +104,13 @@ class OptionalAnalysisTests(unittest.TestCase):
             analysis.analyze(self.media, self.out, self.request(), dict(self.cfg, transcription_required=True), transcribe=False)
         self.assertEqual(caught.exception.code, 'TRANSCRIPTION_REQUIRED')
 
+    def test_ogv_video_is_discovered_for_public_theora_sources(self):
+        self.synthetic_video()
+        (self.media/'synthetic.mp4').rename(self.media/'synthetic.ogv')
+        with patch.object(analysis, 'model_path', return_value=None):
+            result = analysis.analyze(self.media, self.out, self.request(), self.cfg, transcribe=False)
+        self.assertEqual(result['ready_count'], 1)
+        self.assertEqual(read(result['inventory'])[0]['filename'], 'synthetic.ogv')
+
 
 if __name__ == '__main__': unittest.main()

@@ -63,6 +63,8 @@ def encode(folder,content,meta,cfg):
     auxiliary(folder,content['id'])
 
 def build_native(plan,assets,sound,folder,cfg):
+    from .color import assert_native_color_supported
+    assert_native_color_supported(plan)
     import pyJianYingDraft as draft
     from .typography import text_style,caption_line
     font_by_id={}
@@ -267,6 +269,8 @@ def export(plan_path,out,cfg,name=None,do_register=False,preview=True):
     plan['name']=safe_name(name or plan.get('name','我的回忆'))
     report=validate(plan,plan_path,cfg)
     if not report['valid']:raise EditError('INVALID_PLAN','剪辑计划检查未通过。',report)
+    from .color import assert_native_color_supported
+    assert_native_color_supported(plan)
     codec(cfg) # fail before copying large original media
     if plan.get('panels') or plan.get('mask_reveal'):rectangle_mask(cfg)
     folder=resolve_path(out)/plan['name']

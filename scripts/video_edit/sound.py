@@ -6,6 +6,85 @@ from .common import *
 
 SR=48000
 
+
+def measure_loudness(path, cfg):
+    """Read EBU R128 input measurements; the filtered output is discarded.
+
+    This never normalizes a file, chooses a delivery target or approves listening.
+    In particular, PCM sample peaks are not presented as true-peak estimates.
+    """
+    path = Path(path)
+    result = {'path': str(path.resolve()), 'method': 'ffmpeg_loudnorm_input',
+              'status': 'failed', 'integrated_lufs': None, 'true_peak_dbtp': None,
+              'lra_lu': None, 'normalization_applied': False,
+              'listening_review_completed': False}
+    if not path.is_file():
+        return dict(result, status='file_missing', reason='待测文件不存在。')
+    if not cfg.get('ffmpeg'):
+        return dict(result, status='unavailable', reason='未配置 FFmpeg，响度尚未测量。')
+    try:
+        process = run([cfg['ffmpeg'], '-hide_banner', '-nostats', '-v', 'info',
+                       '-i', path, '-map', '0:a:0', '-vn', '-af',
+                       'loudnorm=print_format=json', '-f', 'null', '-'], timeout=1800)
+    except (FileNotFoundError, PermissionError) as exc:
+        return dict(result, status='unavailable', reason=f'{type(exc).__name__}: {exc}')
+    except EditError as exc:
+        detail = str(exc.details.get('stderr', ''))
+        lowered = detail.casefold()
+        if 'matches no streams' in lowered or 'does not contain any stream' in lowered:
+            status = 'no_audio'
+        elif 'no such filter' in lowered or 'filter not found' in lowered:
+            status = 'unsupported'
+        else:
+            status = 'failed'
+        return dict(result, status=status, reason=detail[-1500:] or str(exc))
+    except Exception as exc:
+        return dict(result, status='failed', reason=f'{type(exc).__name__}: {exc}')
+    output = process.stderr.decode('utf-8', 'replace')
+    blocks = re.findall(r'\{[^{}]*"input_i"[^{}]*\}', output, flags=re.S)
+    if not blocks:
+        return dict(result, reason='FFmpeg 未返回 loudnorm 输入测量 JSON。')
+    try:
+        raw = json.loads(blocks[-1])
+        fields = {key: str(raw[key]) for key in ('input_i', 'input_tp', 'input_lra')}
+        values = {key: float(value) for key, value in fields.items()}
+    except (KeyError, TypeError, ValueError) as exc:
+        return dict(result, reason='响度测量 JSON 缺项或无效：'+str(exc))
+    result['ffmpeg_input'] = fields
+    for source, destination in (('input_i', 'integrated_lufs'), ('input_tp', 'true_peak_dbtp'), ('input_lra', 'lra_lu')):
+        if math.isfinite(values[source]):
+            result[destination] = values[source]
+    if values['input_i'] == -math.inf and values['input_tp'] == -math.inf:
+        result.update(status='silent', reason='未测得非静音信号；负无穷响度/真峰值以 null 表示。')
+    elif all(math.isfinite(value) for value in values.values()):
+        result['status'] = 'measured'
+    else:
+        result.update(status='undetermined', reason='包含无法用有限数值表达的测量；不能判为响度达标。')
+    return result
+
+
+def write_audio_qc(folder, cfg, declared_target=None, **outputs):
+    """Add mix/final/preview measurements to a single persistent audit report."""
+    folder = Path(folder)
+    path = folder/'audio-qc.json'
+    report = read(path) if path.is_file() else {
+        'schema_version': 'audio-qc-1.0', 'measurements': {}, 'delivery_target': None,
+        'target_assessment': 'not_assessed_no_delivery_target',
+        'normalization_applied_by_measurement': False, 'listening_review_completed': False,
+        'note': '仅报告实际输入 LUFS、dBTP 和 LRA；未设通用平台目标，不代表对白可懂度、循环接缝或真实听审通过。'}
+    if declared_target is not None:
+        report['delivery_target'] = declared_target
+        report['target_assessment'] = 'reported_only_target_not_automatically_assessed'
+    if 'mix_wav' not in report['measurements'] and 'mix_wav' not in outputs and (folder/'混音.wav').is_file():
+        outputs = {'mix_wav': folder/'混音.wav', **outputs}
+    for label, output in outputs.items():
+        report['measurements'][label] = measure_loudness(output, cfg)
+    report['warnings'] = [f'{label} 响度尚未获得完整有效测量（{measurement["status"]}）。'
+                          for label, measurement in report['measurements'].items()
+                          if measurement['status'] not in ('measured', 'silent')]
+    write(path, report)
+    return report
+
 def pcm(path):
     import numpy as np
     with wave.open(str(path),'rb') as w:
@@ -43,7 +122,9 @@ def compose(path,duration,rhythm):
             end=min(n,start+len(kick));out[start:end]+=kick[:end-start]
     wavwrite(path,np.column_stack([out,out]))
     return {'source':'procedural','bpm':bpm,'beats':[round(k*beat,6) for k in range(math.ceil(duration/beat))],
-            'license':'本工具程序生成的伴奏；不包含第三方录音。','quality_note':'简单循环伴奏，可替换为用户喜欢的音乐。'}
+            'license':'本工具程序生成的伴奏；不包含第三方录音。','quality_note':'简单循环伴奏，可替换为用户喜欢的音乐。',
+            'listening_review_completed':False,
+            'limitations':['固定和弦循环与程序音色；没有按故事设计音乐段落，也未完成真实听审。']}
 
 def detect_beats(path):
     """Spectral-flux onset estimates, not a claim of exact musical downbeats."""
@@ -132,7 +213,12 @@ def prepare_audio(plan,assets,folder,cfg):
             if not src.is_file():raise EditError('MUSIC_NOT_FOUND','选择的音乐文件不存在。')
             original=music/('原音乐'+src.suffix);shutil.copy2(src,original)
             run([cfg['ffmpeg'],'-v','error','-stream_loop','-1','-i',src,'-t',total,'-af','loudnorm=I=-20:TP=-2:LRA=11','-ac','2','-ar',SR,'-y',dest])
-            music_info=detect_beats(dest);music_info['source_file']=str(original)
+            music_info=detect_beats(dest)
+            music_info.update(beat_detection_source=music_info.get('source'),source='user_selected_file',source_file=str(original),source_sha256=sha256(original),
+                              source_in=0,output_seconds=total,loop_to_fill=True,
+                              preparation_note='现有默认路径从源0秒开始，必要时无限循环并截至片长；配乐预处理使用 I=-20/TP=-2/LRA=11，不是整片交付目标。',
+                              listening_review_completed=False,
+                              limitations=['未自动识别乐句、段落与无缝循环点；循环接缝、结尾截取和情绪适配必须实际试听。'])
         else:music_info=compose(dest,total,request.get('rhythm','温馨舒缓'))
         event(dest,0,total,gain=.55,track='music',fi=.6,fo=min(1.5,total/4))
         write(folder/'music-analysis.json',music_info)
@@ -153,6 +239,9 @@ def prepare_audio(plan,assets,folder,cfg):
     gain=min(1,.85/max(peak,1e-9))
     for e in events:e['gain']*=gain
     wavwrite(folder/'混音.wav',mix*gain)
-    result={'events':events,'original_audio':original_reviews,'master_gain':gain,'peak_dbfs':20*math.log10(max(peak*gain,1e-9)),'music':music_info,'audio_layers':layer_report,'voices':voices,'warnings':list(dict.fromkeys(warnings))}
+    qc=write_audio_qc(folder,cfg,declared_target=request.get('loudness_target'),mix_wav=folder/'混音.wav')
+    warnings.extend(qc['warnings'])
+    result={'events':events,'original_audio':original_reviews,'master_gain':gain,'peak_dbfs':20*math.log10(max(peak*gain,1e-9)),'music':music_info,'audio_layers':layer_report,'voices':voices,'warnings':list(dict.fromkeys(warnings)),
+            'audio_qc_path':str(folder/'audio-qc.json'),'mix_loudness':qc['measurements']['mix_wav']}
     write(folder/'audio-plan.json',result)
     return result

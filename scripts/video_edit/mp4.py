@@ -33,7 +33,7 @@ def export(plan_path, out, cfg, name=None):
         assets = prepare_assets(local, rows, folder, cfg, copy_originals=False)
         write(folder / 'prepared-assets.json', assets)
         from .typography import prepare
-        from .sound import prepare_audio
+        from .sound import prepare_audio, write_audio_qc
         from .preview import write_srt
         from .stream_render import render
         prepare(local, assets, folder, cfg)
@@ -48,13 +48,15 @@ def export(plan_path, out, cfg, name=None):
         # Final delivery always uses the plan's full canvas and frame rate.
         # preview_mode=draft is deliberately irrelevant to final MP4 export.
         quality = render(local, assets, folder, cfg, movie)
+        audio_qc = write_audio_qc(folder, cfg, final_encoded=movie)
         audit = {'tool_version': __version__, 'delivery': 'mp4', 'output_path': str(folder),
                  'movie': str(movie), 'preview': str(movie), 'duration_seconds': local['duration'],
                  'editable_project': False, 'requires_jianying': False,
                  'originals_copied_in_full': False, 'original_video_modified': False,
                  'source_hashes_verified': True, 'video_reencoding_before_edit': False,
                  'srt': srt, 'quality': quality, 'source_quality': report.get('quality'),
-                 'warnings': report['warnings'] + sound.get('warnings', []),
+                 'warnings': list(dict.fromkeys(report['warnings'] + sound.get('warnings', []) + audio_qc['warnings'])),
+                 'audio_qc_path': str(folder/'audio-qc.json'), 'audio_qc': audio_qc,
                  'voices': sound.get('voices', []),
                  'visual_review_completed': False, 'listening_review_completed': False,
                  'note': '完整解码和结构检查已通过；仍需实际审看、试听最终成片。'}

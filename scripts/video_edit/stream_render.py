@@ -4,6 +4,7 @@ No editor dependency, compressed intermediates, or source movie copies.
 from __future__ import annotations
 import json, os, re, subprocess, time
 from .common import EditError, progress
+from .color import hdr_filter, input_color_filter
 
 PROCESS_FLAGS = subprocess.CREATE_NO_WINDOW if os.name == 'nt' else 0
 from pathlib import Path
@@ -14,11 +15,6 @@ def save(path, value):
 
 def strs(cmd):
     return [str(x) for x in cmd]
-
-def hdr_filter(asset):
-    if asset.get('source_metadata',{}).get('color_transfer') in ('arib-std-b67','smpte2084'):
-        return 'zscale=t=linear:npl=100,format=gbrpf32le,tonemap=tonemap=mobius:desat=0,zscale=p=bt709:t=bt709:m=bt709:r=tv,'
-    return ''
 
 def nframes(duration,fps):
     n=round(duration*fps)
@@ -43,7 +39,7 @@ def producer(plan, assets, shot, cfg, work, seq):
     filters=[]
     for i,item in enumerate(items):
         a=assets[item['id']]
-        filters.append(f'[{i}:v]setpts=(PTS-STARTPTS)/{item["speed"]},fps={fps},'+hdr_filter(a)+
+        filters.append(f'[{i}:v]setpts=(PTS-STARTPTS)/{item["speed"]},fps={fps},'+input_color_filter(plan,item,a,work.parent,shot if panels else None)+
             f'scale={w}:{h}:force_original_aspect_ratio=decrease:force_divisible_by=2:flags=lanczos,pad={w}:{h}:(ow-iw)/2:(oh-ih)/2,setsar=1,trim=duration={shot["duration"]},setpts=PTS-STARTPTS[v{i}]')
     if panels:
         filters.append(f'color=black:s={w}x{h}:r={fps}:d={shot["duration"]}[bg]');prev='bg'
@@ -84,7 +80,7 @@ def final_command(plan,assets,folder,cfg,work,out):
         sw,sh=asset['source_metadata']['width'],asset['source_metadata']['height']
         fit=min(w/sw,h/sh)*layer['scale'];lw,lh=max(1,round(sw*fit)),max(1,round(sh*fit))
         frames=nframes(layer['duration'],fps);start_frame=nframes(layer['start'],fps)
-        filters.append(f'[{input_index}:v]setpts=(PTS-STARTPTS)/{layer["speed"]},fps={fps},'+hdr_filter(asset)+
+        filters.append(f'[{input_index}:v]setpts=(PTS-STARTPTS)/{layer["speed"]},fps={fps},'+input_color_filter(plan,layer,asset,folder)+
             f'format=rgba,scale={lw}:{lh}:flags=lanczos,setsar=1,trim=end_frame={frames},settb=expr=1/{fps},setpts=N+{start_frame}[layer{i}]')
         x=position_expression(layer,'x');y=position_expression(layer,'y');end=layer['start']+layer['duration']
         filters.append(f"[{prev}][layer{i}]overlay=x='(W-w)/2+W/2*({x})':y='(H-h)/2-H/2*({y})':enable='gte(t,{layer['start']:.12g})*lt(t,{end:.12g})':eval=frame:eof_action=pass:repeatlast=0:format=auto[composite{i}]")
@@ -183,6 +179,7 @@ def render(plan,assets,folder,cfg,out):
             'encoder':'libx264', 'crf':16, 'preset':'medium','intermediate_codec':'rawvideo yuv444p10le, streamed through OS pipe','intermediate_compressed':False,
             'persistent_video_intermediates':False,'lossy_video_encodes_per_output_frame':1,'original_video_modified':False,'full_decode_verified':True,
             'elapsed_seconds':round(time.time()-started,3),'command_log':str(work/'commands.json'),'shot_frame_counts':shot_counts,
+            'color_report':str(folder/'color-report.json') if (folder/'color-report.json').is_file() else None,
             'measured':measured,'notes':['Originals decoded only; no compressed intermediate video.','Composition, scaling, frame-rate conversion and SDR/HDR transforms can change pixels; final H.264 MP4 is not lossless.','ASS titles and subtitles are rendered after visual composition.','All original audio handling is represented by supplied mix WAV; this renderer never imports camera audio.']}
         # Report-write failures must not leave a file named as a completed movie.
         save(work/'render-quality.json',report)

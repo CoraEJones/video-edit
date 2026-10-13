@@ -3,7 +3,8 @@ from __future__ import annotations
 import math
 
 
-FIELDS = {'id', 'start', 'duration', 'source_in', 'speed', 'x', 'y', 'scale', 'keyframes', 'purpose'}
+FIELDS = {'id', 'start', 'duration', 'source_in', 'speed', 'x', 'y', 'scale', 'keyframes', 'purpose',
+          'segment_id', 'analysis_segment_id', 'color'}
 
 
 def finite(value):

@@ -1,0 +1,66 @@
+{
+  "schema_version": "video-edit-forward-test-1.0",
+  "skill_version": "1.7.0",
+  "metrics": {
+    "input_assets": 12,
+    "batch_size": 4,
+    "batches_completed": 3,
+    "contact_sheets_actually_viewed": 12,
+    "coarse_frames_shown": 54,
+    "candidate_assets": 4,
+    "candidate_dense_frames_actually_viewed": 48,
+    "final_output_frames_actually_viewed": 15,
+    "output_duration_seconds": 18,
+    "width": 854,
+    "height": 480,
+    "fps": 60,
+    "output_frames": 1080,
+    "render_seconds": 13.714,
+    "source_hashes_verified": true,
+    "full_decode_verified": true
+  },
+  "result": "MP4 technical delivery succeeded; sampled visual QA completed; actual playback and all listening remain unverified.",
+  "selected_public_sources": [
+    {
+      "id": "commons-111761471",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Overlooking_a_forest_creek_in_the_Tsimpsean_Peninsula.webm",
+      "author": "Extemporalist",
+      "license": "CC0",
+      "license_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en"
+    },
+    {
+      "id": "commons-120108049",
+      "source_page": "https://commons.wikimedia.org/wiki/File:J2gala_waterfall_2022.webm",
+      "author": "Sillerkiil",
+      "license": "CC BY-SA 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-sa/4.0"
+    },
+    {
+      "id": "commons-140596544",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Korkeakoski_waterfalls.webm",
+      "author": "LKorhonen",
+      "license": "CC BY-SA 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-sa/4.0"
+    },
+    {
+      "id": "commons-151668238",
+      "source_page": "https://commons.wikimedia.org/wiki/File:Turahalli_Forest,_Bangalore_(2024).ogg",
+      "author": "Gpkp",
+      "license": "CC BY-SA 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-sa/4.0"
+    }
+  ],
+  "remaining_unverified": [
+    "Actual continuous playback and movement/cut comfort",
+    "All audio listening and aesthetic music judgment",
+    "Independent source color-space verification",
+    "Target audience blind preference or real 200-clip editorial performance"
+  ],
+  "context_recovery": "New Python process read durable index; actual model context reset was not performed.",
+  "workflow_fixes_validated": [
+    "completed batch refinement",
+    "independent submissions and archive",
+    "bounded candidate summary with detail path"
+  ],
+  "color_input": "Untagged public derivatives interpreted as BT.709 SDR for this internal technical test; source space not independently verified."
+}

@@ -1,6 +1,6 @@
 ---
 name: video-edit
-description: 把旅行、家庭和活动素材剪成故事短片，支持直接对话或大字向导；先提取路径和需求、补问缺项并确认，再按需委派子智能体看帧、编故事、设计节奏、标题与声音。可只交付 MP4（无需剪映），或同时交付剪映可编辑工程。Codex 或具备本地工具的 DeepSeek Harness 二选一即可。
+description: 把旅行、家庭和活动素材剪成故事短片，支持对话或向导、磁盘素材索引和分批子智能体交接；可选择20套SDR创意调色并做逐镜校正。交付MP4或剪映可编辑工程，调色目前支持MP4。Codex或具备本地工具的DeepSeek Harness二选一即可。
 ---
 
 # Video Edit
@@ -17,7 +17,7 @@ description: 把旅行、家庭和活动素材剪成故事短片，支持直接�
 
 ## 从素材到成片
 
-1. **整理证据。** `analyze --request JOB/request.json --output JOB` 生成素材清单、带时码联系表及本地转录。失败文件仍留清单。原片不删除、不覆盖、不预先降画质；“删废片”指不放进时间线。
+1. **整理证据。** `analyze --request JOB/request.json --output JOB` 生成素材清单、带时码联系表及本地转录。失败文件仍留清单。素材多或上下文紧张时读 [磁盘记忆与交接](references/material-memory.md)，运行 `scripts/material_memory.py init --job JOB`，以磁盘记录为真源，每次只领取小批或检索少量候选，不把200条完整信息塞入上下文。原片不删除、不覆盖、不预先降画质；“删废片”指不放进时间线。
 2. **分段审看。** 按 [素材分析](references/material-analysis.md) 查看图片序列与转录，记录景别、主体动作、光色、构图、运动、气氛、故事用途、质量区间和可用原声。联系表初筛后，候选片段、动作/表情、对焦变化、抖动、转场两端用 [密集取帧工具](references/frame-review-tool.md) 追加审看，关键短区间可逐帧。不能把每 8 秒抽样描述成整片逐帧看完；声音判断需试听，像素评分/波形不等于语义。输出 `material-analysis.json`，观察、推断、未知分开。
 3. **素材变故事。** 按 [故事与节奏](references/story-rhythm.md) 选有素材支撑的主题，写 `story-outline.json` 与 `story.txt`，每段关联实际素材区间。起承转合可用启程—探索—相遇—回望，也可跨地点围绕同一情绪；不强套巴黎例子。年龄、错过飞机、独自旅行、人物内心和历史引用不能凭空当作经历。素材稀少则做更短的诚实初稿。
 4. **声音方向与粗剪。** 按 [声音设计](references/sound-design.md) 从用户音乐/音乐库选少量合适 BGM，提前获得并听审节奏候选，区分高潮、过门、安静段；仅保留通过严格音质审核的重要讲话与现场声。粗剪先保证事件和情绪逻辑。通常只做一条主方案，用户要求先看故事时再停在故事稿。
@@ -35,6 +35,9 @@ description: 把旅行、家庭和活动素材剪成故事短片，支持直接�
 - 遵守确认的 `title_mode` 与 `audio_policy`：`fonts_only` 只用字体排版，不生成艺术字图片；`mute_all` 全部原声为零；`key_speech_only` 只保留审核清楚的关键讲话。`voiceover=false` 时不生成配音音轨。首尾偏好也优先于推荐模板。
 - `techniques` 名称本身不生成效果，必须落实轨道/参数。分段变速不是连续曲线，矩形蒙版不是人物抠像；光流、跟踪、复杂抠像等不可把建议写成已完成。支持详情见计划接口。剪辑使用原片；临时渲染用无压缩帧流或无损中间片，仅最终 MP4 做有损视频编码，不为省时间提前降画质。
 - 不上传完整素材到第三方分析服务。子智能体只读分配材料；艺术标题默认用文字描述生成，提供用户画面给外部模型须符合当前任务授权。
+- 批次结果包含所有分配编号、input_fingerprint、coverage、segments和未知项，核验后由memory ingest/compile合并；上下文重启先读request、workflow-state、memory status和故事摘要，再按需检索，不依赖模型记得上轮。新任务用review.analysis_path关联分析、每个选段填segment_id；必留瞬间用request.must_keep_ranges，详见 [证据与计划接口](references/plan-format.md)。
+- 需要调色时读 [调色接口](references/color-grading.md)：先确认输入空间、校正曝光/白平衡并匹配相邻镜头，再选择20套原创BT.709 SDR外观及强度。调色现支持MP4与预览，原生剪映明确拒绝有效调色，不能冒称已经写入。LUT不能修复过曝/模糊。
+- 性能与公开素材来源按 [基准流程](references/benchmark.md)，区分下载/解码/索引、模型实际审看和人工盲评，不能用工具测试替代选片质量。
 
 ```text
 doctor --host codex --delivery-mode mp4 --entry-mode chat [--request REQUEST]

@@ -69,6 +69,8 @@ def validate(plan, plan_path, cfg, inspect_files=True):
         return {'valid':False,'errors':[{'code':'INVENTORY_FORMAT','message':'fingerprint 必须是对象'}],'warnings':[]}
     lookup={r['id']:r for r in rows}
     if len(lookup)!=len(rows):issue('DUPLICATE_ASSET','inventory','素材编号必须唯一')
+    from .color import validate_color
+    validate_color(plan,rows,issue)
     review=plan.get('review',{})
     if review.get('status')!='reviewed' or not review.get('evidence'):
         issue('REVIEW_REQUIRED','review','需要助手查看联系表/转录并记录剪辑依据，不能直接把分析结果当完成品')
@@ -118,6 +120,8 @@ def validate(plan, plan_path, cfg, inspect_files=True):
     validate_visual_layers(plan,lookup,selected,issue)
     from .audio_policy import validate_original_audio
     validate_original_audio(plan,rows,issue)
+    from .review_evidence import validate_review
+    validate_review(plan,rows,plan_path,issue,warnings)
     for group in ('captions','titles','narration'):
         for i,t in enumerate(plan.get(group,[])):
             for key,low,high in [('x',-1,plan['width']),('y',-1,plan['height']),('size',1,300),('rotation',-360,360)]:

@@ -1,5 +1,7 @@
 # 剪辑计划 1.0
 
+1.7新增可选 `color`（顶层及shots/panels/visual_layers继承），详见 [调色接口](color-grading.md)；调色仅支持MP4与预览，原生剪映明确拒绝有效调色。新增 `review.analysis_path` 和镜头 `segment_id`/`analysis_segment_id` 严格核对候选与已审范围。`request.must_keep_ranges=[{"asset_id":"v实际编号","source_start":2,"source_end":4}]` 指定必须覆盖的源秒区间。新任务使用结构化 `review.evidence`：`{"asset_id":"v实际编号","kind":"frame","path":"实际证据.jpg","time":2}` 或带source_start/source_end的回放证据。历史文字声明兼容并警告，不等于严格证据通过。
+
 顶层：schema_version、name、width、height、fps、duration、inventory_path、request、shots、panels、titles、captions、chapters、narration、audio_layers、visual_layers、techniques、review。1.5 保持计划版本 1.0，增加可选 visual_layers 和 mask_reveal.hold；正增益原声需新增实际听审记录，旧计划不能绕过此要求。
 
 1.6 仍使用计划版本 1.0。实际执行时，`request` 必须完整复制 [需求接入](intake.md) 中已由用户确认的对象，包括 `media_dir`、`output_dir`、`delivery_mode` 与 `confirmation`。以下精简 request 仅展示字段关系，不能直接用于导出。`validate` 可以检查历史计划；分析/导出另外强制检查完整需求及确认，不自动升级或伪造确认。

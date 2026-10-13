@@ -29,6 +29,7 @@ DEFAULTS = {
     'text_style': '自动搭配', 'title_mode': 'art_preferred', 'audio_policy': 'strict',
     'opening_style': 'highlight_reveal', 'ending_style': 'slow_echo',
     'allow_select': True, 'duration_policy': 'soft', 'quality_policy': 'preserve_source',
+    'audience': '', 'viewing_context': '', 'color_preference': '', 'must_keep_ranges': [],
 }
 
 FIELD_LABELS = {
@@ -42,6 +43,8 @@ FIELD_LABELS = {
     'text_style': '文字风格', 'title_mode': '是否接受艺术字图片',
     'audio_policy': '原声保留与审核要求', 'opening_style': '片头偏好',
     'ending_style': '结尾偏好',
+    'audience': '目标观众', 'viewing_context': '观看场景',
+    'color_preference': '调色偏好', 'must_keep_ranges': '必留源时间区间',
 }
 
 REQUIRED_FIELDS = (
@@ -143,11 +146,14 @@ def summary_lines(request):
             return '暂无补充'
         if field == 'must_keep_files' and isinstance(v, list):
             return '\n  '.join(str(p) for p in v) if v else '暂无指定'
+        if field == 'must_keep_ranges' and isinstance(v, list):
+            return json.dumps(v, ensure_ascii=False) if v else '暂无指定'
         if field == 'target_seconds' and isinstance(v, (int, float)):
             return f'约 {v:g} 秒'
         return CHOICE_LABELS.get(v, v) if isinstance(v, str) else '尚未提供'
 
     fields = list(REQUIRED_FIELDS)
+    fields.extend(f for f in ('audience', 'viewing_context', 'color_preference', 'must_keep_ranges') if request.get(f))
     if request.get('subtitles') is True:
         fields.insert(fields.index('subtitles') + 1, 'subtitle_language')
     if request.get('voiceover') is True:
@@ -187,6 +193,20 @@ def inspect_request(request, cfg=None):
         if error:
             invalid.append(error)
     keep = request.get('must_keep_files', [])
+    for field in ('audience', 'viewing_context', 'color_preference'):
+        if field in request and not isinstance(request[field], str):
+            invalid_fields.append({'field': field, 'reason': '需要文字说明；可留空。'})
+    ranges = request.get('must_keep_ranges', [])
+    if not isinstance(ranges, list):
+        invalid_fields.append({'field': 'must_keep_ranges', 'reason': '需要源时间区间对象列表。'})
+    else:
+        for index, entry in enumerate(ranges):
+            valid = isinstance(entry, dict) and isinstance(entry.get('asset_id'), str) and bool(entry['asset_id'].strip())
+            if valid:
+                a, b = entry.get('source_start'), entry.get('source_end')
+                valid = all(isinstance(v, (int, float)) and not isinstance(v, bool) and math.isfinite(v) for v in (a, b)) and 0 <= a < b
+            if not valid:
+                invalid_fields.append({'field': f'must_keep_ranges[{index}]', 'reason': '需要 asset_id 与有限源秒 source_start < source_end。'})
     if not isinstance(keep, list):
         invalid_fields.append({'field': 'must_keep_files', 'reason': '需要文件路径列表；无指定时使用空列表。'})
     else:

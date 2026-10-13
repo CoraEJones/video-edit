@@ -1,0 +1,32 @@
+[
+  [
+    "Adobe：基础校色与白平衡",
+    "https://helpx.adobe.com/premiere/desktop/correct-color/color-correction-fundamentals/basic-color-correction-options.html",
+    "曝光、白平衡、对比、黑白位的功能依据。"
+  ],
+  [
+    "Blackmagic Design：调色工具与工作流程",
+    "https://www.blackmagicdesign.com/products/davinciresolve/color",
+    "先校色后风格；曲线、色轮、限定器与示波器的工作思路。"
+  ],
+  [
+    "Adobe：Creative Looks、强度与分离色调",
+    "https://helpx.adobe.com/in/premiere/desktop/correct-color/add-color-effects/apply-lumetri-looks.html",
+    "创意外观、褪色、饱和度及暗部/高光着色的功能依据。"
+  ],
+  [
+    "Adobe：色相与饱和度曲线",
+    "https://helpx.adobe.com/ca/premiere/desktop/correct-color/add-color-effects/correct-color-using-hue-and-saturation-curves.html",
+    "对蓝色、绿色等单独调节的思路依据。"
+  ],
+  [
+    "Adobe：HSL Secondary",
+    "https://helpx.adobe.com/premiere/desktop/correct-color/add-color-effects/correct-color-using-hsl-secondary-controls.html",
+    "选色范围与肤色微调的功能依据。"
+  ],
+  [
+    "FFmpeg：lut3d",
+    "https://www.ffmpeg.org/ffmpeg-filters.html#lut3d",
+    "实际渲染使用 cube 文件和 tetrahedral 插值。"
+  ]
+]

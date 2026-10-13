@@ -1,0 +1,74 @@
+{
+  "schema_version": "material-benchmark-1.0",
+  "skill_version": "1.7.0",
+  "python": "3.12.14",
+  "system": "Windows",
+  "scope": "Actual corpus decode/extraction, cache and bounded handoffs. No ASR, semantic selection, listening or aesthetic score.",
+  "runs": [
+    {
+      "stage": "cold",
+      "seconds": 223.299,
+      "reported_count": 200,
+      "persisted_count": 200,
+      "ready_count": 200,
+      "external_decode_extract_calls": 976,
+      "frame_count": 976
+    },
+    {
+      "stage": "warm",
+      "seconds": 5.661,
+      "reported_count": 200,
+      "persisted_count": 200,
+      "ready_count": 200,
+      "external_decode_extract_calls": 0,
+      "frame_count": 976
+    }
+  ],
+  "total_source_seconds": 6421.413,
+  "total_source_bytes": 1009246885,
+  "memory": {
+    "seconds": 0.701,
+    "batch_count": 17,
+    "max_packet_chars": 7214,
+    "packet_budget_chars": 14000,
+    "inventory_json_bytes": 810684,
+    "all_assets_still_require_semantic_review": true
+  },
+  "checks": {
+    "report_matches_inventory": true,
+    "warm_visual_cache_has_zero_extraction_calls": true,
+    "all_packets_within_budget": true
+  },
+  "editorial_benchmark": {
+    "status": "pending_human_annotations_and_blind_review",
+    "metrics": [
+      "key_moment_recall",
+      "candidate_precision",
+      "story_comprehension",
+      "rhythm",
+      "dialogue_integrity",
+      "color_continuity",
+      "sound_quality",
+      "human_revision_minutes"
+    ]
+  },
+  "settings": {
+    "sample_interval_seconds": 8,
+    "max_samples_per_video": 24,
+    "thumbnail_edge": 640,
+    "transcription": false,
+    "logical_cpu_count": 16,
+    "cpu": "AMD64 Family 23 Model 113 Stepping 0, AuthenticAMD",
+    "repetitions": 1,
+    "timing_note": "Single-machine observations; no editorial model work or ASR included."
+  },
+  "tools": {
+    "ffmpeg": "ffmpeg version 2025-11-12-git-6cdd2cbe32-full_build-www.gyan.dev Copyright (c) 2000-2025 the FFmpeg developers",
+    "ffprobe": "ffprobe version 2025-11-12-git-6cdd2cbe32-full_build-www.gyan.dev Copyright (c) 2007-2025 the FFmpeg developers"
+  },
+  "packages": {
+    "numpy": "2.2.6",
+    "Pillow": "12.3.0",
+    "fontTools": "4.66.1"
+  }
+}
