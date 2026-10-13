@@ -133,5 +133,9 @@ def doctor(cfg, delivery_mode=None, host=None, entry_mode=None):
             'technique_assets': {'schema_version': 'technique.2.0', 'interface': 'scripts/technique_tool.py',
                 'continuous_speed_curve': True, 'animated_transforms': True, 'alpha_masks': True,
                 'output': 'silent QTRLE ARGB MOV plus parameter sidecars', 'native_effect_parameter_roundtrip': False,
+                'native_export': {'interface': 'export-jianying / native-capabilities',
+                    'native_layers_available': native, 'preflight_per_spec_required': True,
+                    'derived_fallback_opt_in': True, 'editor_ui_verified_by_doctor': False},
+                'explicit_image_normalization': 'normalize-image: declared sRGB or actual embedded ICC to new BT.709 PNG',
                 'render_verified_by_doctor': False, 'note': '实现能力；先校验与渲染，再审看并登记派生素材，继续主流程。'},
             'problems': problems, 'note': 'ready 仅表示所选模式运行依赖就绪；不证明模型视觉权限、Skill 已加载或剪映界面验收。'}

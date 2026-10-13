@@ -246,8 +246,10 @@
       "source_sha256": "fdb1a74de3561cffcc31f6d939c1c0038d731fecceddf10bbf5eb3e17bd3af45",
       "principles": 2,
       "execution_routes": [
-        "workflow:voiceover",
-        "external:exact_voice"
+        "typed:layers",
+        "typed:keyframes",
+        "knowledge:reviewed_vocal_cue",
+        "external:decorations"
       ]
     },
     {
@@ -256,8 +258,9 @@
       "source_sha256": "c97ac639d656384b5c488b3d8ff4f967024070c06cb0e6b0065d22e0ba90cd0a",
       "principles": 2,
       "execution_routes": [
-        "workflow:captions",
-        "knowledge:marker_semantics"
+        "recipe:freeze",
+        "recipe:grid",
+        "knowledge:reviewed_music_cue"
       ]
     },
     {

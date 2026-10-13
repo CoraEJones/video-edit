@@ -16,8 +16,9 @@
     "continuous_playback": false
   },
   "execution_routes": [
-    "workflow:captions",
-    "knowledge:marker_semantics"
+    "recipe:freeze",
+    "recipe:grid",
+    "knowledge:reviewed_music_cue"
   ],
   "route_semantics": {
     "typed": "Supported technique.2.0 fields; build and validate an explicit graph.",

@@ -1,0 +1,82 @@
+{
+  "schema_version": "story-decisions/1",
+  "fps": 25,
+  "assets": [
+    {
+      "id": "fictional_video",
+      "duration": 30
+    },
+    {
+      "id": "fictional_music",
+      "duration": 30
+    }
+  ],
+  "events": [
+    {
+      "id": "fictional_action",
+      "evidence": [
+        {
+          "asset_id": "fictional_video",
+          "source_start": 10,
+          "source_end": 20,
+          "review_ref": "FICTIONAL_TEST_ONLY"
+        }
+      ]
+    }
+  ],
+  "shots": [
+    {
+      "shot_id": "s1",
+      "asset_id": "fictional_video",
+      "event_id": "fictional_action",
+      "reaction_to_event_id": null,
+      "source_start": 10,
+      "source_end": 20,
+      "timeline_start": 4,
+      "speed": 2
+    }
+  ],
+  "protected": [
+    {
+      "asset_id": "fictional_video",
+      "source_start": 13,
+      "source_end": 15,
+      "kind": "semantic",
+      "review_ref": "FICTIONAL_TEST_ONLY"
+    }
+  ],
+  "candidates": [
+    {
+      "id": "protected",
+      "shot_id": "s1",
+      "source_time": 14,
+      "dramatic_beat_id": "fictional_action",
+      "review_ref": "FICTIONAL_TEST_ONLY"
+    },
+    {
+      "id": "safe",
+      "shot_id": "s1",
+      "source_time": 16,
+      "dramatic_beat_id": "fictional_action",
+      "review_ref": "FICTIONAL_TEST_ONLY"
+    }
+  ],
+  "music": {
+    "asset_id": "fictional_music",
+    "source_start": 10,
+    "source_end": 20,
+    "timeline_start": 4,
+    "listened_ranges": [
+      {
+        "source_start": 10,
+        "source_end": 20,
+        "review_ref": "FICTIONAL_TEST_ONLY"
+      }
+    ],
+    "beats": [
+      12,
+      13.08
+    ]
+  },
+  "max_beat_distance": 0.12
+}

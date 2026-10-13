@@ -257,6 +257,9 @@ def package_editorial(plan,rows,assets,folder,plan_path):
         bundled=folder/'assets/music'/('原音乐'+Path(req['music_file']).suffix)
         if not bundled.is_file():raise EditError('AUDIO_COPY','自选音乐原件尚未打包')
         req['music_file']=str(bundled)
+    from .package_review import bundle_review
+    bundled_review=bundle_review(plan,local,local_rows,folder,plan_path)
+    write(folder/'review-packaging.json',bundled_review)
     write(folder/'edit-plan.json',local);write(folder/'inventory.json',local_rows)
     story=Path(plan_path).parent/'story.txt'
     if story.is_file():shutil.copy2(story,folder/'story.txt')
@@ -392,7 +395,7 @@ def relocate(folder,cfg,name=None,do_register=False):
             olddir.rename(newdir)
     shutil.copy2(folder/'draft_content.json',folder/'template-2.tmp')
     package_manifest(folder,content,cfg)
-    for file in ('edit-plan.json','inventory.json','prepared-assets.json','audio-plan.json','verification.json'):
+    for file in ('edit-plan.json','inventory.json','prepared-assets.json','audio-plan.json','verification.json','material-analysis.json','story-decisions.json','story-outline.json','score-provenance.json','music-analysis.json'):
         path=folder/file
         if path.is_file():
             shutil.copy2(path,backup/file);updated=walk(read(path))

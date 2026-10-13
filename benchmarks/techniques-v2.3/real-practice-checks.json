@@ -1,0 +1,1473 @@
+{
+  "date": "2026-10-13",
+  "skill_version": "2.3.0",
+  "practice_assets_ready": 97,
+  "practice_unique_sha256": 79,
+  "cases": [
+    {
+      "lesson": "L001",
+      "practice_inputs": [
+        "P001"
+      ],
+      "independent_course_practice": false,
+      "code_status": "rendered_decode_verified",
+      "native_status": "encrypted_structure_verified",
+      "route": "native_layers",
+      "ui_verified": false,
+      "audio_listened": false,
+      "visual_scope": "first/middle/last sampled code frames; no continuous playback",
+      "representative_case": true,
+      "all_principles_individually_tested": false
+    },
+    {
+      "lesson": "L002",
+      "practice_inputs": [
+        "P001",
+        "P002"
+      ],
+      "independent_course_practice": false,
+      "code_status": "rendered_decode_verified",
+      "native_status": "encrypted_structure_verified",
+      "route": "native_layers",
+      "ui_verified": false,
+      "audio_listened": false,
+      "visual_scope": "first/middle/last sampled code frames; no continuous playback",
+      "representative_case": true,
+      "all_principles_individually_tested": false
+    },
+    {
+      "lesson": "L003",
+      "practice_inputs": [
+        "P001"
+      ],
+      "independent_course_practice": false,
+      "code_status": "rendered_decode_verified",
+      "native_status": "encrypted_structure_verified",
+      "route": "hybrid_layers",
+      "ui_verified": false,
+      "audio_listened": false,
+      "visual_scope": "first/middle/last sampled code frames; no continuous playback",
+      "representative_case": true,
+      "all_principles_individually_tested": false
+    },
+    {
+      "lesson": "L004",
+      "practice_inputs": [
+        "P001"
+      ],
+      "independent_course_practice": false,
+      "code_status": "rendered_decode_verified",
+      "native_status": "encrypted_structure_verified",
+      "route": "native_layers",
+      "ui_verified": false,
+      "audio_listened": false,
+      "visual_scope": "first/middle/last sampled code frames; no continuous playback",
+      "representative_case": true,
+      "all_principles_individually_tested": false
+    },
+    {
+      "lesson": "L005",
+      "practice_inputs": [
+        "P001"
+      ],
+      "independent_course_practice": false,
+      "code_status": "rendered_decode_verified",
+      "native_status": "encrypted_structure_verified",
+      "route": "native_layers",
+      "ui_verified": false,
+      "audio_listened": false,
+      "visual_scope": "first/middle/last sampled code frames; no continuous playback",
+      "representative_case": true,
+      "all_principles_individually_tested": false
+    },
+    {
+      "lesson": "L006",
+      "practice_inputs": [
+        "P001",
+        "P002"
+      ],
+      "independent_course_practice": false,
+      "code_status": "rendered_decode_verified",
+      "native_status": "encrypted_structure_verified",
+      "route": "hybrid_layers",
+      "ui_verified": false,
+      "audio_listened": false,
+      "visual_scope": "first/middle/last sampled code frames; no continuous playback",
+      "representative_case": true,
+      "all_principles_individually_tested": false
+    },
+    {
+      "lesson": "L007",
+      "practice_inputs": [
+        "P001"
+      ],
+      "independent_course_practice": false,
+      "code_status": "rendered_decode_verified",
+      "native_status": "encrypted_structure_verified",
+      "route": "hybrid_layers",
+      "ui_verified": false,
+      "audio_listened": false,
+      "visual_scope": "first/middle/last sampled code frames; no continuous playback",
+      "representative_case": true,
+      "all_principles_individually_tested": false
+    },
+    {
+      "lesson": "L008",
+      "practice_inputs": [
+        "P001"
+      ],
+      "independent_course_practice": false,
+      "code_status": "rendered_decode_verified",
+      "native_status": "encrypted_structure_verified",
+      "route": "native_layers",
+      "ui_verified": false,
+      "audio_listened": false,
+      "visual_scope": "first/middle/last sampled code frames; no continuous playback",
+      "representative_case": true,
+      "all_principles_individually_tested": false
+    },
+    {
+      "lesson": "L009",
+      "practice_inputs": [
+        "P001"
+      ],
+      "independent_course_practice": true,
+      "code_status": "rendered_decode_verified",
+      "native_status": "encrypted_structure_verified",
+      "route": "hybrid_layers",
+      "ui_verified": false,
+      "audio_listened": false,
+      "visual_scope": "first/middle/last sampled code frames; no continuous playback",
+      "representative_case": true,
+      "all_principles_individually_tested": false
+    },
+    {
+      "lesson": "L010",
+      "practice_inputs": [
+        "P002"
+      ],
+      "independent_course_practice": true,
+      "code_status": "rendered_decode_verified",
+      "native_status": "encrypted_structure_verified",
+      "route": "hybrid_layers",
+      "ui_verified": false,
+      "audio_listened": false,
+      "visual_scope": "first/middle/last sampled code frames; no continuous playback",
+      "representative_case": true,
+      "all_principles_individually_tested": false
+    },
+    {
+      "lesson": "L011",
+      "practice_inputs": [
+        "P003"
+      ],
+      "independent_course_practice": true,
+      "code_status": "rendered_decode_verified",
+      "native_status": "encrypted_structure_verified",
+      "route": "hybrid_layers",
+      "ui_verified": false,
+      "audio_listened": false,
+      "visual_scope": "first/middle/last sampled code frames; no continuous playback",
+      "representative_case": true,
+      "all_principles_individually_tested": false
+    },
+    {
+      "lesson": "L012",
+      "practice_inputs": [
+        "P005"
+      ],
+      "independent_course_practice": true,
+      "code_status": "rendered_decode_verified",
+      "native_status": "encrypted_structure_verified",
+      "route": "native_layers",
+      "ui_verified": false,
+      "audio_listened": false,
+      "visual_scope": "first/middle/last sampled code frames; no continuous playback",
+      "representative_case": true,
+      "all_principles_individually_tested": false
+    },
+    {
+      "lesson": "L013",
+      "practice_inputs": [
+        "P006"
+      ],
+      "independent_course_practice": true,
+      "code_status": "rendered_decode_verified",
+      "native_status": "encrypted_structure_verified",
+      "route": "hybrid_layers",
+      "ui_verified": false,
+      "audio_listened": false,
+      "visual_scope": "first/middle/last sampled code frames; no continuous playback",
+      "representative_case": true,
+      "all_principles_individually_tested": false
+    },
+    {
+      "lesson": "L014",
+      "practice_inputs": [
+        "P007"
+      ],
+      "independent_course_practice": true,
+      "code_status": "rendered_decode_verified",
+      "native_status": "encrypted_structure_verified",
+      "route": "hybrid_layers",
+      "ui_verified": false,
+      "audio_listened": false,
+      "visual_scope": "first/middle/last sampled code frames; no continuous playback",
+      "representative_case": true,
+      "all_principles_individually_tested": false
+    },
+    {
+      "lesson": "L015",
+      "practice_inputs": [
+        "P008"
+      ],
+      "independent_course_practice": true,
+      "code_status": "rendered_decode_verified",
+      "native_status": "encrypted_structure_verified",
+      "route": "hybrid_layers",
+      "ui_verified": false,
+      "audio_listened": false,
+      "visual_scope": "first/middle/last sampled code frames; no continuous playback",
+      "representative_case": true,
+      "all_principles_individually_tested": false
+    },
+    {
+      "lesson": "L016",
+      "practice_inputs": [
+        "P009",
+        "P010"
+      ],
+      "independent_course_practice": true,
+      "code_status": "rendered_decode_verified",
+      "native_status": "encrypted_structure_verified",
+      "route": "derived_composition",
+      "ui_verified": false,
+      "audio_listened": false,
+      "visual_scope": "first/middle/last sampled code frames; no continuous playback",
+      "representative_case": true,
+      "all_principles_individually_tested": false
+    },
+    {
+      "lesson": "L017",
+      "practice_inputs": [
+        "P013",
+        "P014"
+      ],
+      "independent_course_practice": true,
+      "code_status": "rendered_decode_verified",
+      "native_status": "encrypted_structure_verified",
+      "route": "derived_composition",
+      "ui_verified": false,
+      "audio_listened": false,
+      "visual_scope": "first/middle/last sampled code frames; no continuous playback",
+      "representative_case": true,
+      "all_principles_individually_tested": false
+    },
+    {
+      "lesson": "L018",
+      "practice_inputs": [
+        "P015",
+        "P016"
+      ],
+      "independent_course_practice": true,
+      "code_status": "rendered_decode_verified",
+      "native_status": "encrypted_structure_verified",
+      "route": "hybrid_layers",
+      "ui_verified": false,
+      "audio_listened": false,
+      "visual_scope": "first/middle/last sampled code frames; no continuous playback",
+      "representative_case": true,
+      "all_principles_individually_tested": false
+    },
+    {
+      "lesson": "L019",
+      "practice_inputs": [
+        "P017"
+      ],
+      "independent_course_practice": true,
+      "code_status": "rendered_decode_verified",
+      "native_status": "encrypted_structure_verified",
+      "route": "native_layers",
+      "ui_verified": false,
+      "audio_listened": false,
+      "visual_scope": "first/middle/last sampled code frames; no continuous playback",
+      "representative_case": true,
+      "all_principles_individually_tested": false
+    },
+    {
+      "lesson": "L020",
+      "practice_inputs": [
+        "P018",
+        "P019",
+        "P020",
+        "P021"
+      ],
+      "independent_course_practice": true,
+      "code_status": "rendered_decode_verified",
+      "native_status": "encrypted_structure_verified",
+      "route": "native_layers",
+      "ui_verified": false,
+      "audio_listened": false,
+      "visual_scope": "first/middle/last sampled code frames; no continuous playback",
+      "representative_case": true,
+      "all_principles_individually_tested": false
+    },
+    {
+      "lesson": "L021",
+      "practice_inputs": [
+        "P022"
+      ],
+      "independent_course_practice": true,
+      "code_status": "rendered_decode_verified",
+      "native_status": "encrypted_structure_verified",
+      "route": "native_layers",
+      "ui_verified": false,
+      "audio_listened": false,
+      "visual_scope": "first/middle/last sampled code frames; no continuous playback",
+      "representative_case": true,
+      "all_principles_individually_tested": false
+    },
+    {
+      "lesson": "L022",
+      "practice_inputs": [
+        "P069",
+        "P074"
+      ],
+      "independent_course_practice": true,
+      "code_status": "rendered_decode_verified",
+      "native_status": "encrypted_structure_verified",
+      "route": "hybrid_layers",
+      "ui_verified": false,
+      "audio_listened": false,
+      "visual_scope": "first/middle/last sampled code frames; no continuous playback",
+      "representative_case": true,
+      "all_principles_individually_tested": false
+    },
+    {
+      "lesson": "L023",
+      "practice_inputs": [
+        "P080"
+      ],
+      "independent_course_practice": true,
+      "code_status": "rendered_decode_verified",
+      "native_status": "encrypted_structure_verified",
+      "route": "native_layers",
+      "ui_verified": false,
+      "audio_listened": false,
+      "visual_scope": "first/middle/last sampled code frames; no continuous playback",
+      "representative_case": true,
+      "all_principles_individually_tested": false
+    },
+    {
+      "lesson": "L024",
+      "practice_inputs": [
+        "P083",
+        "P085"
+      ],
+      "independent_course_practice": true,
+      "code_status": "rendered_decode_verified",
+      "native_status": "encrypted_structure_verified",
+      "route": "hybrid_layers",
+      "ui_verified": false,
+      "audio_listened": false,
+      "visual_scope": "first/middle/last sampled code frames; no continuous playback",
+      "representative_case": true,
+      "all_principles_individually_tested": false
+    },
+    {
+      "lesson": "L025",
+      "practice_inputs": [
+        "P086"
+      ],
+      "independent_course_practice": true,
+      "code_status": "rendered_decode_verified",
+      "native_status": "encrypted_structure_verified",
+      "route": "hybrid_layers",
+      "ui_verified": false,
+      "audio_listened": false,
+      "visual_scope": "first/middle/last sampled code frames; no continuous playback",
+      "representative_case": true,
+      "all_principles_individually_tested": false
+    },
+    {
+      "lesson": "L026",
+      "practice_inputs": [
+        "P088"
+      ],
+      "independent_course_practice": true,
+      "code_status": "rendered_decode_verified",
+      "native_status": "encrypted_structure_verified",
+      "route": "native_layers",
+      "ui_verified": false,
+      "audio_listened": false,
+      "visual_scope": "first/middle/last sampled code frames; no continuous playback",
+      "representative_case": true,
+      "all_principles_individually_tested": false
+    },
+    {
+      "lesson": "L027",
+      "practice_inputs": [
+        "P089"
+      ],
+      "independent_course_practice": true,
+      "code_status": "rendered_decode_verified",
+      "native_status": "encrypted_structure_verified",
+      "route": "native_layers",
+      "ui_verified": false,
+      "audio_listened": false,
+      "visual_scope": "first/middle/last sampled code frames; no continuous playback",
+      "representative_case": true,
+      "all_principles_individually_tested": false
+    },
+    {
+      "lesson": "L028",
+      "practice_inputs": [
+        "P091"
+      ],
+      "independent_course_practice": true,
+      "code_status": "rendered_decode_verified",
+      "native_status": "encrypted_structure_verified",
+      "route": "native_layers",
+      "ui_verified": false,
+      "audio_listened": false,
+      "visual_scope": "first/middle/last sampled code frames; no continuous playback",
+      "representative_case": true,
+      "all_principles_individually_tested": false
+    },
+    {
+      "lesson": "L029",
+      "practice_inputs": [
+        "P092"
+      ],
+      "independent_course_practice": true,
+      "code_status": "rendered_decode_verified",
+      "native_status": "encrypted_structure_verified",
+      "route": "native_layers",
+      "ui_verified": false,
+      "audio_listened": false,
+      "visual_scope": "first/middle/last sampled code frames; no continuous playback",
+      "representative_case": true,
+      "all_principles_individually_tested": false
+    },
+    {
+      "lesson": "L030",
+      "practice_inputs": [
+        "P093",
+        "P095",
+        "P096"
+      ],
+      "independent_course_practice": true,
+      "code_status": "rendered_decode_verified",
+      "native_status": "encrypted_structure_verified",
+      "route": "derived_composition",
+      "ui_verified": false,
+      "audio_listened": false,
+      "visual_scope": "first/middle/last sampled code frames; no continuous playback",
+      "representative_case": true,
+      "all_principles_individually_tested": false
+    },
+    {
+      "lesson": "L031",
+      "practice_inputs": [
+        "P097"
+      ],
+      "independent_course_practice": true,
+      "code_status": "rendered_decode_verified",
+      "native_status": "encrypted_structure_verified",
+      "route": "native_layers",
+      "ui_verified": false,
+      "audio_listened": false,
+      "visual_scope": "first/middle/last sampled code frames; no continuous playback",
+      "representative_case": true,
+      "all_principles_individually_tested": false
+    }
+  ],
+  "principles": [
+    {
+      "lesson": "L001",
+      "principle_id": "project-assets",
+      "name": "Separate editable project references from rendered output",
+      "execution_routes": [
+        "workflow:inventory",
+        "typed:layers"
+      ],
+      "representative_case_route": "native_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L001",
+      "principle_id": "layered-timeline",
+      "name": "Represent timeline placement, overlap, canvas and audio as separate state",
+      "execution_routes": [
+        "workflow:inventory",
+        "typed:layers"
+      ],
+      "representative_case_route": "native_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L001",
+      "principle_id": "time-markers-export",
+      "name": "Frame-aware splitting and beat markers with explicit export settings",
+      "execution_routes": [
+        "workflow:inventory",
+        "typed:layers"
+      ],
+      "representative_case_route": "native_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L002",
+      "principle_id": "timeline_split_and_actions",
+      "name": "选择、切割与片段操作",
+      "execution_routes": [
+        "workflow:inventory",
+        "typed:canvas"
+      ],
+      "representative_case_route": "native_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L002",
+      "principle_id": "occlusion_sticker",
+      "name": "独立遮挡贴纸层",
+      "execution_routes": [
+        "workflow:inventory",
+        "typed:canvas"
+      ],
+      "representative_case_route": "native_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L002",
+      "principle_id": "preview_axis_state",
+      "name": "预览指针与编辑播放头分离",
+      "execution_routes": [
+        "workflow:inventory",
+        "typed:canvas"
+      ],
+      "representative_case_route": "native_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L003",
+      "principle_id": "non_destructive_clip_timeline",
+      "name": "非破坏剪裁与轨道合成",
+      "execution_routes": [
+        "typed:source_in/speed/reverse/speed_curve"
+      ],
+      "representative_case_route": "hybrid_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L003",
+      "principle_id": "canvas_background_and_blend",
+      "name": "统一画布、模糊背景与叠层",
+      "execution_routes": [
+        "typed:source_in/speed/reverse/speed_curve"
+      ],
+      "representative_case_route": "hybrid_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L003",
+      "principle_id": "speed_freeze_reverse",
+      "name": "变速、定格与反放",
+      "execution_routes": [
+        "typed:source_in/speed/reverse/speed_curve"
+      ],
+      "representative_case_route": "hybrid_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L003",
+      "principle_id": "correction_and_proprietary_portrait",
+      "name": "调节与人物效果边界",
+      "execution_routes": [
+        "typed:source_in/speed/reverse/speed_curve"
+      ],
+      "representative_case_route": "hybrid_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L004",
+      "principle_id": "audio-trim-mix",
+      "name": "Non-destructive audio intervals and independent tracks",
+      "execution_routes": [
+        "workflow:audio_tracks"
+      ],
+      "representative_case_route": "native_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L004",
+      "principle_id": "audio-fade-envelope",
+      "name": "Fade-in and fade-out as time-domain gain envelopes",
+      "execution_routes": [
+        "workflow:audio_tracks"
+      ],
+      "representative_case_route": "native_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L004",
+      "principle_id": "audio-speed-pitch-markers",
+      "name": "Separate audio speed, pitch policy and beat markers",
+      "execution_routes": [
+        "workflow:audio_tracks"
+      ],
+      "representative_case_route": "native_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L005",
+      "principle_id": "text_style_layer",
+      "name": "文字作为独立可布局图层",
+      "execution_routes": [
+        "typed:text/keyframes"
+      ],
+      "representative_case_route": "native_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L005",
+      "principle_id": "asr_tts_tracks",
+      "name": "识别字幕与文字朗读分轨",
+      "execution_routes": [
+        "typed:text/keyframes"
+      ],
+      "representative_case_route": "native_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L005",
+      "principle_id": "sticker_composition",
+      "name": "多贴纸叠加和入出场动画",
+      "execution_routes": [
+        "typed:text/keyframes"
+      ],
+      "representative_case_route": "native_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L006",
+      "principle_id": "effect_interval_stack",
+      "name": "独立特效轨与叠加",
+      "execution_routes": [
+        "workflow:transitions",
+        "external:proprietary_effects"
+      ],
+      "representative_case_route": "hybrid_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L006",
+      "principle_id": "transition_as_boundary_operator",
+      "name": "边界转场",
+      "execution_routes": [
+        "workflow:transitions",
+        "external:proprietary_effects"
+      ],
+      "representative_case_route": "hybrid_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L007",
+      "principle_id": "ordered-filter-stack",
+      "name": "叠加有强度与时间范围的滤镜",
+      "execution_routes": [
+        "typed:color",
+        "workflow:color"
+      ],
+      "representative_case_route": "hybrid_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L007",
+      "principle_id": "time-scoped-adjustment",
+      "name": "时间范围内的调节层与局部预览",
+      "execution_routes": [
+        "typed:color",
+        "workflow:color"
+      ],
+      "representative_case_route": "hybrid_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L008",
+      "principle_id": "detach_audio",
+      "name": "音画分离后独立剪辑",
+      "execution_routes": [
+        "typed:mask/keyframes/speed_curve"
+      ],
+      "representative_case_route": "native_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L008",
+      "principle_id": "geometric_alpha_mask",
+      "name": "可羽化、反转、旋转的几何蒙版",
+      "execution_routes": [
+        "typed:mask/keyframes/speed_curve"
+      ],
+      "representative_case_route": "native_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L008",
+      "principle_id": "continuous_speed_ramp",
+      "name": "连续曲线变速",
+      "execution_routes": [
+        "typed:mask/keyframes/speed_curve"
+      ],
+      "representative_case_route": "native_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L009",
+      "principle_id": "grade_recipe_with_comparison",
+      "name": "调色配方与原片对照",
+      "execution_routes": [
+        "workflow:color",
+        "external:proprietary_looks"
+      ],
+      "representative_case_route": "hybrid_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L009",
+      "principle_id": "filter_stack_dependency",
+      "name": "有资源依赖的滤镜叠加",
+      "execution_routes": [
+        "workflow:color",
+        "external:proprietary_looks"
+      ],
+      "representative_case_route": "hybrid_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L010",
+      "principle_id": "color-before-after-wipe",
+      "name": "横向或纵向调色前后擦除对比",
+      "execution_routes": [
+        "recipe:compare-wipe"
+      ],
+      "representative_case_route": "hybrid_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L010",
+      "principle_id": "trim-composed-effect",
+      "name": "保留转场内部时序后再裁剪",
+      "execution_routes": [
+        "recipe:compare-wipe"
+      ],
+      "representative_case_route": "hybrid_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L010",
+      "principle_id": "align-audio-marker-to-reveal",
+      "name": "音乐入点标记对齐变色完成",
+      "execution_routes": [
+        "recipe:compare-wipe"
+      ],
+      "representative_case_route": "hybrid_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L011",
+      "principle_id": "beat_color_overlays",
+      "name": "按重音区间切换颜色覆盖层",
+      "execution_routes": [
+        "typed:color/intervals",
+        "workflow:reviewed_audio_cues"
+      ],
+      "representative_case_route": "hybrid_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L011",
+      "principle_id": "long_gap_filters_transition",
+      "name": "长间隙滤镜与特效衔接",
+      "execution_routes": [
+        "typed:color/intervals",
+        "workflow:reviewed_audio_cues"
+      ],
+      "representative_case_route": "hybrid_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L012",
+      "principle_id": "letterbox_caption_design",
+      "name": "黑边中的简洁字幕",
+      "execution_routes": [
+        "recipe:letterbox",
+        "workflow:captions"
+      ],
+      "representative_case_route": "native_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L012",
+      "principle_id": "vignette_for_focus",
+      "name": "按素材亮度调整暗角",
+      "execution_routes": [
+        "recipe:letterbox",
+        "workflow:captions"
+      ],
+      "representative_case_route": "native_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L013",
+      "principle_id": "independent-glyph-title-layout",
+      "name": "独立字层构成有大小变化的片头标题",
+      "execution_routes": [
+        "typed:text/keyframes"
+      ],
+      "representative_case_route": "hybrid_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L013",
+      "principle_id": "per-layer-title-motion",
+      "name": "逐字入场运动与一致的出场",
+      "execution_routes": [
+        "typed:text/keyframes"
+      ],
+      "representative_case_route": "hybrid_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L013",
+      "principle_id": "music-tail-and-library-ambience",
+      "name": "音乐尾部淡出与可选环境音分轨",
+      "execution_routes": [
+        "typed:text/keyframes"
+      ],
+      "representative_case_route": "hybrid_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L014",
+      "principle_id": "glowing_text_group",
+      "name": "隔离文字后叠加发光并混合回画面",
+      "execution_routes": [
+        "recipe:glow-title"
+      ],
+      "representative_case_route": "hybrid_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L015",
+      "principle_id": "animated_text_luma_aperture",
+      "name": "文字亮度镂空开场",
+      "execution_routes": [
+        "recipe:hollow-title"
+      ],
+      "representative_case_route": "hybrid_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L015",
+      "principle_id": "trim_music_and_fade",
+      "name": "按尾部声音边界截配乐",
+      "execution_routes": [
+        "recipe:hollow-title"
+      ],
+      "representative_case_route": "hybrid_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L016",
+      "principle_id": "smoke-screen-composite",
+      "name": "黑底烟雾滤色叠加与边缘处理",
+      "execution_routes": [
+        "recipe:screen-overlay",
+        "external:smoke"
+      ],
+      "representative_case_route": "derived_composition",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L016",
+      "principle_id": "caption-duration-smoke-retime",
+      "name": "烟雾重定时匹配字幕区间",
+      "execution_routes": [
+        "recipe:screen-overlay",
+        "external:smoke"
+      ],
+      "representative_case_route": "derived_composition",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L016",
+      "principle_id": "vertical-typewriter-disappearance",
+      "name": "竖排歌词与逐字出场配合烟雾",
+      "execution_routes": [
+        "recipe:screen-overlay",
+        "external:smoke"
+      ],
+      "representative_case_route": "derived_composition",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L017",
+      "principle_id": "neutral_background_blends",
+      "name": "用混合模式合成黑底或白底特效",
+      "execution_routes": [
+        "typed:key/blend",
+        "external:effect_media"
+      ],
+      "representative_case_route": "derived_composition",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L018",
+      "principle_id": "screen_silhouette_double_exposure",
+      "name": "白底深色剪影的滤色合成",
+      "execution_routes": [
+        "knowledge:segmentation_and_silhouette",
+        "external:subject_matte"
+      ],
+      "representative_case_route": "hybrid_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L018",
+      "principle_id": "silhouette_texture_look_and_caption",
+      "name": "剪影外观资源与同画面字幕",
+      "execution_routes": [
+        "knowledge:segmentation_and_silhouette",
+        "external:subject_matte"
+      ],
+      "representative_case_route": "hybrid_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L019",
+      "principle_id": "insert-freeze-frame",
+      "name": "按音乐标记插入定格帧",
+      "execution_routes": [
+        "recipe:freeze",
+        "workflow:reviewed_audio_cues"
+      ],
+      "representative_case_route": "native_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L019",
+      "principle_id": "photo-flash-shutter-sync",
+      "name": "闪白与拍照声按可见事件对齐",
+      "execution_routes": [
+        "recipe:freeze",
+        "workflow:reviewed_audio_cues"
+      ],
+      "representative_case_route": "native_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L019",
+      "principle_id": "camera-overlay-and-focus-cues",
+      "name": "分时段叠加清晰变化与录像机边框",
+      "execution_routes": [
+        "recipe:freeze",
+        "workflow:reviewed_audio_cues"
+      ],
+      "representative_case_route": "native_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L020",
+      "principle_id": "staggered_motion_grid",
+      "name": "四宫格轮流运动，其余冻结",
+      "execution_routes": [
+        "recipe:grid"
+      ],
+      "representative_case_route": "native_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L020",
+      "principle_id": "group_look_change",
+      "name": "统一多画面色调与尾段风格变化",
+      "execution_routes": [
+        "recipe:grid"
+      ],
+      "representative_case_route": "native_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L021",
+      "principle_id": "beat_aligned_still_sequence",
+      "name": "强拍驱动的图片切换",
+      "execution_routes": [
+        "recipe:beat-shake",
+        "workflow:reviewed_audio_cues"
+      ],
+      "representative_case_route": "native_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L021",
+      "principle_id": "alternating_beat_motion",
+      "name": "相邻变化的入场抖动",
+      "execution_routes": [
+        "recipe:beat-shake",
+        "workflow:reviewed_audio_cues"
+      ],
+      "representative_case_route": "native_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L021",
+      "principle_id": "montage_look_and_tail_partition",
+      "name": "整体外观与结尾特效分区",
+      "execution_routes": [
+        "recipe:beat-shake",
+        "workflow:reviewed_audio_cues"
+      ],
+      "representative_case_route": "native_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L022",
+      "principle_id": "animated-ink-matte-reveal",
+      "name": "白底黑墨素材滤色显照片",
+      "execution_routes": [
+        "recipe:screen-overlay",
+        "external:ink"
+      ],
+      "representative_case_route": "hybrid_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L022",
+      "principle_id": "beat-aligned-photo-overlap-budget",
+      "name": "加入重叠转场后维持照片拍点",
+      "execution_routes": [
+        "recipe:screen-overlay",
+        "external:ink"
+      ],
+      "representative_case_route": "hybrid_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L022",
+      "principle_id": "global-and-event-effect-intervals",
+      "name": "整体氛围与末段重音特效分开定时",
+      "execution_routes": [
+        "recipe:screen-overlay",
+        "external:ink"
+      ],
+      "representative_case_route": "hybrid_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L023",
+      "principle_id": "template_windows_blend",
+      "name": "黑色窗口模板上叠出动态九宫格",
+      "execution_routes": [
+        "recipe:grid"
+      ],
+      "representative_case_route": "native_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L023",
+      "principle_id": "animated_qr_experiment",
+      "name": "二维码深色模块填入动态视频",
+      "execution_routes": [
+        "recipe:grid"
+      ],
+      "representative_case_route": "native_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L024",
+      "principle_id": "video_filled_glyphs",
+      "name": "动态纹理填充字形",
+      "execution_routes": [
+        "typed:mask/text/keyframes"
+      ],
+      "representative_case_route": "hybrid_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L024",
+      "principle_id": "title_plate_layout_and_resources",
+      "name": "文字版面偏移与效果组合",
+      "execution_routes": [
+        "typed:mask/text/keyframes"
+      ],
+      "representative_case_route": "hybrid_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L025",
+      "principle_id": "portrait-blurred-background-still",
+      "name": "单张照片竖屏适配与模糊背景",
+      "execution_routes": [
+        "typed:layers/text/keyframes",
+        "external:decoration_and_blurred_fill"
+      ],
+      "representative_case_route": "hybrid_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L025",
+      "principle_id": "cue-sequenced-wishes-and-final-title",
+      "name": "按语音提示排列祝福文字并处理末句动画",
+      "execution_routes": [
+        "typed:layers/text/keyframes",
+        "external:decoration_and_blurred_fill"
+      ],
+      "representative_case_route": "hybrid_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L025",
+      "principle_id": "birthday-decoration-intervals",
+      "name": "日期贴纸、整体氛围和尾部彩带分层定时",
+      "execution_routes": [
+        "typed:layers/text/keyframes",
+        "external:decoration_and_blurred_fill"
+      ],
+      "representative_case_route": "hybrid_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L026",
+      "principle_id": "countdown_reveal_cues",
+      "name": "倒计时与人声起点触发表白文字",
+      "execution_routes": [
+        "typed:layers",
+        "typed:keyframes",
+        "knowledge:reviewed_vocal_cue",
+        "external:decorations"
+      ],
+      "representative_case_route": "native_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L026",
+      "principle_id": "cue_aligned_decorations",
+      "name": "特效与短贴纸按文字提示点对齐",
+      "execution_routes": [
+        "typed:layers",
+        "typed:keyframes",
+        "knowledge:reviewed_vocal_cue",
+        "external:decorations"
+      ],
+      "representative_case_route": "native_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L027",
+      "principle_id": "phrase_aligned_freeze_schedule",
+      "name": "乐句标记驱动的动静交替",
+      "execution_routes": [
+        "recipe:freeze",
+        "recipe:grid",
+        "knowledge:reviewed_music_cue"
+      ],
+      "representative_case_route": "native_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L027",
+      "principle_id": "flash_shutter_freeze_bundle",
+      "name": "闪白、快门声和相机效果的时序束",
+      "execution_routes": [
+        "recipe:freeze",
+        "recipe:grid",
+        "knowledge:reviewed_music_cue"
+      ],
+      "representative_case_route": "native_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L028",
+      "principle_id": "corrected-caption-driven-tts",
+      "name": "校正识别文字后分段生成配音",
+      "execution_routes": [
+        "workflow:voiceover",
+        "external:exact_voice"
+      ],
+      "representative_case_route": "native_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L028",
+      "principle_id": "replacement-narration-audio-routing",
+      "name": "替换配音时关闭原声并独立控制字幕显示",
+      "execution_routes": [
+        "workflow:voiceover",
+        "external:exact_voice"
+      ],
+      "representative_case_route": "native_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L029",
+      "principle_id": "caption_recognition_review_style",
+      "name": "自动字幕、逐段纠错与共享样式",
+      "execution_routes": [
+        "workflow:captions",
+        "knowledge:manual_marker_review"
+      ],
+      "representative_case_route": "native_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L029",
+      "principle_id": "local_music_recognition_workaround",
+      "name": "本地歌曲转视频后走语音识别的历史绕行",
+      "execution_routes": [
+        "workflow:captions",
+        "knowledge:manual_marker_review"
+      ],
+      "representative_case_route": "native_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L029",
+      "principle_id": "instructional_symbol_layers",
+      "name": "教学符号贴纸",
+      "execution_routes": [
+        "workflow:captions",
+        "knowledge:manual_marker_review"
+      ],
+      "representative_case_route": "native_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L030",
+      "principle_id": "complementary-avatar-mattes",
+      "name": "双层明暗混合头像关注动画",
+      "execution_routes": [
+        "typed:blend/layers/keyframes",
+        "external:avatar_mattes_and_follow_sticker"
+      ],
+      "representative_case_route": "derived_composition",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L030",
+      "principle_id": "avatar-cover-transform",
+      "name": "头像画面覆盖与图层身份",
+      "execution_routes": [
+        "typed:blend/layers/keyframes",
+        "external:avatar_mattes_and_follow_sticker"
+      ],
+      "representative_case_route": "derived_composition",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L030",
+      "principle_id": "decoration-resource-interval",
+      "name": "外围装饰与结束提示",
+      "execution_routes": [
+        "typed:blend/layers/keyframes",
+        "external:avatar_mattes_and_follow_sticker"
+      ],
+      "representative_case_route": "derived_composition",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L031",
+      "principle_id": "grouped-monochrome-marquee",
+      "name": "多行单色文字块滚动及重复接续",
+      "execution_routes": [
+        "recipe:danmaku"
+      ],
+      "representative_case_route": "native_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L031",
+      "principle_id": "independent-colored-bullet-lanes",
+      "name": "分层弹幕行、错时出现和独立颜色",
+      "execution_routes": [
+        "recipe:danmaku"
+      ],
+      "representative_case_route": "native_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    },
+    {
+      "lesson": "L031",
+      "principle_id": "library-instrument-audio",
+      "name": "可选乐器库音与淡入淡出",
+      "execution_routes": [
+        "recipe:danmaku"
+      ],
+      "representative_case_route": "native_layers",
+      "individual_forward_test": "not certified by one representative lesson case",
+      "code_expression_available": true,
+      "native_ui_equivalence_verified": false
+    }
+  ],
+  "audio_supplements": {
+    "L004": "provided audio source trim/gain/fades + native audio track",
+    "L028": "actual offline Huihui voice; substitute, not Siri",
+    "L029": "provided course audio ASR4segments/SRT/code subtitles/native text; words unverified"
+  },
+  "limits": [
+    "No private source media/screenshots/full transcripts/paths are published.",
+    "No continuous playback, listening, native editor UI, or proprietary preset equivalence certification.",
+    "L001-L008 borrowed a practice source because independent course assets were absent."
+  ]
+}

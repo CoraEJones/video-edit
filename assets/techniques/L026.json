@@ -15,8 +15,10 @@
     "continuous_playback": false
   },
   "execution_routes": [
-    "workflow:voiceover",
-    "external:exact_voice"
+    "typed:layers",
+    "typed:keyframes",
+    "knowledge:reviewed_vocal_cue",
+    "external:decorations"
   ],
   "route_semantics": {
     "typed": "Supported technique.2.0 fields; build and validate an explicit graph.",

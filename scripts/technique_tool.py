@@ -11,11 +11,17 @@ def main():
     for name in ('validate','compile','render'):
         p=sub.add_parser(name);p.add_argument('--spec',required=True)
         if name!='validate':p.add_argument('--output',required=True,help='新的技巧资产目录')
+    p=sub.add_parser('native-capabilities');p.add_argument('--spec',required=True)
+    p=sub.add_parser('export-jianying');p.add_argument('--spec',required=True);p.add_argument('--output',required=True);p.add_argument('--name',default='技巧复现');p.add_argument('--allow-derived',action='store_true',help='显式允许局部透明素材或整体合成回退；报告列出烘焙操作')
     p=sub.add_parser('catalog');p.add_argument('--query',default='');p.add_argument('--id');p.add_argument('--limit',type=int,default=10);p.add_argument('--offset',type=int,default=0)
     p=sub.add_parser('recipe');p.add_argument('--name',required=True);p.add_argument('--params',required=True);p.add_argument('--output',required=True)
+    p=sub.add_parser('normalize-image');p.add_argument('--source',required=True);p.add_argument('--input-space',required=True,choices=('srgb','embedded_icc'));p.add_argument('--output',required=True)
     args=parser.parse_args()
     try:
-        if args.command=='recipe':
+        if args.command=='normalize-image':
+            from video_edit.image_color import convert_image
+            result=convert_image(args.source,args.output,args.input_space)
+        elif args.command=='recipe':
             from video_edit.technique_recipes import build
             output=Path(args.output).resolve()
             if output.exists():raise EditError('OUTPUT_EXISTS','参数文件已存在，请使用新文件名。')
@@ -47,8 +53,15 @@ def main():
             if args.command=='validate':
                 result=validate(spec,path.parent,cfg)
                 print(json.dumps({'ok':result['valid'],'data':result},ensure_ascii=False));return 0 if result['valid'] else 2
+            if args.command=='native-capabilities':
+                from video_edit.technique_native import capabilities
+                result=capabilities(spec,path.parent,cfg)
+                print(json.dumps({'ok':result['valid'],'data':result},ensure_ascii=False));return 0 if result['valid'] else 2
             output=Path(args.output).resolve()
-            if args.command=='compile':
+            if args.command=='export-jianying':
+                from video_edit.technique_native import export_native
+                result=export_native(spec,path.parent,cfg,output,name=args.name,allow_derived=args.allow_derived)
+            elif args.command=='compile':
                 if output.exists():raise EditError('OUTPUT_EXISTS','技巧输出目录已存在，请使用新目录。')
                 result=compile_spec(spec,path.parent,cfg,output)
             else:result=render(spec,path.parent,cfg,output)
