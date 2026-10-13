@@ -27,7 +27,8 @@ class PackageReviewTests(unittest.TestCase):
             shutil.rmtree(source)
             result=validate(local,dest/'plan.json',{},inspect_files=False)
             self.assertTrue(result['valid'],result)
-            self.assertTrue(all(Path(e['path']).is_relative_to(dest) for e in local['review']['evidence']))
+            # Hosted Windows temp roots may be junctions; compare resolved paths.
+            self.assertTrue(all(Path(e['path']).resolve().is_relative_to(dest.resolve()) for e in local['review']['evidence']))
             self.assertEqual(plan['review']['analysis_path'],str(source/'analysis.json'))
 
     def test_missing_evidence_is_not_silently_dropped(self):
