@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Independent silent title intro design",
+  "description": "A separate 4–6 second dual-delivery design, not an edit-plan 1.0. Runtime validation additionally probes files, SHA, SAR, alpha, frame alignment and source limits.",
+  "type": "object",
+  "required": ["schema_version", "id", "title_text", "source", "title"],
+  "properties": {
+    "schema_version": {"const": "title-intro.1.0"},
+    "id": {"type": "string", "minLength": 1, "maxLength": 80},
+    "title_text": {"type": "string", "minLength": 1},
+    "source": {
+      "type": "object", "required": ["path", "duration_s"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "source_in_s": {"type": "number", "minimum": 0, "default": 0},
+        "duration_s": {"type": "number", "minimum": 4, "maximum": 6},
+        "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+      }
+    },
+    "canvas": {
+      "type": "object",
+      "properties": {
+        "width": {"type": "integer", "minimum": 64, "maximum": 1920, "multipleOf": 2, "default": 854},
+        "height": {"type": "integer", "minimum": 64, "maximum": 1920, "multipleOf": 2, "default": 480},
+        "fps": {"type": "integer", "minimum": 24, "maximum": 60, "default": 60}
+      }
+    },
+    "title": {"$ref": "#/$defs/layer"},
+    "accessories": {"type": "array", "items": {"allOf": [{"$ref": "#/$defs/layer"}, {"required": ["id"]}]}},
+    "design": {"type": "object", "description": "Human design/evidence sidecar; descriptive metadata never implies visual acceptance."}
+  },
+  "$defs": {
+    "point": {"type": "array", "prefixItems": [{"type": "number"}, {"type": "number"}], "minItems": 2, "maxItems": 2},
+    "layer": {
+      "type": "object", "required": ["path", "x_px", "y_px", "width_px"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1, "maxLength": 80},
+        "path": {"type": "string", "minLength": 1, "description": "Original real-alpha PNG; no glyph editing or implicit cropping."},
+        "x_px": {"type": "number", "description": "Whole PNG resting top-left in canvas pixels; actual alpha is the visibility boundary."},
+        "y_px": {"type": "number"},
+        "width_px": {"type": "number", "minimum": 1},
+        "start_s": {"type": "number", "minimum": 0},
+        "end_s": {"type": "number", "minimum": 0},
+        "safe_margin_px": {"type": "number", "minimum": 0},
+        "pivot_px": {"$ref": "#/$defs/point", "description": "Canvas pixel center of rotation/scaling, default actual alpha bbox center."},
+        "motion": {"$ref": "#/$defs/motion"}
+      }
+    },
+    "motion": {
+      "type": "object",
+      "properties": {
+        "type": {"enum": ["slide_fade", "scale_fade", "staggered", "curved_path", "rotate_settle"]},
+        "easing": {"enum": ["smoothstep", "linear"]},
+        "enter_s": {"type": "number", "exclusiveMinimum": 0},
+        "exit_s": {"type": "number", "exclusiveMinimum": 0},
+        "stagger_s": {"type": "number", "minimum": 0},
+        "settle_s": {"type": "number", "minimum": 0, "maximum": 1.5},
+        "dx_px": {"type": "number"}, "dy_px": {"type": "number"},
+        "exit_dx_px": {"type": "number"}, "exit_dy_px": {"type": "number"},
+        "from_scale": {"type": "number", "minimum": 0.5, "maximum": 1.5},
+        "from_rotation_deg": {"type": "number", "minimum": -360, "maximum": 360},
+        "rotation_deg": {"type": "number", "minimum": -360, "maximum": 360},
+        "overshoot_px": {"type": "number", "minimum": 0, "maximum": 24},
+        "overshoot_rotation_deg": {"type": "number", "minimum": -20, "maximum": 20},
+        "cubic_bezier_points_px": {"type": "array", "minItems": 4, "maxItems": 4, "items": {"$ref": "#/$defs/point"}, "description": "Relative canvas-pixel offsets; the final point must be [0,0]."},
+        "rotation_keyframes": {
+          "type": "array", "minItems": 2, "maxItems": 200,
+          "items": {"type": "object", "required": ["time_s", "rotation_deg"], "properties": {
+            "time_s": {"type": "number", "minimum": 0},
+            "rotation_deg": {"type": "number", "minimum": -360, "maximum": 360}
+          }}
+        }
+      },
+      "allOf": [{"if": {"required": ["type"], "properties": {"type": {"const": "curved_path"}}}, "then": {"required": ["cubic_bezier_points_px"]}}]
+    }
+  }
+}

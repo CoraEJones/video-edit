@@ -1,0 +1,110 @@
+{
+  "schema_version": "video-edit-notes-evidence/1",
+  "date_local": "2026-10-14",
+  "baseline": "2.3.1",
+  "scope": "Sanitized summary of existing local evidence; no new continuous playback, audio audition or editor UI verification performed during this documentation task.",
+  "knowledge": {
+    "tutorial_lessons": 31,
+    "technique_abstractions": 77,
+    "abstractions_are_not_completed_effect_count": true
+  },
+  "historical_tutorial_practice": {
+    "date_local": "2026-10-13",
+    "representative_cases": 31,
+    "routes": {
+      "native_layers": 15,
+      "hybrid_layers": 13,
+      "derived_composition": 3
+    },
+    "each_case_video_full_decode": true,
+    "output_frames_sampled_by_agent": true,
+    "original_lesson_media_for_all_cases": false,
+    "audio_listened": false,
+    "editor_ui_verified": false
+  },
+  "frozen_corpus": {
+    "source_count": 200,
+    "groups": 8,
+    "per_group": 25,
+    "full_decode_passed": 200,
+    "metadata_is_visual_ground_truth": false,
+    "public_manifest": "../benchmarks/commons-200/manifest.json",
+    "historical_single_machine_technical_observation": {
+      "cold_analysis_s": 223.299,
+      "hot_cache_s": 5.661,
+      "asr_included": false,
+      "model_review_time_included": false,
+      "repeat_distribution_measured": false
+    }
+  },
+  "story": {
+    "unit_tests_added_in_2_3": 24,
+    "synthetic_vfr_pts_and_frame_identity_checked": true,
+    "expert_blind_ground_truth_completed": false
+  },
+  "art_titles": {
+    "date_local": "2026-10-14",
+    "source_clips_selected": 20,
+    "clip_duration_s": 4,
+    "canvas_px": [
+      854,
+      480
+    ],
+    "project_fps": 60,
+    "frames_per_clip": 240,
+    "overview_duration_s": 80,
+    "overview_decoded_frames": 4800,
+    "overview_audio_streams": 0,
+    "chosen_final_output_stills_seen_by_independent_agent": 60,
+    "all_video_frames_human_reviewed": false,
+    "continuous_playback_reviewed": false,
+    "overview_matching_decoded_case_frames": 20,
+    "original_transparent_artwork_preserved": true,
+    "private_images_bundled": false,
+    "final_case_revision": {
+      "T03": 3,
+      "T04": 2,
+      "T06": 2,
+      "T09": 3,
+      "T10": 2,
+      "T14": 2,
+      "T16": 2,
+      "T18": 2,
+      "T20": 2
+    },
+    "native_collection": {
+      "track_types": 5,
+      "segments": 99,
+      "matched_keyframe_samples": 28749,
+      "actual_encrypted_roundtrip": true,
+      "editor_ui_verified": false,
+      "registered_in_user_drafts": false
+    },
+    "png_is_full_ttf_font": false
+  },
+  "regression_before_notes_publication": {
+    "runner": "unittest",
+    "total": 252,
+    "passed": 251,
+    "skipped": 1,
+    "skip_reason": "legacy real rectangular-mask cache dependency unavailable in that test configuration",
+    "new_title_tests": 32,
+    "new_title_tests_passed": 32,
+    "actual_ffmpeg_enabled": true,
+    "actual_local_jianying_dll_enabled": true,
+    "github_ci_for_new_commit": "not yet asserted; inspect actual workflow run"
+  },
+  "pending": [
+    "audition full mixes and validate speech/subtitle semantics",
+    "editor open/play/edit/save/reopen comparison",
+    "expert important-moment ground truth and held-out evaluation",
+    "audience blind comparison",
+    "fresh-device end-to-end install and host validation"
+  ],
+  "public_source_documents": [
+    "../references/validation-status.md",
+    "../references/benchmark.md",
+    "../references/tutorial-coverage.json",
+    "../references/title-intro-api.md"
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Title visual QA request",
+  "type": "object", "required": ["schema_version", "canvas", "title_image", "frames"],
+  "properties": {
+    "schema_version": {"const": "title-visual-qa/1"},
+    "canvas": {"type": "object", "required": ["width_px", "height_px"], "properties": {"width_px": {"type": "integer", "minimum": 1}, "height_px": {"type": "integer", "minimum": 1}}},
+    "title_image": {"type": "string", "minLength": 1},
+    "readability_mask": {"type": "string", "description": "Optional original-size grayscale mask to isolate lettering from ornaments for contrast only."},
+    "rgb_transfer": {"enum": ["srgb", "bt709"], "default": "srgb", "description": "Background and artwork must actually share this declared encoding; this tool does no ICC/HDR conversion."},
+    "transform": {"$ref": "#/$defs/transform"},
+    "roi": {"$ref": "#/$defs/rect"},
+    "palette_colors": {"type": "integer", "minimum": 2, "maximum": 4},
+    "safe_margin_px": {"type": "object", "properties": {"left": {"type": "number", "minimum": 0}, "top": {"type": "number", "minimum": 0}, "right": {"type": "number", "minimum": 0}, "bottom": {"type": "number", "minimum": 0}}},
+    "protected_rectangles": {"type": "array", "items": {"$ref": "#/$defs/rect"}},
+    "thresholds": {"type": "object", "properties": {
+      "visible_alpha": {"type": "number", "exclusiveMinimum": 0, "maximum": 1},
+      "core_alpha": {"type": "number", "exclusiveMinimum": 0, "maximum": 1},
+      "minimum_feature_px": {"type": "integer", "enum": [3, 5, 7, 9, 11, 13, 15]}
+    }},
+    "frames": {"type": "array", "minItems": 1, "items": {
+      "type": "object", "required": ["path", "source_time_s"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "source_time_s": {"type": "number", "minimum": 0},
+        "label": {"type": "string"},
+        "transform": {"$ref": "#/$defs/transform"},
+        "roi": {"$ref": "#/$defs/rect"},
+        "protected_rectangles": {"type": "array", "items": {"$ref": "#/$defs/rect"}}
+      }
+    }}
+  },
+  "$defs": {
+    "rect": {"type": "object", "required": ["x_px", "y_px", "width_px", "height_px"], "properties": {
+      "id": {"type": "string"}, "reason": {"type": "string"},
+      "x_px": {"type": "integer", "minimum": 0}, "y_px": {"type": "integer", "minimum": 0},
+      "width_px": {"type": "integer", "minimum": 1}, "height_px": {"type": "integer", "minimum": 1}
+    }},
+    "transform": {"type": "object", "properties": {
+      "x_px": {"type": "number"}, "y_px": {"type": "number"},
+      "width_px": {"type": "integer", "minimum": 1}, "height_px": {"type": "integer", "minimum": 1},
+      "rotation_deg": {"type": "number", "description": "Clockwise about resized PNG center."},
+      "opacity": {"type": "number", "minimum": 0, "maximum": 1}
+    }}
+  }
+}
